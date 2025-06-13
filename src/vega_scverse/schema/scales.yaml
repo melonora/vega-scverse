@@ -1,30 +1,34 @@
 ---
-id: https://w3id.org/scverse/vega-spatialdata
-name: vega-spatialdata
-title: vega-spatialdata
+id: https://w3id.org/scverse/vega-scverse
+name: vega-scverse-scales
+version: 0.1.0
+title: vega-scverse-scales
 description: |-
   Vega like specification for the scverse plotting ecosystem.
 license: BSD-3
 see_also:
-  - https://scverse.github.io/vega-spatialdata
+  - https://scverse.github.io/vega-scverse
 
 prefixes:
-  vega_spatialdata: https://w3id.org/scverse/vega-spatialdata/
+  vega_scverse: https://w3id.org/scverse/vega-scverse/
   linkml: https://w3id.org/linkml/
-default_prefix: vega_spatialdata
+  orcid: https://orcid.org/
+default_prefix: vega_scverse
 default_range: string
 
 imports:
   - linkml:types
+
+created_by: orcid:0000-0003-1666-5421
 
 classes:
   Scales:
     description: >
       Vega like definition for scales which specifies a collection of mappings from a data domain 
       (e.g., numbers, categories, dates) to a visual range (e.g., position on the screen, color spectrum, size).
-    multivalued: true
     attributes:
       scales:
+        multivalued: true
         any_of:
           - range: AxisScale
           - range: CategoricalColorScale
@@ -55,8 +59,9 @@ classes:
     description: A vega like scale specifically for mapping from a data domain to an axis range.
     slot_usage:
       name:
-        description: `Y_scale` or `X_scale` optionally followed by `_n` where n stands for the index of the subplot
-        pattern: ^[XY]_scale(_\d+)?$
+        description: >
+          `Y_scale` or `X_scale` optionally followed by `_n` where n stands for the index of the subplot.
+        pattern: "^[XY]_scale(_\\d+)?$"
       type:
         description: Only linear is supported for an `AxisScale` for now.
         equals_string: linear
@@ -69,7 +74,17 @@ classes:
           to be transformed. For example, [512.0, 0.0] maps the data range from 512 (top) to 0 (bottom),
           which is typical for Y-axis scales in image coordinate systems where the origin is at the top-left.
         multivalued: true
-
+        range: float
+        exact_cardinality: 2
+      range:
+        description: >
+          Defines the target visual dimension for the axis scale’s output range. Must be either 'width' for an X-axis 
+          scale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the 
+          full canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically 
+          defined by the top-level 'width' and 'height' properties of a Vega specification. For example, setting 
+          "range": "height" in a Y-axis scale maps the scale’s domain to pixel positions from top to bottom within the 
+          plot area. This is commonly used to align data values with positional axes in coordinate-based visualizations.
+        range: AxisRangeEnum
 
 
   ContinuousColorScale:
@@ -77,12 +92,20 @@ classes:
     description: A vega like scale specifically for mapping from a data domain to an axis range.
     slot_usage:
       name:
-        description: `Y_scale` or `X_scale` optionally followed by `_n` where n stands for the index of the subplot
+        description: >
+          'Y_scale' or 'X_scale' optionally followed by '_n' where n stands for the index of the subplot
         pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
-enum:
+  CategoricalColorScale:
+    is_a: Scale
+
+enums:
   ScaleEnum:
     permissible_values:
       linear: Maps continuous numeric data to a continuous range.
       ordinal: Maps discrete values (categories) to distinct values in the output range.
+  AxisRangeEnum:
+    permissible_values:
+      height: Referring to the height of the plotting area.
+      width: Referring to the width of the plotting area.
         
