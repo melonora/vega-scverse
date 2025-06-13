@@ -1,0 +1,59 @@
+---
+id: https://w3id.org/scverse/vega-spatialdata
+name: vega-spatialdata
+title: vega-spatialdata
+description: |-
+  Vega like specification for the scverse plotting ecosystem.
+license: BSD-3
+see_also:
+  - https://scverse.github.io/vega-spatialdata
+
+prefixes:
+  vega_spatialdata: https://w3id.org/scverse/vega-spatialdata/
+  linkml: https://w3id.org/linkml/
+  biolink: https://w3id.org/biolink/
+  schema: http://schema.org/
+  PATO: http://purl.obolibrary.org/obo/PATO_
+  example: https://example.org/
+default_prefix: vega_spatialdata
+default_range: string
+
+imports:
+  - linkml:types
+
+classes:
+
+  Scale
+  NamedThing:
+    description: >-
+      A generic grouping for any identifiable entity
+    slots:
+      - id
+      - name
+      - description
+    class_uri: schema:Thing
+
+  ScverseVega:
+    is_a: NamedThing
+    description: >-
+      Represents a ScverseVega
+    slots:
+      - primary_email
+      - birth_date
+      - age_in_years
+      - vital_status
+    slot_usage:
+      primary_email:
+        pattern: "^\\S+@[\\S+\\.]+\\S+"
+
+  ScverseVegaCollection:
+    tree_root: true
+    description: >-
+      A holder for ScverseVega objects
+    attributes:
+      entries:
+        range: ScverseVega
+        multivalued: true
+        inlined: true
+
+
