@@ -1,0 +1,36 @@
+---
+id: https://w3id.org/scverse/vega-scverse/data
+name: vega-scverse-data
+version: 0.1.0
+title: vega-scverse-data
+description: |-
+  Vega like specification for the data array used in view configurations for the scverse visualization ecosystem.
+license: BSD-3
+see_also:
+  - https://scverse.github.io/vega-scverse
+
+prefixes:
+  vega_scverse: https://w3id.org/scverse/vega-scverse/
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+default_prefix: vega_scverse
+default_range: string
+
+imports:
+  - linkml:types
+
+created_on: "2025-06-01"
+created_by: orcid:0000-0003-1666-5421
+
+classes:
+  DataObject:
+    abstract: true
+    description: |-
+      Abstract class for Vega like data set definitions and transforms that define the data based on scverse data 
+      models like SpatialData and AnnData to load and how to process it.
+    attributes:
+      name:
+
+
+
+  SpatialDataRoot:
