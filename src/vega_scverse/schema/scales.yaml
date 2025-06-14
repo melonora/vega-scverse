@@ -1,5 +1,5 @@
 ---
-id: https://w3id.org/scverse/vega-scverse
+id: https://w3id.org/scverse/vega-scverse/scales
 name: vega-scverse-scales
 version: 0.1.0
 title: vega-scverse-scales
@@ -19,11 +19,12 @@ default_range: string
 imports:
   - linkml:types
 
+created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
 classes:
   Scales:
-    description: >
+    description: |-
       Vega like definition for scales which specifies a collection of mappings from a data domain 
       (e.g., numbers, categories, dates) to a visual range (e.g., position on the screen, color spectrum, size).
     attributes:
@@ -36,11 +37,11 @@ classes:
 
   Scale:
     abstract: true
-    description: > 
+    description: |- 
       Base class for vega like scales which map from a data domain to a visual range, be it axis or color.
     attributes:
       name:
-        description: >
+        description: |-
           Name of the scale. Is used to refer to the scale in the rest of the view configuration. For scales used for
           axes typically `Y_scale` or `X_scale` optionally followed by `_n` where n stands for the index of the subplot.
           In case of a color mapping it is `color_` followed by a pseudo UUID.
@@ -48,7 +49,7 @@ classes:
         required: true
         range: string
       type:
-        description: >
+        description: |-
           The type of scale which is a description of what kind of mapping is performed between data domain and 
           visual range, e.g. `linear`.
         required: true
@@ -59,7 +60,7 @@ classes:
     description: A vega like scale specifically for mapping from a data domain to an axis range.
     slot_usage:
       name:
-        description: >
+        description: |-
           `Y_scale` or `X_scale` optionally followed by `_n` where n stands for the index of the subplot.
         pattern: "^[XY]_scale(_\\d+)?$"
       type:
@@ -68,7 +69,7 @@ classes:
         ifabsent: string(linear)
     attributes:
       domain:
-        description: >
+        description: |-
           The set of input data values that the scale maps from. In the case of a linear scale,
           this should be a two-element list representing the minimum and maximum numeric values
           to be transformed. For example, [512.0, 0.0] maps the data range from 512 (top) to 0 (bottom),
@@ -77,7 +78,7 @@ classes:
         range: float
         exact_cardinality: 2
       range:
-        description: >
+        description: |-
           Defines the target visual dimension for the axis scale’s output range. Must be either 'width' for an X-axis 
           scale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the 
           full canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically 
@@ -86,18 +87,85 @@ classes:
           plot area. This is commonly used to align data values with positional axes in coordinate-based visualizations.
         range: AxisRangeEnum
 
-
-  ContinuousColorScale:
+  ColorScale:
+    abstract: true
+    description: |-
+      Abstract class to map a data domain to a color range. Not to be used on its own.
     is_a: Scale
-    description: A vega like scale specifically for mapping from a data domain to an axis range.
     slot_usage:
       name:
-        description: >
-          'Y_scale' or 'X_scale' optionally followed by '_n' where n stands for the index of the subplot
+        description: |-
+          color followed by '_pseudoUUID' used to refer to this scale elsewhere in the view configuration.
         pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
+  ContinuousColorScale:
+    is_a: ColorScale
+    description: A vega like scale specifically for mapping from a continuous data domain to a visual color range.
+    slot_usage:
+      type:
+        description: Only linear is supported for an `ContinuousColorScale` for now.
+        equals_string: linear
+        ifabsent: string(linear)
+    attributes:
+      domain:
+        description: |- 
+          The data used as a source for the visual color range
+        range: ContinuousColorDomain
+      range:
+        description: |-
+          The range to which to map the data domain. In this case one that refers to a colormap range.
+        range: ContinuousColorMapRange
+
   CategoricalColorScale:
-    is_a: Scale
+    is_a: ColorScale
+    description: A scale to map a discrete data domain to discrete colors
+    slot_usage:
+      type:
+        equals_string: ordinal
+        ifabsent: string(ordinal)
+    attributes:
+      domain:
+        description: |-
+          The data domain as a list of discrete string values.
+        multivalued: true
+        range: string
+      range:
+        description: |-
+          List of RGB colors as hexadecimal strings
+        multivalued: true
+        pattern: "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+
+  ContinuousColorDomain:
+    description: |-
+      A data domain or source for a ContinuousColorScale.
+    attributes:
+      data:
+        description: |-
+          The identifier of the particular data object in the data array to which the color mapping in 
+          ContinuousColorScale must be applied. In Vega this is only defined when the type of Scale is
+          ordinal, but we deviate from that.
+        pattern: "^.*_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+      field:
+        description: |-
+          If the data source is a table, then the field is the column within the table that is used as 
+          a source for the color mapping. In case of raster data with a single channel, the field equals
+          "value" and if multichannel raster data it is the name or index of the image channel.
+
+
+  ContinuousColorMapRange:
+    description: |-
+      Color scheme reference for a color palette.
+    attributes:
+      scheme:
+        # TODO: check which colormaps are supported across all viewers.
+        description: |-
+          The name of the color scheme to use or an array of color values.
+        range: string
+        required: true
+      count:
+        description: |-
+          The number of colors to use in the scheme.
+        range: integer
 
 enums:
   ScaleEnum:
