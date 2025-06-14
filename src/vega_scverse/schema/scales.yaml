@@ -4,7 +4,8 @@ name: vega-scverse-scales
 version: 0.1.0
 title: vega-scverse-scales
 description: |-
-  Vega like specification for the scverse plotting ecosystem.
+  Vega like specification for scales mapping a data domain to a visual range, whether axis or color in
+  the scverse plotting / visualization ecosystem.
 license: BSD-3
 see_also:
   - https://scverse.github.io/vega-scverse

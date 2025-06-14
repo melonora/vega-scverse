@@ -1,8 +1,11 @@
 ﻿from __future__ import annotations
 
 import re
+import sys
+from datetime import date, datetime, time
+from decimal import Decimal
 from enum import Enum
-from typing import Any, ClassVar, Literal, Optional
+from typing import Any, ClassVar, Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, RootModel, field_validator
 
@@ -46,7 +49,9 @@ linkml_meta = LinkMLMeta(
         "created_on": "2025-06-01T00:00:00",
         "default_prefix": "vega_scverse",
         "default_range": "string",
-        "description": "Vega like specification for the scverse plotting ecosystem.",
+        "description": "Vega like specification for scales mapping a data domain to a "
+        "visual range, whether axis or color in\n"
+        "the scverse plotting / visualization ecosystem.",
         "id": "https://w3id.org/scverse/vega-scverse/scales",
         "imports": ["linkml:types"],
         "license": "BSD-3",
@@ -485,3 +490,4 @@ ContinuousColorScale.model_rebuild()
 CategoricalColorScale.model_rebuild()
 ContinuousColorDomain.model_rebuild()
 ContinuousColorMapRange.model_rebuild()
+
