@@ -30,7 +30,29 @@ classes:
       models like SpatialData and AnnData to load and how to process it.
     attributes:
       name:
+        description: |- 
+          The name used throughout the view configuration to refer to the data object. It is an arbitrary string 
+          followed by an underscore and pseudo UUID.
+        required: true
+        pattern: "^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+      format:
+        description: |-
+          Format object containing the type of data as object and a string value representing the version.
+        required: true
+        range: Format
 
+  Format:
+    description: |- 
+      Format object containing the type of data as object and a string value representing the version.
+    attributes:
+      type:
+        description: |-
+          The type of the data as string, e.g. RasterFormat
+        range: string
+        required: true
+      version:
+        description: |- 
+          The version of the data type that is defined. Defined as semantic version + optional development release.
+        pattern: "^(\\d+\\.\\d+)(\\.\\d+)?([a-zA-Z0-9.+-]*)?$"
+        required: true
 
-
-  SpatialDataRoot:
