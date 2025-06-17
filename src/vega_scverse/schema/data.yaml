@@ -153,6 +153,7 @@ classes:
         any_of:
           - range: string
           - range: integer
+        required: true
 
   AggregateTransform:
     is_a: Transform
