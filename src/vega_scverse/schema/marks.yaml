@@ -1,0 +1,108 @@
+---
+id: https://w3id.org/scverse/vega-scverse/marks
+name: vega-scverse-marks
+version: 0.1.0
+title: vega-scverse-marks
+description: |-
+  Vega like specification for the marks used in view configurations for the scverse visualization ecosystem.
+license: BSD-3
+see_also:
+  - https://scverse.github.io/vega-scverse
+
+prefixes:
+  vega_scverse: https://w3id.org/scverse/vega-scverse/
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+default_prefix: vega_scverse
+default_range: string
+
+imports:
+  - linkml:types
+
+created_on: "2025-06-01"
+created_by: orcid:0000-0003-1666-5421
+
+classes:
+  Mark:
+    is_abstract: true
+    description: |-
+      Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting symbols. 
+      Marks are the basic visual building block of a visualization, providing basic shapes whose properties can be set 
+      according to backing data. Mark property definitions may be simple constants or data fields, or scales can be 
+      used to map data values to visual values.
+    attributes:
+      type:
+        description: |-
+          The type of mark.
+        range: MarkTypeEnum
+        required: true
+      from:
+        description: |- 
+          The data stream used as the source for the graphical mark.
+        range: MarkDataSource
+        required: true
+      encode:
+        description: |-
+          A set of visual encoding properties that determine the position and appearance of mark instances. In Vega, there 
+          are three primary property sets: enter, update, exit. The enter properties are evaluated when data is processed 
+          for the first time and a mark instance is newly added to a scene. The update properties are evaluated for all 
+          existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is 
+          removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
+          enter and update property sets.
+      zindex:
+        description: |-
+          An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
+          (1) will cause marks to be drawn on top of those with lower z-index values.
+        range: integer
+        required: true
+
+MarkDataSource:
+  description: |-
+    Object with a data field pointing to the name of the datastream that serves as data source for the mark.
+  attributes:
+    data:
+      description: name of the datastream
+      pattern: "^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+      required: true
+
+Encode:
+  is_abstract: true
+  description: |-
+    A set of visual encoding properties that determine the position and appearance of mark instances. In Vega, there 
+    are three primary property sets: enter, update, exit. The enter properties are evaluated when data is processed 
+    for the first time and a mark instance is newly added to a scene. The update properties are evaluated for all 
+    existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is 
+    removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
+    enter and update property sets.
+  attributes:
+    enter:
+      description: |-
+        Enter properties that are evaluated when data is processed for the first time and a mark instance is newly added
+        to a scene.
+      range: EncodeEnter
+    update:
+      description: |-
+        Update properties that are evaluated for all existing (non-exiting) mark instances
+      range: EncodeUpdate
+
+EncodeEnter:
+  is_a: Encode
+  description:
+
+
+slots:
+  opacity:
+    description: Opacity of the mark; accepts a value or signal.
+    range: ValueOrSignal
+
+enums:
+  MarkTypeEnum:
+    description: |-
+      The valid mark types within the scverse plotting / visualization ecosystem.
+    permissible_values:
+      raster_image: Mark used for a SpatialData image element.
+      raster_label: Mark used for SpatialData label element.
+      symbol: The mark used for points data.
+      path: The mark used for circle and shapes geometries.
+
+

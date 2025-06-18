@@ -51,10 +51,10 @@ linkml_meta = LinkMLMeta(
         "default_range": "string",
         "description": "The configuration entailing all the specification components "
         "for visualization of data in the scverse ecosystem.",
-        "id": "https://w3id.org/scverse/vega-scverse/config",
+        "id": "https://w3id.org/scverse/vega-scverse/specification",
         "imports": ["linkml:types", "scales"],
         "license": "BSD-3",
-        "name": "vega-scverse-config",
+        "name": "vega-scverse-specification",
         "prefixes": {
             "linkml": {"prefix_prefix": "linkml", "prefix_reference": "https://w3id.org/linkml/"},
             "orcid": {"prefix_prefix": "orcid", "prefix_reference": "https://orcid.org/"},
@@ -64,8 +64,8 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": "vega_scverse.yaml",
-        "title": "vega-scverse-config",
+        "source_file": ".\\specification.yaml",
+        "title": "vega-scverse-specification",
     }
 )
 
@@ -110,7 +110,7 @@ class Scales(ConfiguredBaseModel):
                     {"range": "CategoricalColorScale"},
                     {"range": "ContinuousColorScale"},
                 ],
-                "domain_of": ["Scales", "ViewConfiguration"],
+                "domain_of": ["Scales"],
             }
         },
     )
@@ -166,8 +166,8 @@ class AxisScale(Scale):
         }
     )
 
-    domain: Optional[list[float]] = Field(
-        default=None,
+    domain: list[float] = Field(
+        default=...,
         description="""The set of input data values that the scale maps from. In the case of a linear scale,
 this should be a two-element list representing the minimum and maximum numeric values
 to be transformed. For example, [512.0, 0.0] maps the data range from 512 (top) to 0 (bottom),
@@ -181,8 +181,8 @@ which is typical for Y-axis scales in image coordinate systems where the origin 
             }
         },
     )
-    range: Optional[AxisRangeEnum] = Field(
-        default=None,
+    range: AxisRangeEnum = Field(
+        default=...,
         description="""Defines the target visual dimension for the axis scaleÆs output range. Must be either 'width' for an X-axis 
 scale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the 
 full canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically 
@@ -294,8 +294,8 @@ class ContinuousColorScale(ColorScale):
         }
     )
 
-    domain: Optional[ContinuousColorDomain] = Field(
-        default=None,
+    domain: ContinuousColorDomain = Field(
+        default=...,
         description="""The data used as a source for the visual color range""",
         json_schema_extra={
             "linkml_meta": {
@@ -304,8 +304,8 @@ class ContinuousColorScale(ColorScale):
             }
         },
     )
-    range: Optional[ContinuousColorMapRange] = Field(
-        default=None,
+    range: ContinuousColorMapRange = Field(
+        default=...,
         description="""The range to which to map the data domain. In this case one that refers to a colormap range.""",
         json_schema_extra={
             "linkml_meta": {
@@ -358,8 +358,8 @@ class CategoricalColorScale(ColorScale):
         }
     )
 
-    domain: Optional[list[str]] = Field(
-        default=None,
+    domain: list[str] = Field(
+        default=...,
         description="""The data domain as a list of discrete string values.""",
         json_schema_extra={
             "linkml_meta": {
@@ -368,8 +368,8 @@ class CategoricalColorScale(ColorScale):
             }
         },
     )
-    range: Optional[list[str]] = Field(
-        default=None,
+    range: list[str] = Field(
+        default=...,
         description="""List of RGB colors as hexadecimal strings""",
         json_schema_extra={
             "linkml_meta": {
@@ -431,15 +431,15 @@ class ContinuousColorDomain(ConfiguredBaseModel):
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/scales"})
 
-    data: Optional[str] = Field(
-        default=None,
+    data: str = Field(
+        default=...,
         description="""The identifier of the particular data object in the data array to which the color mapping in 
 ContinuousColorScale must be applied. In Vega this is only defined when the type of Scale is
 ordinal, but we deviate from that.""",
         json_schema_extra={"linkml_meta": {"alias": "data", "domain_of": ["ContinuousColorDomain"]}},
     )
-    field: Optional[str] = Field(
-        default=None,
+    field: str = Field(
+        default=...,
         description="""If the data source is a table, then the field is the column within the table that is used as 
 a source for the color mapping. In case of raster data with a single channel, the field equals
 \"value\" and if multichannel raster data it is the name or index of the image channel.""",
@@ -472,19 +472,75 @@ class ContinuousColorMapRange(ConfiguredBaseModel):
         description="""The name of the color scheme to use or an array of color values.""",
         json_schema_extra={"linkml_meta": {"alias": "scheme", "domain_of": ["ContinuousColorMapRange"]}},
     )
-    count: Optional[int] = Field(
-        default=None,
+    count: int = Field(
+        default=...,
         description="""The number of colors to use in the scheme.""",
         json_schema_extra={"linkml_meta": {"alias": "count", "domain_of": ["ContinuousColorMapRange"]}},
     )
 
 
-class ViewConfiguration(ConfiguredBaseModel):
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/config"})
+class Padding(ConfiguredBaseModel):
+    """
+    padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner
+    view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes,
+    titles, and legends donÆt touch or overflow the chartÆs outer boundaries.
+    When combined with \"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}, this padding is included within the chart's
+    specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
+    is defined with this class. This class should at least have one attribute defined.
+    """
 
-    scales: Optional[Scales] = Field(
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {"from_schema": "https://w3id.org/scverse/vega-scverse/specification"}
+    )
+
+    left: Optional[int] = Field(
+        default=None, json_schema_extra={"linkml_meta": {"alias": "left", "domain_of": ["Padding"]}}
+    )
+    top: Optional[int] = Field(
+        default=None, json_schema_extra={"linkml_meta": {"alias": "top", "domain_of": ["Padding"]}}
+    )
+    right: Optional[int] = Field(
+        default=None, json_schema_extra={"linkml_meta": {"alias": "right", "domain_of": ["Padding"]}}
+    )
+    bottom: Optional[int] = Field(
+        default=None, json_schema_extra={"linkml_meta": {"alias": "bottom", "domain_of": ["Padding"]}}
+    )
+
+
+class ViewConfiguration(ConfiguredBaseModel):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {"from_schema": "https://w3id.org/scverse/vega-scverse/specification"}
+    )
+
+    height: int = Field(
+        default=...,
+        description="""The height of the plotting area. The plotting area is defined as the rectangular region within a visualization 
+where graphical marks (such as points, lines, or bars) are rendered, bounded by the axes and padding, 
+excluding titles, legends, and margins.""",
+        json_schema_extra={"linkml_meta": {"alias": "height", "domain_of": ["ViewConfiguration"]}},
+    )
+    width: int = Field(
+        default=...,
+        description="""The width of the plotting area. The plotting area is defined as the rectangular region within a visualization 
+where graphical marks (such as points, lines, or bars) are rendered, bounded by the axes and padding, 
+excluding titles, legends, and margins.""",
+        json_schema_extra={"linkml_meta": {"alias": "width", "domain_of": ["ViewConfiguration"]}},
+    )
+    padding: Optional[Union[Padding, float]] = Field(
         default=None,
-        json_schema_extra={"linkml_meta": {"alias": "scales", "domain_of": ["Scales", "ViewConfiguration"]}},
+        description="""padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner 
+view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes, 
+titles, and legends donÆt touch or overflow the chartÆs outer boundaries.
+When combined with \"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}, this padding is included within the chart's 
+specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
+is defined with this class. This class should at least have one attribute defined.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "padding",
+                "any_of": [{"range": "float"}, {"range": "Padding"}],
+                "domain_of": ["ViewConfiguration"],
+            }
+        },
     )
 
 
@@ -498,5 +554,6 @@ ContinuousColorScale.model_rebuild()
 CategoricalColorScale.model_rebuild()
 ContinuousColorDomain.model_rebuild()
 ContinuousColorMapRange.model_rebuild()
+Padding.model_rebuild()
 ViewConfiguration.model_rebuild()
 

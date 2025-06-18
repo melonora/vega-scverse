@@ -1,8 +1,8 @@
 ---
-id: https://w3id.org/scverse/vega-scverse/config
-name: vega-scverse-config
+id: https://w3id.org/scverse/vega-scverse/specification
+name: vega-scverse-specification
 version: 0.1.0
-title: vega-scverse-config
+title: vega-scverse-specification
 description: |-
   The configuration entailing all the specification components for visualization of data in the scverse ecosystem.
 license: BSD-3
@@ -19,12 +19,68 @@ default_range: string
 imports:
   - linkml:types
   - scales
+  - marks
 
 created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
 classes:
+  Padding:
+    description: |-
+      padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner 
+      view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes, 
+      titles, and legends don’t touch or overflow the chart’s outer boundaries.
+      When combined with "autosize": {"type": "fit", "contains": "padding"}, this padding is included within the chart's 
+      specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
+      is defined with this class. This class should at least have one attribute defined.
+    # TODO linkml does not currently support json like minProperties to state that at least one attribute would be
+    # required.
+    attributes:
+      left:
+        range: integer
+        required: false
+      top:
+        range: integer
+        required: false
+      right:
+        range: integer
+        required: false
+      bottom:
+        range: integer
+        required: false
+
   ViewConfiguration:
     attributes:
-      scales:
-        range: Scales
+      height:
+        description: |-
+          The height of the plotting area. The plotting area is defined as the rectangular region within a visualization 
+          where graphical marks (such as points, lines, or bars) are rendered, bounded by the axes and padding, 
+          excluding titles, legends, and margins.
+        range: integer
+        required: true
+      width:
+        description: |-
+          The width of the plotting area. The plotting area is defined as the rectangular region within a visualization 
+          where graphical marks (such as points, lines, or bars) are rendered, bounded by the axes and padding, 
+          excluding titles, legends, and margins.
+        range: integer
+        required: true
+      padding:
+        description: |-
+          padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner 
+          view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes, 
+          titles, and legends don’t touch or overflow the chart’s outer boundaries.
+          When combined with "autosize": {"type": "fit", "contains": "padding"}, this padding is included within the chart's 
+          specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
+          is defined with this class. This class should at least have one attribute defined.
+        any_of:
+          - range: float
+          - range: Padding
+      title:
+        description: |-
+          The title directive adds a descriptive title to a chart.
+        range: Title
+        required: false
+
+        
+
