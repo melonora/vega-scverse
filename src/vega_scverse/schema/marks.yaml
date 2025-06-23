@@ -18,13 +18,29 @@ default_range: string
 
 imports:
   - linkml:types
+  - misc
 
 created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
+
+slots:
+  opacity:
+    description: Opacity of the image mark; accepts a value or signal.
+    range: OpacityValueOrSignal
+  fillOpacity:
+    description: Opacity of the fill color of a labels, symbol or path mark.
+    range: OpacityValueOrSignal
+  strokeOpacity:
+    description: Opacity off the outline of a labels, symbol or path mark.
+    range: OpacityValueOrSignal
+  strokeWidth:
+    description: The width of the outline of a labels, symbol or path mark
+    range: ValueOrSignal
+
 classes:
   Mark:
-    is_abstract: true
+    abstract: true
     description: |-
       Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting symbols. 
       Marks are the basic visual building block of a visualization, providing basic shapes whose properties can be set 
@@ -36,19 +52,21 @@ classes:
           The type of mark.
         range: MarkTypeEnum
         required: true
-      from:
+      from_:
         description: |- 
           The data stream used as the source for the graphical mark.
         range: MarkDataSource
         required: true
       encode:
         description: |-
-          A set of visual encoding properties that determine the position and appearance of mark instances. In Vega, there 
-          are three primary property sets: enter, update, exit. The enter properties are evaluated when data is processed 
-          for the first time and a mark instance is newly added to a scene. The update properties are evaluated for all 
-          existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is 
-          removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
-          enter and update property sets.
+          A set of visual encoding properties that determine the position and appearance of mark instances. In Vega, 
+          there are three primary property sets: enter, update, exit. The enter properties are evaluated when data is 
+          processed for the first time and a mark instance is newly added to a scene. The update properties are 
+          evaluated for all existing (non-exiting) mark instances. The exit properties are evaluated when the data 
+          backing a mark is removed, and so the mark is leaving the visual scene. However, in this specification we 
+          currently only support enter and update property sets.
+        range: Encode
+        required: true
       zindex:
         description: |-
           An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
@@ -56,44 +74,89 @@ classes:
         range: integer
         required: true
 
-MarkDataSource:
-  description: |-
-    Object with a data field pointing to the name of the datastream that serves as data source for the mark.
-  attributes:
-    data:
-      description: name of the datastream
-      pattern: "^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-      required: true
+  MarkDataSource:
+    description: |-
+      Object with a data field pointing to the name of the datastream that serves as data source for the mark.
+    attributes:
+      data:
+        description: name of the datastream
+        pattern: "^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        required: true
 
-Encode:
-  is_abstract: true
-  description: |-
-    A set of visual encoding properties that determine the position and appearance of mark instances. In Vega, there 
-    are three primary property sets: enter, update, exit. The enter properties are evaluated when data is processed 
-    for the first time and a mark instance is newly added to a scene. The update properties are evaluated for all 
-    existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is 
-    removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
-    enter and update property sets.
-  attributes:
-    enter:
-      description: |-
-        Enter properties that are evaluated when data is processed for the first time and a mark instance is newly added
-        to a scene.
-      range: EncodeEnter
-    update:
-      description: |-
-        Update properties that are evaluated for all existing (non-exiting) mark instances
-      range: EncodeUpdate
-
-EncodeEnter:
-  is_a: Encode
-  description:
+  RasterImageMark:
+    is_a: Mark
+    description: |-
+      Graphical mark encoding an image.
+    slot_usage:
+      type:
+        description: |-
+          The type of the mark. In this case, it is always 'raster_image'
+        equals_string: raster_image
+        ifabsent: string(raster_image)
 
 
-slots:
-  opacity:
-    description: Opacity of the mark; accepts a value or signal.
-    range: ValueOrSignal
+  Encode:
+    abstract: true
+    description: |-
+      A set of visual encoding properties that determine the position and appearance of mark instances. In Vega, there 
+      are three primary property sets: enter, update, exit. The enter properties are evaluated when data is processed 
+      for the first time and a mark instance is newly added to a scene. The update properties are evaluated for all 
+      existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is 
+      removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
+      enter and update property sets.
+    attributes:
+      enter:
+        description: |-
+          Enter properties that are evaluated when data is processed for the first time and a mark instance is newly added
+          to a scene.
+        range: EncodeEnter
+      update:
+        description: |-
+          Update properties that are evaluated for all existing (non-exiting) mark instances
+        range: EncodeUpdate
+
+  EncodeEnter:
+    description: |-
+      Enter properties that are evaluated when data is processed for the first time and a mark instance is newly added
+      to a scene.
+    attributes:
+      opacity:
+        slot_uri: opacity
+      fillOpacity:
+        slot_uri: fillOpacity
+      strokeOpacity:
+        slot_uri: strokeOpacity
+      strokeWidth:
+        slot_uri: strokeWidth
+
+  EncodeUpdate:
+    description: |-
+      Update properties that are evaluated for all existing (non-exiting) mark instances.
+    attributes:
+      fill:
+        description: Update of fill color
+        range: FillUpdate
+
+  FillUpdate:
+    description: |-
+      Update color based on test condition. This is following an 'if-then-else' style chain of production rules. If
+      no else is specified, then the property value evaluates to 'null' or similar value.
+    attributes:
+      test:
+        description: |-
+          The condition to test on, e.g. 'isValid(datum.value). MUST be a valid expression in Vega. See also:
+          https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'true' or 'false'.
+        range: string
+        required: true
+      scale:
+        description: |- 
+          The scale to use for applying the fill color. This scale MUST exist in the view configuration Scales array.
+        pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        required: true
+      field:
+        description: |-
+          The column that serves as data input, in the test condition this corresponds to 'datum'.
+        range: string
 
 enums:
   MarkTypeEnum:

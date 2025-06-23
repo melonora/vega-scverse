@@ -23,7 +23,7 @@ created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
 classes:
-  ValueOrSignal:
+  OpacityValueOrSignal:
     description: Represents either a literal value or a signal-based dynamic value.
     attributes:
       value:
@@ -36,3 +36,16 @@ classes:
       value:
         minimum_value: 0.0
         maximum_value: 1.0
+
+  ValueOrSignal:
+    description: Represents either a literal value or a signal-based dynamic value.
+    attributes:
+      value:
+        range: float
+        required: false
+      signal:
+        range: string
+        required: false
+    slot_usage:
+      value:
+        minimum_value: 0.0
