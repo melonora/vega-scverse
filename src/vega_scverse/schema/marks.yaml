@@ -93,6 +93,10 @@ classes:
           The type of the mark. In this case, it is always 'raster_image'
         equals_string: raster_image
         ifabsent: string(raster_image)
+      encode:
+        description: |-
+          A set of visual encoding properties that determine the position and appearance of the raster_image mark.
+        range: ImageEncode
 
 
   Encode:
@@ -115,6 +119,18 @@ classes:
           Update properties that are evaluated for all existing (non-exiting) mark instances
         range: EncodeUpdate
 
+  ImageEncode:
+    is_a: Encode
+    description: |-
+      A set of visual encoding properties that determine the position and appearance of the raster_image mark.
+    slot_usage:
+      enter:
+        description: |-
+          Enter properties that are evaluated when image data is processed for the first time and the raster_image mark is 
+          newly added to a scene.
+        range: ImageEncodeEnter
+        required: true
+
   EncodeEnter:
     description: |-
       Enter properties that are evaluated when data is processed for the first time and a mark instance is newly added
@@ -128,6 +144,30 @@ classes:
         slot_uri: strokeOpacity
       strokeWidth:
         slot_uri: strokeWidth
+      fill:
+        description: |-
+          A list of fill objects used in visual encodings to map color scales to values / fields to which the 
+          colors are applied. Can be multivalued in case of for example having multiple image channels with 1 color
+          applied to each image channel.
+        range: ColorItem
+
+  ImageEncodeEnter:
+    is_a: EncodeEnter
+    description: |-
+      Enter properties that are evaluated when image data is processed for the first time and the raster_image mark is 
+      newly added to a scene.
+    slot_usage:
+      opacity:
+        required: true
+      fill:
+        multivalued: true
+        required: true
+
+  LabelEncodeEnter:
+    is_a: EncodeEnter
+    description: |-
+      Enter properties that are evaluated when label data is processed for the first time and the raster_image mark is 
+      newly added to a scene.
 
   EncodeUpdate:
     description: |-
@@ -136,6 +176,23 @@ classes:
       fill:
         description: Update of fill color
         range: FillUpdate
+
+  ColorItem:
+    description: |-
+      A single color item definition specifying the scale on which the color is based and the value / field
+      to which to apply the color.
+    attributes:
+      scale:
+        description: |-
+          The color scale.
+        pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        required: true
+      value:
+        description: |-
+          The value or field to which to apply the color.
+        range: string
+        required: true
+
 
   FillUpdate:
     description: |-
@@ -167,5 +224,3 @@ enums:
       raster_label: Mark used for SpatialData label element.
       symbol: The mark used for points data.
       path: The mark used for circle and shapes geometries.
-
-
