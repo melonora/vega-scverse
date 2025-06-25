@@ -1,0 +1,140 @@
+---
+id: https://w3id.org/scverse/vega-scverse/encode
+name: vega-scverse-encode
+version: 0.1.0
+title: vega-scverse-encode
+description: |-
+  Vega like specification for the encodings used to specify the visuals representation of marks.
+license: BSD-3
+see_also:
+  - https://scverse.github.io/vega-scverse
+
+prefixes:
+  vega_scverse: https://w3id.org/scverse/vega-scverse/
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+default_prefix: vega_scverse
+default_range: string
+
+imports:
+  - linkml:types
+  - misc
+  - slots
+
+created_on: "2025-06-01"
+created_by: orcid:0000-0003-1666-5421
+
+classes:
+  ImageEncode:
+    description: |-
+      A set of visual encoding properties that determine the position and appearance of a 'raster_image' mark. 
+      In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data 
+      is processed for the first time and a mark instance is newly added to a scene and are the only properties 
+      supported for a 'raster_image' mark.
+    attributes:
+      enter:
+        description: |-
+          Enter properties that are evaluated when image data is processed for the first time and the raster_image mark 
+          is newly added to a scene.
+        range: ImageEncodeEnter
+        required: true
+
+  LabelEncode:
+    description: |-
+      A set of visual encoding properties that determine the position and appearance of a 'raster_label' mark. 
+      In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data 
+      is processed for the first time and a mark instance is newly added to a scene. The update properties are evaluated 
+      for all existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is 
+      removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
+      enter and update property sets for a 'raster_label' mark.
+    attributes:
+      enter:
+        description: |-
+          Enter properties that are evaluated when label data is processed for the first time and the raster_label mark 
+          is newly added to a scene.
+        range: LabelEncodeEnter
+        required: true
+      update:
+        description: |-
+          Enter properties that are evaluated when label data is processed for the first time and the raster_label mark 
+          is newly added to a scene. Typically included when no random coloring is being used for the labels.
+        range: LabelEncodeUpdate
+        required: false
+
+  ImageEncodeEnter:
+    description: |-
+      Enter properties that are evaluated when image data is processed for the first time and the raster_image mark is 
+      newly added to a scene.
+    attributes:
+      opacity:
+        slot_uri: opacity
+        required: true
+      fill:
+        description: |-
+          The colormap by which to show the intensity value of the image or channel.
+        range: ColorItem
+        multivalued: true
+        required: true
+
+  LabelEncodeEnter:
+    description: |-
+      Enter properties that are evaluated when label data is processed for the first time and the raster_image mark is 
+      newly added to a scene.
+    attributes:
+      stroke:
+        description: |-
+          The color of the outline of each individual label.
+        multivalued: true
+        exact_cardinality: 1
+        range: ColorItem
+        required: true
+      fill:
+        description: |-
+          The color fill of each individual label.
+        multivalued: true
+        exact_cardinality: 1
+        range: ColorItem
+        required: true
+      fillOpacity:
+        slot_uri: fillOpacity
+        required: true
+      strokeOpacity:
+        slot_uri: strokeOpacity
+        required: true
+      strokeWidth:
+        slot_uri: strokeWidth
+        required: true
+
+  LabelEncodeUpdate:
+    description: |-
+      Update properties that are evaluated for all existing (non-exiting) mark instances.
+    attributes:
+      fill:
+        description: Update of fill color based on a test condition and optional a backup static fill value
+        # TODO: exactly_one_of not properly implemented on linkml side.
+        any_of:
+          - range: ConditionalFillUpdate
+          - range: RGBHex
+        multivalued: true
+
+  ConditionalFillUpdate:
+    description: |-
+      Update color based on test condition. This is following an 'if-then-else' style chain of production rules. If
+      no else is specified, then the property value evaluates to 'null' or similar value.
+    attributes:
+      test:
+        description: |-
+          The condition to test on, e.g. 'isValid(datum.value). MUST be a valid expression in Vega. See also:
+          https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'true' or 'false'.
+        range: string
+        required: true
+      scale:
+        description: |-
+          The scale to use for applying the fill color. This scale MUST exist in the view configuration Scales array.
+        pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        required: true
+      field:
+        description: |-
+          The column that serves as data input, in the test condition this corresponds to 'datum'.
+        range: string
+        required: true

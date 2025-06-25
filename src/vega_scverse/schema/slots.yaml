@@ -1,0 +1,59 @@
+---
+id: https://w3id.org/scverse/vega-scverse/slots
+name: vega-scverse-marks
+version: 0.1.0
+title: vega-scverse-marks
+description: |-
+  Vega like specification for the marks used in view configurations for the scverse visualization ecosystem.
+license: BSD-3
+see_also:
+  - https://scverse.github.io/vega-scverse
+
+prefixes:
+  vega_scverse: https://w3id.org/scverse/vega-scverse/
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+default_prefix: vega_scverse
+default_range: string
+
+imports:
+  - linkml:types
+  - misc
+
+created_on: "2025-06-01"
+created_by: orcid:0000-0003-1666-5421
+
+slots:
+  opacity:
+    description: Opacity of the image mark; accepts a value or signal.
+    range: OpacityValue
+  fillOpacity:
+    description: Opacity of the fill color of a labels, symbol or path mark.
+    range: OpacityValue
+  strokeOpacity:
+    description: Opacity off the outline of a labels, symbol or path mark.
+    range: OpacityValue
+  strokeWidth:
+    description: The width of the outline of a labels, symbol or path mark
+    range: PositiveValue
+  rgbHexValue:
+    description: |-
+      Object containing a value which is a hexadecimal string representing a RGB color.
+    range: RGBHex
+
+classes:
+  ColorItem:
+    description: |-
+      A single color item definition specifying the scale on which the color is based and the value / field
+      to which to apply the color.
+    attributes:
+      scale:
+        description: |-
+          The color scale.
+        pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        required: true
+      value:
+        description: |-
+          The value or field to which to apply the color.
+        range: string
+        required: true

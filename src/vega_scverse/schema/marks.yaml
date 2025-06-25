@@ -18,25 +18,10 @@ default_range: string
 
 imports:
   - linkml:types
-  - misc
+  - encode
 
 created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
-
-
-slots:
-  opacity:
-    description: Opacity of the image mark; accepts a value or signal.
-    range: OpacityValueOrSignal
-  fillOpacity:
-    description: Opacity of the fill color of a labels, symbol or path mark.
-    range: OpacityValueOrSignal
-  strokeOpacity:
-    description: Opacity off the outline of a labels, symbol or path mark.
-    range: OpacityValueOrSignal
-  strokeWidth:
-    description: The width of the outline of a labels, symbol or path mark
-    range: ValueOrSignal
 
 classes:
   Mark:
@@ -65,7 +50,6 @@ classes:
           evaluated for all existing (non-exiting) mark instances. The exit properties are evaluated when the data 
           backing a mark is removed, and so the mark is leaving the visual scene. However, in this specification we 
           currently only support enter and update property sets.
-        range: Encode
         required: true
       zindex:
         description: |-
@@ -98,122 +82,20 @@ classes:
           A set of visual encoding properties that determine the position and appearance of the raster_image mark.
         range: ImageEncode
 
-
-  Encode:
-    abstract: true
+  RasterLabelMark:
+    is_a: Mark
     description: |-
-      A set of visual encoding properties that determine the position and appearance of mark instances. In Vega, there 
-      are three primary property sets: enter, update, exit. The enter properties are evaluated when data is processed 
-      for the first time and a mark instance is newly added to a scene. The update properties are evaluated for all 
-      existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is 
-      removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
-      enter and update property sets.
-    attributes:
-      enter:
-        description: |-
-          Enter properties that are evaluated when data is processed for the first time and a mark instance is newly added
-          to a scene.
-        range: EncodeEnter
-      update:
-        description: |-
-          Update properties that are evaluated for all existing (non-exiting) mark instances
-        range: EncodeUpdate
-
-  ImageEncode:
-    is_a: Encode
-    description: |-
-      A set of visual encoding properties that determine the position and appearance of the raster_image mark.
+      Graphical mark encoding a label image.
     slot_usage:
-      enter:
+      type:
         description: |-
-          Enter properties that are evaluated when image data is processed for the first time and the raster_image mark is 
-          newly added to a scene.
-        range: ImageEncodeEnter
-        required: true
-
-  EncodeEnter:
-    description: |-
-      Enter properties that are evaluated when data is processed for the first time and a mark instance is newly added
-      to a scene.
-    attributes:
-      opacity:
-        slot_uri: opacity
-      fillOpacity:
-        slot_uri: fillOpacity
-      strokeOpacity:
-        slot_uri: strokeOpacity
-      strokeWidth:
-        slot_uri: strokeWidth
-      fill:
+          The type of the mark. In this case, it is always 'raster_label'
+        equals_string: raster_label
+        ifabsent: string(raster_label)
+      encode:
         description: |-
-          A list of fill objects used in visual encodings to map color scales to values / fields to which the 
-          colors are applied. Can be multivalued in case of for example having multiple image channels with 1 color
-          applied to each image channel.
-        range: ColorItem
-
-  ImageEncodeEnter:
-    is_a: EncodeEnter
-    description: |-
-      Enter properties that are evaluated when image data is processed for the first time and the raster_image mark is 
-      newly added to a scene.
-    slot_usage:
-      opacity:
-        required: true
-      fill:
-        multivalued: true
-        required: true
-
-  LabelEncodeEnter:
-    is_a: EncodeEnter
-    description: |-
-      Enter properties that are evaluated when label data is processed for the first time and the raster_image mark is 
-      newly added to a scene.
-
-  EncodeUpdate:
-    description: |-
-      Update properties that are evaluated for all existing (non-exiting) mark instances.
-    attributes:
-      fill:
-        description: Update of fill color
-        range: FillUpdate
-
-  ColorItem:
-    description: |-
-      A single color item definition specifying the scale on which the color is based and the value / field
-      to which to apply the color.
-    attributes:
-      scale:
-        description: |-
-          The color scale.
-        pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-        required: true
-      value:
-        description: |-
-          The value or field to which to apply the color.
-        range: string
-        required: true
-
-
-  FillUpdate:
-    description: |-
-      Update color based on test condition. This is following an 'if-then-else' style chain of production rules. If
-      no else is specified, then the property value evaluates to 'null' or similar value.
-    attributes:
-      test:
-        description: |-
-          The condition to test on, e.g. 'isValid(datum.value). MUST be a valid expression in Vega. See also:
-          https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'true' or 'false'.
-        range: string
-        required: true
-      scale:
-        description: |- 
-          The scale to use for applying the fill color. This scale MUST exist in the view configuration Scales array.
-        pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-        required: true
-      field:
-        description: |-
-          The column that serves as data input, in the test condition this corresponds to 'datum'.
-        range: string
+          A set of visual encoding properties that determine the position and appearance of the raster_image mark.
+        range: LabelEncode
 
 enums:
   MarkTypeEnum:
