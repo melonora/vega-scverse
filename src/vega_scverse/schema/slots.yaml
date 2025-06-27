@@ -25,7 +25,7 @@ created_by: orcid:0000-0003-1666-5421
 
 slots:
   opacity:
-    description: Opacity of the image mark; accepts a value or signal.
+    description: Opacity of the image mark.
     range: OpacityValue
   fillOpacity:
     description: Opacity of the fill color of a labels, symbol or path mark.
@@ -35,6 +35,9 @@ slots:
     range: OpacityValue
   strokeWidth:
     description: The width of the outline of a labels, symbol or path mark
+    range: PositiveValue
+  size:
+    description: The size of points in a PointsMark.
     range: PositiveValue
   rgbHexValue:
     description: |-
@@ -52,8 +55,38 @@ classes:
           The color scale.
         pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
         required: true
-      value:
+      field:
         description: |-
           The value or field to which to apply the color.
         range: string
         required: true
+
+  CircleShape:
+    description: |-
+      Circle shape definition used in symbol mark.
+    attributes:
+      value:
+        equals_string: circle
+        ifabsent: string(circle)
+
+  AxisItem:
+    description: |-
+      A axis item which for a mark can define the scale and field used for the axis definition in the mark.
+    attributes:
+      scale:
+        description: |-
+          The scale on which the axis is based.
+        pattern: "^[XY]_scale(_\\d+)?$"
+        required: true
+      field:
+        description: |-
+          The mark's field value transformed by the scale. Either x or y.
+        range: AxisEnum
+        required: true
+
+enums:
+  AxisEnum:
+    permissible_values:
+      x: x-axis of the visualization. Typically referring to the horizontal axis.
+      y: y-axis of the visualization. Typically referring to the vertical axis.
+

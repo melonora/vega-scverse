@@ -25,6 +25,7 @@ created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
 classes:
+############################### Encoders
   ImageEncode:
     description: |-
       A set of visual encoding properties that determine the position and appearance of a 'raster_image' mark. 
@@ -56,11 +57,34 @@ classes:
         required: true
       update:
         description: |-
-          Enter properties that are evaluated when label data is processed for the first time and the raster_label mark 
-          is newly added to a scene. Typically included when no random coloring is being used for the labels.
-        range: LabelEncodeUpdate
+          Update properties that are evaluated for all existing (non-exiting) mark instances. Typically included when 
+          no random coloring is being used for the labels.
+        range: MarkEncodeUpdate
         required: false
 
+  SymbolEncode:
+    description: |-
+      A set of visual encoding properties that determine the position and appearance of a 'symbol' mark. 
+      In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data 
+      is processed for the first time and a mark instance is newly added to a scene. The update properties are evaluated 
+      for all existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is 
+      removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
+      enter and update property sets for a 'symbol' mark.
+    attributes:
+      enter:
+        description: |-
+          Enter properties that are evaluated when points data is processed for the first time and the points mark 
+          is newly added to a scene.
+        range: LabelEncodeEnter
+        required: true
+      update:
+        description: |-
+          Update properties that are evaluated for all existing (non-exiting) mark instances. Usually defined if the 
+          user specified a color to be used for the PointsMark.
+        range: MarkEncodeUpdate
+        required: false
+
+############################### EncodeEnter
   ImageEncodeEnter:
     description: |-
       Enter properties that are evaluated when image data is processed for the first time and the raster_image mark is 
@@ -93,7 +117,9 @@ classes:
           The color fill of each individual label.
         multivalued: true
         exact_cardinality: 1
-        range: ColorItem
+        any_of:
+          - range: ColorItem
+          - range: RandomRGBSignal
         required: true
       fillOpacity:
         slot_uri: fillOpacity
@@ -105,7 +131,53 @@ classes:
         slot_uri: strokeWidth
         required: true
 
-  LabelEncodeUpdate:
+  PointsEncodeEnter:
+    description: |-
+      Enter properties that are evaluated when points data is processed for the first time and the raster_image mark is 
+      newly added to a scene.
+    attributes:
+      x:
+        description: |-
+          The x coordinates
+        range: AxisItem
+        required: true
+      y:
+        description: |-
+          The y coordinates
+        range: AxisItem
+        required: true
+      stroke:
+        description: |-
+          The color of the outline of each individual label.
+        any_of:
+          - range: ColorItem
+          - range: RGBHex
+        required: true
+      fill:
+        description: |-
+          The color fill of each individual label.
+        any_of:
+          - range: ColorItem
+          - range: RGBHex
+        required: true
+      fillOpacity:
+        slot_uri: fillOpacity
+        required: true
+      strokeOpacity:
+        slot_uri: strokeOpacity
+        required: true
+      strokeWidth:
+        slot_uri: strokeWidth
+        required: true
+      size:
+        slot_uri: size
+        required: true
+      shape:
+        range: CircleShape
+        required: true
+
+############################### EncodeUpdate
+  MarkEncodeUpdate:
     description: |-
       Update properties that are evaluated for all existing (non-exiting) mark instances.
     attributes:

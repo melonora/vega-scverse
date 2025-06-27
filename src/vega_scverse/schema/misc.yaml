@@ -58,3 +58,11 @@ classes:
       value:
         pattern: "^#([A-Fa-f0-9]{6})$"
 
+  RandomRGBSignal:
+    description: |-
+      RGB value represented by a hexadecimal string value.
+    attributes:
+      signal:
+        equals_string: "rgb(random()*255, random()*255, random()*255)"
+        ifabsent: string(rgb(random()*255, random()*255, random()*255))
+

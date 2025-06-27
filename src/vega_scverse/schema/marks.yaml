@@ -37,6 +37,8 @@ classes:
           The type of mark.
         range: MarkTypeEnum
         required: true
+      # The reason for adding the underscore here is that from is reserved in python for imports, something that
+      # can't be respected if the underscore is not being added.
       from_:
         description: |- 
           The data stream used as the source for the graphical mark.
@@ -96,6 +98,21 @@ classes:
         description: |-
           A set of visual encoding properties that determine the position and appearance of the raster_image mark.
         range: LabelEncode
+
+  PointsMark:
+    is_a: Mark
+    description: |-
+      Graphical mark for encoding points data, using a vega like symbol mark.
+    slot_usage:
+      type:
+        description: |-
+          The type of the mark. In this case, it is always 'symbol'.
+        equals_string: symbol
+        ifabsent: string(symbol)
+      encode:
+        description: |-
+          A set of visual encoding properties that determine the position and appearance of the symbol mark.
+        range: SymbolEncode
 
 enums:
   MarkTypeEnum:
