@@ -114,6 +114,21 @@ classes:
           A set of visual encoding properties that determine the position and appearance of the symbol mark.
         range: SymbolEncode
 
+  ShapesMark:
+    is_a: Mark
+    description: |-
+      Graphical mark for encoding shapes data, using a vega like path mark.
+    slot_usage:
+      type:
+        description: |-
+          The type of the mark. In this case, it is always 'symbol'.
+        equals_string: path
+        ifabsent: string(path)
+      encode:
+        description: |-
+          A set of visual encoding properties that determine the position and appearance of the symbol mark.
+        range: PathEncode
+
 enums:
   MarkTypeEnum:
     description: |-

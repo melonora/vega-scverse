@@ -70,6 +70,17 @@ linkml_meta = LinkMLMeta(
 )
 
 
+class AxisEnum(str, Enum):
+    x = "x"
+    """
+    x-axis of the visualization. Typically referring to the horizontal axis.
+    """
+    y = "y"
+    """
+    y-axis of the visualization. Typically referring to the vertical axis.
+    """
+
+
 class MarkTypeEnum(str, Enum):
     """
     The valid mark types within the scverse plotting / visualization ecosystem.
@@ -104,7 +115,7 @@ class Value(ConfiguredBaseModel):
 
     value: Optional[float] = Field(
         default=None,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "ColorItem"]}},
+        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
     )
 
 
@@ -127,7 +138,7 @@ class OpacityValue(Value):
         default=None,
         ge=0,
         le=1,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "ColorItem"]}},
+        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
     )
 
 
@@ -146,7 +157,7 @@ class PositiveValue(Value):
     value: Optional[float] = Field(
         default=None,
         ge=0,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "ColorItem"]}},
+        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
     )
 
 
@@ -159,7 +170,7 @@ class RGBHex(ConfiguredBaseModel):
 
     value: Optional[str] = Field(
         default=None,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "ColorItem"]}},
+        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
     )
 
     @field_validator("value")
@@ -176,6 +187,26 @@ class RGBHex(ConfiguredBaseModel):
         return v
 
 
+class RandomRGBSignal(ConfiguredBaseModel):
+    """
+    RGB value represented by a hexadecimal string value.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    signal: Optional[Literal["rgb(random()*255, random()*255, random()*255)"]] = Field(
+        default="rgb",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "signal",
+                "domain_of": ["RandomRGBSignal"],
+                "equals_string": "rgb(random()*255, random()*255, random()*255)",
+                "ifabsent": "string(rgb(random()*255, random()*255, random()*255))",
+            }
+        },
+    )
+
+
 class ColorItem(ConfiguredBaseModel):
     """
     A single color item definition specifying the scale on which the color is based and the value / field
@@ -187,17 +218,77 @@ class ColorItem(ConfiguredBaseModel):
     scale: str = Field(
         default=...,
         description="""The color scale.""",
-        json_schema_extra={"linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "ConditionalFillUpdate"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+        },
     )
-    value: str = Field(
+    field: str = Field(
         default=...,
         description="""The value or field to which to apply the color.""",
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "ColorItem"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "field", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+        },
     )
 
     @field_validator("scale")
     def pattern_scale(cls, v):
         pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid scale format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid scale format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class CircleShape(ConfiguredBaseModel):
+    """
+    Circle shape definition used in symbol mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/slots"})
+
+    value: Optional[Literal["circle"]] = Field(
+        default="circle",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": ["Value", "RGBHex", "CircleShape"],
+                "equals_string": "circle",
+                "ifabsent": "string(circle)",
+            }
+        },
+    )
+
+
+class AxisItem(ConfiguredBaseModel):
+    """
+    A axis item which for a mark can define the scale and field used for the axis definition in the mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/slots"})
+
+    scale: str = Field(
+        default=...,
+        description="""The scale on which the axis is based.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+        },
+    )
+    field: AxisEnum = Field(
+        default=...,
+        description="""The mark's field value transformed by the scale. Either x or y.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "field", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+        },
+    )
+
+    @field_validator("scale")
+    def pattern_scale(cls, v):
+        pattern = re.compile(r"^[XY]_scale(_\d+)?$")
         if isinstance(v, list):
             for element in v:
                 if isinstance(element, str) and not pattern.match(element):
@@ -223,7 +314,9 @@ class ImageEncode(ConfiguredBaseModel):
         default=...,
         description="""Enter properties that are evaluated when image data is processed for the first time and the raster_image mark 
 is newly added to a scene.""",
-        json_schema_extra={"linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+        },
     )
 
 
@@ -243,13 +336,77 @@ class LabelEncode(ConfiguredBaseModel):
         default=...,
         description="""Enter properties that are evaluated when label data is processed for the first time and the raster_label mark 
 is newly added to a scene.""",
-        json_schema_extra={"linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+        },
     )
-    update: Optional[LabelEncodeUpdate] = Field(
+    update: Optional[MarkEncodeUpdate] = Field(
         default=None,
-        description="""Enter properties that are evaluated when label data is processed for the first time and the raster_label mark 
-is newly added to a scene. Typically included when no random coloring is being used for the labels.""",
-        json_schema_extra={"linkml_meta": {"alias": "update", "domain_of": ["LabelEncode"]}},
+        description="""Update properties that are evaluated for all existing (non-exiting) mark instances. Typically included when 
+no random coloring is being used for the labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "update", "domain_of": ["LabelEncode", "SymbolEncode", "PathEncode"]}
+        },
+    )
+
+
+class SymbolEncode(ConfiguredBaseModel):
+    """
+    A set of visual encoding properties that determine the position and appearance of a 'symbol' mark.
+    In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data
+    is processed for the first time and a mark instance is newly added to a scene. The update properties are evaluated
+    for all existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is
+    removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
+    enter and update property sets for a 'symbol' mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    enter: PointsEncodeEnter = Field(
+        default=...,
+        description="""Enter properties that are evaluated when points data is processed for the first time and the points mark 
+is newly added to a scene.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+        },
+    )
+    update: Optional[MarkEncodeUpdate] = Field(
+        default=None,
+        description="""Update properties that are evaluated for all existing (non-exiting) mark instances. Usually defined if the 
+user specified a color to be used for the PointsMark.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "update", "domain_of": ["LabelEncode", "SymbolEncode", "PathEncode"]}
+        },
+    )
+
+
+class PathEncode(ConfiguredBaseModel):
+    """
+    A set of visual encoding properties that determine the position and appearance of a 'path' mark.
+    In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data
+    is processed for the first time and a mark instance is newly added to a scene. The update properties are evaluated
+    for all existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is
+    removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
+    enter and update property sets for a 'path' mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    enter: PathEncodeEnter = Field(
+        default=...,
+        description="""Enter properties that are evaluated when points data is processed for the first time and the points mark 
+is newly added to a scene.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+        },
+    )
+    update: Optional[MarkEncodeUpdate] = Field(
+        default=None,
+        description="""Update properties that are evaluated for all existing (non-exiting) mark instances. Usually defined if the 
+user specified a color to be used for the PointsMark.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "update", "domain_of": ["LabelEncode", "SymbolEncode", "PathEncode"]}
+        },
     )
 
 
@@ -271,7 +428,16 @@ class ImageEncodeEnter(ConfiguredBaseModel):
         default=...,
         description="""The colormap by which to show the intensity value of the image or channel.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "fill", "domain_of": ["ImageEncodeEnter", "LabelEncodeEnter", "LabelEncodeUpdate"]}
+            "linkml_meta": {
+                "alias": "fill",
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "MarkEncodeUpdate",
+                ],
+            }
         },
     )
 
@@ -289,38 +455,192 @@ class LabelEncodeEnter(ConfiguredBaseModel):
         description="""The color of the outline of each individual label.""",
         min_length=1,
         max_length=1,
-        json_schema_extra={"linkml_meta": {"alias": "stroke", "domain_of": ["LabelEncodeEnter"]}},
+        json_schema_extra={"linkml_meta": {"alias": "stroke", "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"]}},
     )
-    fill: list[ColorItem] = Field(
+    fill: list[Union[ColorItem, RandomRGBSignal]] = Field(
         default=...,
         description="""The color fill of each individual label.""",
         min_length=1,
         max_length=1,
         json_schema_extra={
-            "linkml_meta": {"alias": "fill", "domain_of": ["ImageEncodeEnter", "LabelEncodeEnter", "LabelEncodeUpdate"]}
+            "linkml_meta": {
+                "alias": "fill",
+                "any_of": [{"range": "ColorItem"}, {"range": "RandomRGBSignal"}],
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "MarkEncodeUpdate",
+                ],
+            }
         },
     )
     fillOpacity: str = Field(
         default=...,
         json_schema_extra={
-            "linkml_meta": {"alias": "fillOpacity", "domain_of": ["LabelEncodeEnter"], "slot_uri": "fillOpacity"}
+            "linkml_meta": {
+                "alias": "fillOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+                "slot_uri": "fillOpacity",
+            }
         },
     )
     strokeOpacity: str = Field(
         default=...,
         json_schema_extra={
-            "linkml_meta": {"alias": "strokeOpacity", "domain_of": ["LabelEncodeEnter"], "slot_uri": "strokeOpacity"}
+            "linkml_meta": {
+                "alias": "strokeOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
+                "slot_uri": "strokeOpacity",
+            }
         },
     )
     strokeWidth: str = Field(
         default=...,
         json_schema_extra={
-            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["LabelEncodeEnter"], "slot_uri": "strokeWidth"}
+            "linkml_meta": {
+                "alias": "strokeWidth",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
+                "slot_uri": "strokeWidth",
+            }
         },
     )
 
 
-class LabelEncodeUpdate(ConfiguredBaseModel):
+class PointsEncodeEnter(ConfiguredBaseModel):
+    """
+    Enter properties that are evaluated when points data is processed for the first time and the raster_image mark is
+    newly added to a scene.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    x: AxisItem = Field(
+        default=...,
+        description="""The x coordinates""",
+        json_schema_extra={"linkml_meta": {"alias": "x", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+    )
+    y: AxisItem = Field(
+        default=...,
+        description="""The y coordinates""",
+        json_schema_extra={"linkml_meta": {"alias": "y", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+    )
+    stroke: Union[ColorItem, RGBHex] = Field(
+        default=...,
+        description="""The color of the outline of each individual label.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "stroke",
+                "any_of": [{"range": "ColorItem"}, {"range": "RGBHex"}],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
+            }
+        },
+    )
+    fill: Union[ColorItem, RGBHex] = Field(
+        default=...,
+        description="""The color fill of each individual label.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fill",
+                "any_of": [{"range": "ColorItem"}, {"range": "RGBHex"}],
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "MarkEncodeUpdate",
+                ],
+            }
+        },
+    )
+    fillOpacity: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fillOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+                "slot_uri": "fillOpacity",
+            }
+        },
+    )
+    strokeOpacity: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "strokeOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
+                "slot_uri": "strokeOpacity",
+            }
+        },
+    )
+    strokeWidth: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "strokeWidth",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
+                "slot_uri": "strokeWidth",
+            }
+        },
+    )
+    size: str = Field(
+        default=...,
+        json_schema_extra={"linkml_meta": {"alias": "size", "domain_of": ["PointsEncodeEnter"], "slot_uri": "size"}},
+    )
+    shape: CircleShape = Field(
+        default=..., json_schema_extra={"linkml_meta": {"alias": "shape", "domain_of": ["PointsEncodeEnter"]}}
+    )
+
+
+class PathEncodeEnter(ConfiguredBaseModel):
+    """
+    Enter properties that are evaluated when shapes data is processed for the first time and the raster_image mark is
+    newly added to a scene.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    x: AxisItem = Field(
+        default=...,
+        description="""The x coordinates""",
+        json_schema_extra={"linkml_meta": {"alias": "x", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+    )
+    y: AxisItem = Field(
+        default=...,
+        description="""The y coordinates""",
+        json_schema_extra={"linkml_meta": {"alias": "y", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+    )
+    fill: Union[ColorItem, RGBHex] = Field(
+        default=...,
+        description="""The color fill of each individual label.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fill",
+                "any_of": [{"range": "ColorItem"}, {"range": "RGBHex"}],
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "MarkEncodeUpdate",
+                ],
+            }
+        },
+    )
+    fillOpacity: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fillOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+                "slot_uri": "fillOpacity",
+            }
+        },
+    )
+
+
+class MarkEncodeUpdate(ConfiguredBaseModel):
     """
     Update properties that are evaluated for all existing (non-exiting) mark instances.
     """
@@ -334,7 +654,13 @@ class LabelEncodeUpdate(ConfiguredBaseModel):
             "linkml_meta": {
                 "alias": "fill",
                 "any_of": [{"range": "ConditionalFillUpdate"}, {"range": "RGBHex"}],
-                "domain_of": ["ImageEncodeEnter", "LabelEncodeEnter", "LabelEncodeUpdate"],
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "MarkEncodeUpdate",
+                ],
             }
         },
     )
@@ -357,12 +683,16 @@ https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'tr
     scale: str = Field(
         default=...,
         description="""The scale to use for applying the fill color. This scale MUST exist in the view configuration Scales array.""",
-        json_schema_extra={"linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "ConditionalFillUpdate"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+        },
     )
     field: str = Field(
         default=...,
         description="""The column that serves as data input, in the test condition this corresponds to 'datum'.""",
-        json_schema_extra={"linkml_meta": {"alias": "field", "domain_of": ["ConditionalFillUpdate"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "field", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+        },
     )
 
     @field_validator("scale")
@@ -560,21 +890,137 @@ class RasterLabelMark(Mark):
     )
 
 
+class PointsMark(Mark):
+    """
+    Graphical mark for encoding points data, using a vega like symbol mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {
+            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
+            "slot_usage": {
+                "encode": {
+                    "description": "A set of visual encoding properties "
+                    "that determine the position and "
+                    "appearance of the symbol mark.",
+                    "name": "encode",
+                    "range": "SymbolEncode",
+                },
+                "type": {
+                    "description": "The type of the mark. In this case, " "it is always 'symbol'.",
+                    "equals_string": "symbol",
+                    "ifabsent": "string(symbol)",
+                    "name": "type",
+                },
+            },
+        }
+    )
+
+    type: Literal["symbol"] = Field(
+        default="symbol",
+        description="""The type of the mark. In this case, it is always 'symbol'.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Mark"],
+                "equals_string": "symbol",
+                "ifabsent": "string(symbol)",
+            }
+        },
+    )
+    from_: MarkDataSource = Field(
+        default=...,
+        description="""The data stream used as the source for the graphical mark.""",
+        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["Mark"]}},
+    )
+    encode: SymbolEncode = Field(
+        default=...,
+        description="""A set of visual encoding properties that determine the position and appearance of the symbol mark.""",
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
+    )
+    zindex: int = Field(
+        default=...,
+        description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
+(1) will cause marks to be drawn on top of those with lower z-index values.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
+    )
+
+
+class ShapesMark(Mark):
+    """
+    Graphical mark for encoding shapes data, using a vega like path mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {
+            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
+            "slot_usage": {
+                "encode": {
+                    "description": "A set of visual encoding properties "
+                    "that determine the position and "
+                    "appearance of the symbol mark.",
+                    "name": "encode",
+                    "range": "PathEncode",
+                },
+                "type": {
+                    "description": "The type of the mark. In this case, " "it is always 'symbol'.",
+                    "equals_string": "path",
+                    "ifabsent": "string(path)",
+                    "name": "type",
+                },
+            },
+        }
+    )
+
+    type: Literal["path"] = Field(
+        default="path",
+        description="""The type of the mark. In this case, it is always 'symbol'.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "type", "domain_of": ["Mark"], "equals_string": "path", "ifabsent": "string(path)"}
+        },
+    )
+    from_: MarkDataSource = Field(
+        default=...,
+        description="""The data stream used as the source for the graphical mark.""",
+        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["Mark"]}},
+    )
+    encode: PathEncode = Field(
+        default=...,
+        description="""A set of visual encoding properties that determine the position and appearance of the symbol mark.""",
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
+    )
+    zindex: int = Field(
+        default=...,
+        description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
+(1) will cause marks to be drawn on top of those with lower z-index values.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
+    )
+
+
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
 Value.model_rebuild()
 OpacityValue.model_rebuild()
 PositiveValue.model_rebuild()
 RGBHex.model_rebuild()
+RandomRGBSignal.model_rebuild()
 ColorItem.model_rebuild()
+CircleShape.model_rebuild()
+AxisItem.model_rebuild()
 ImageEncode.model_rebuild()
 LabelEncode.model_rebuild()
+SymbolEncode.model_rebuild()
+PathEncode.model_rebuild()
 ImageEncodeEnter.model_rebuild()
 LabelEncodeEnter.model_rebuild()
-LabelEncodeUpdate.model_rebuild()
+PointsEncodeEnter.model_rebuild()
+PathEncodeEnter.model_rebuild()
+MarkEncodeUpdate.model_rebuild()
 ConditionalFillUpdate.model_rebuild()
 Mark.model_rebuild()
 MarkDataSource.model_rebuild()
 RasterImageMark.model_rebuild()
 RasterLabelMark.model_rebuild()
+PointsMark.model_rebuild()
+ShapesMark.model_rebuild()
 

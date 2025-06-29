@@ -75,7 +75,29 @@ classes:
         description: |-
           Enter properties that are evaluated when points data is processed for the first time and the points mark 
           is newly added to a scene.
-        range: LabelEncodeEnter
+        range: PointsEncodeEnter
+        required: true
+      update:
+        description: |-
+          Update properties that are evaluated for all existing (non-exiting) mark instances. Usually defined if the 
+          user specified a color to be used for the PointsMark.
+        range: MarkEncodeUpdate
+        required: false
+
+  PathEncode:
+    description: |-
+      A set of visual encoding properties that determine the position and appearance of a 'path' mark. 
+      In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data 
+      is processed for the first time and a mark instance is newly added to a scene. The update properties are evaluated 
+      for all existing (non-exiting) mark instances. The exit properties are evaluated when the data backing a mark is 
+      removed, and so the mark is leaving the visual scene. However, in this specification we currently only support
+      enter and update property sets for a 'path' mark.
+    attributes:
+      enter:
+        description: |-
+          Enter properties that are evaluated when points data is processed for the first time and the points mark 
+          is newly added to a scene.
+        range: PathEncodeEnter
         required: true
       update:
         description: |-
@@ -174,6 +196,32 @@ classes:
         required: true
       shape:
         range: CircleShape
+        required: true
+
+  PathEncodeEnter:
+    description: |-
+      Enter properties that are evaluated when shapes data is processed for the first time and the raster_image mark is 
+      newly added to a scene.
+    attributes:
+      x:
+        description: |-
+          The x coordinates
+        range: AxisItem
+        required: true
+      y:
+        description: |-
+          The y coordinates
+        range: AxisItem
+        required: true
+      fill:
+        description: |-
+          The color fill of each individual label.
+        any_of:
+          - range: ColorItem
+          - range: RGBHex
+        required: true
+      fillOpacity:
+        slot_uri: fillOpacity
         required: true
 
 ############################### EncodeUpdate
