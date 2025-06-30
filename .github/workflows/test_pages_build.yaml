@@ -21,13 +21,13 @@ jobs:
       - name: Set up Python 3
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.10
 
-      - name: Install Poetry
-        run: pipx install poetry
+      - name: Install pixi
+        run: curl -fsSL https://pixi.sh/install.sh | bash
 
       - name: Install dependencies
-        run: poetry install
+        run: pixi install --features doc
 
       - name: Build documentation
         run: |
@@ -35,7 +35,7 @@ jobs:
           touch site/.nojekyll
           make gendoc
           ([ ! -f docs/about.md ] && cp src/docs/about.md docs/) || true
-          poetry run mkdocs build -d site
+          pixi run mkdocs build -d site
 
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
