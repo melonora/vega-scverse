@@ -1,5 +1,5 @@
 ---
-name: Auto-deployment of vega_spatialdata Documentation
+name: Auto-deployment of vega_scverse Documentation
 on:
   push:
     branches: [main]
@@ -17,21 +17,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python.
-        uses: actions/setup-python@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          python-version: 3.10
-
-      - name: Install Poetry.
-        run: pipx install poetry
-
-      - name: Install dependencies.
-        run: poetry install
+          pixi-version: v0.49.0
+          frozen: true
+        cache: true
+        cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
 
       - name: Build documentation.
         run: |
           mkdir -p docs
           touch docs/.nojekyll
-          make gendoc
+          pixi run -e doc gen_doc
           ([ ! -f docs/about.md ] && cp src/docs/about.md docs/) || true
-          make mkd-gh-deploy
+          pixi run -e doc mkdocs gh-deploy --force

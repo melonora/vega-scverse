@@ -58,3 +58,6 @@ doc = { features = ["doc"], solve-group = "default" }
 [tool.pixi.feature.doc.tasks]
 mkdocs = "mkdocs"
 gen_doc = "gen-doc -d docs src/vega_scverse/schema/specification.yaml"
+
+[tool.pixi.feature.test.tasks]
+test = "pytest"

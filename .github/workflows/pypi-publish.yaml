@@ -13,21 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          python-version: 3.9
-
-      - name: Install Poetry
-        run: |
-          pipx install poetry
-          poetry self add "poetry-dynamic-versioning[plugin]"
-
-      # - name: Install dependencies
-      #   run: poetry install --no-interaction
+          pixi-version: v0.49.0
+          frozen: true
+        cache: true
+        cache-write: ${{ github.event_name == 'release' }}
 
       - name: Build source and wheel archives
-        run: poetry build
+        run: pixi run python -m build
 
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@v1.2.2
