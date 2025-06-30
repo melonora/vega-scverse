@@ -23,7 +23,7 @@ generator_args:
   jsonldcontext:
     mergeimports: true
   python:
-    mergeimports: true
+    mergeimports: false
   prefixmap:
     mergeimports: true
   proto:

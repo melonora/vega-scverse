@@ -79,7 +79,7 @@ classes:
       title:
         description: |-
           The title directive adds a descriptive title to a chart.
-        range: Title
+        range: string
         required: false
 
         

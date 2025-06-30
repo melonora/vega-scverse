@@ -1,5 +1,5 @@
 ---
-site_name: "vega-spatialdata"
+site_name: "vega-scverse"
 theme:
   name: material
   # palette:
@@ -18,8 +18,8 @@ nav:
   # - Home: home.md
   - Index: index.md
   - About: about.md
-site_url: https://scverse.github.io/vega-spatialdata
-repo_url: https://github.com/scverse/vega-spatialdata
+site_url: https://melonora.github.io/vega-scverse
+repo_url: https://github.com/melonora/vega-scverse
 markdown_extensions:
   - tables
 extra_javascript:
