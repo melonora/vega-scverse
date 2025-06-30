@@ -29,10 +29,6 @@ dev = [
   "linkml>=1.3.5",
   "schemasheets>=0.1.14",
   "jupyter>=1.0.0",
-  "mkdocs>=1.4.0",
-  "mkdocs-material>=8.2.8",
-  "mkdocs-mermaid2-plugin>=1.1.1",
-  "mknotebooks>=0.8.0",
 ]
 
 test = [
@@ -54,8 +50,11 @@ channels = ["conda-forge"]
 platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
 
 [tool.pixi.environments]
-default = { solve-group = "default", features = ["doc", "dev"] }
+default = { solve-group = "default" }
+dev = { features = ["dev"], solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }
+doc = { features = ["doc"], solve-group = "default" }
 
-[tool.pixi.tasks]
-mkdocs = { cmd = "mkdocs" }
-gen-doc = { cmd = "gen-doc -d docs src/vega_scverse/schema/specification.yaml" }
+[tool.pixi.feature.doc.tasks]
+mkdocs = "mkdocs"
+gen_doc = "gen-doc -d docs src/vega_scverse/schema/specification.yaml"
