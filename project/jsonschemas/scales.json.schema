@@ -1,0 +1,204 @@
+﻿{
+    "$defs": {
+        "AxisRangeEnum": {
+            "description": "",
+            "enum": [
+                "height",
+                "width"
+            ],
+            "title": "AxisRangeEnum",
+            "type": "string"
+        },
+        "AxisScale": {
+            "additionalProperties": false,
+            "description": "A vega like scale specifically for mapping from a data domain to an axis range.",
+            "properties": {
+                "domain": {
+                    "description": "The set of input data values that the scale maps from. In the case of a linear scale,\nthis should be a two-element list representing the minimum and maximum numeric values\nto be transformed. For example, [512.0, 0.0] maps the data range from 512 (top) to 0 (bottom),\nwhich is typical for Y-axis scales in image coordinate systems where the origin is at the top-left.",
+                    "items": {
+                        "type": "number"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "description": "`Y_scale` or `X_scale` optionally followed by `_n` where n stands for the index of the subplot.",
+                    "pattern": "^[XY]_scale(_\\d+)?$",
+                    "type": "string"
+                },
+                "range": {
+                    "$ref": "#/$defs/AxisRangeEnum",
+                    "description": "Defines the target visual dimension for the axis scale\u2019s output range. Must be either 'width' for an X-axis \nscale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the \nfull canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically \ndefined by the top-level 'width' and 'height' properties of a Vega specification. For example, setting \n\"range\": \"height\" in a Y-axis scale maps the scale\u2019s domain to pixel positions from top to bottom within the \nplot area. This is commonly used to align data values with positional axes in coordinate-based visualizations."
+                },
+                "type": {
+                    "$ref": "#/$defs/ScaleEnum",
+                    "const": "linear",
+                    "description": "Only linear is supported for an `AxisScale` for now."
+                }
+            },
+            "required": [
+                "domain",
+                "range",
+                "name",
+                "type"
+            ],
+            "title": "AxisScale",
+            "type": "object"
+        },
+        "CategoricalColorScale": {
+            "additionalProperties": false,
+            "description": "A scale to map a discrete data domain to discrete colors",
+            "properties": {
+                "domain": {
+                    "description": "The data domain as a list of discrete string values.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "description": "color followed by '_pseudoUUID' used to refer to this scale elsewhere in the view configuration.",
+                    "pattern": "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                    "type": "string"
+                },
+                "range": {
+                    "description": "List of RGB colors as hexadecimal strings",
+                    "items": {
+                        "pattern": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "type": {
+                    "$ref": "#/$defs/ScaleEnum",
+                    "const": "ordinal",
+                    "description": "The type of scale which is a description of what kind of mapping is performed between data domain and \nvisual range, e.g. `linear`."
+                }
+            },
+            "required": [
+                "domain",
+                "range",
+                "name",
+                "type"
+            ],
+            "title": "CategoricalColorScale",
+            "type": "object"
+        },
+        "ContinuousColorDomain": {
+            "additionalProperties": false,
+            "description": "A data domain or source for a ContinuousColorScale.",
+            "properties": {
+                "data": {
+                    "description": "The identifier of the particular data object in the data array to which the color mapping in \nContinuousColorScale must be applied. In Vega this is only defined when the type of Scale is\nordinal, but we deviate from that.",
+                    "pattern": "^.*_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                    "type": "string"
+                },
+                "field": {
+                    "description": "If the data source is a table, then the field is the column within the table that is used as \na source for the color mapping. In case of raster data with a single channel, the field equals\n\"value\" and if multichannel raster data it is the name or index of the image channel.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "data",
+                "field"
+            ],
+            "title": "ContinuousColorDomain",
+            "type": "object"
+        },
+        "ContinuousColorMapRange": {
+            "additionalProperties": false,
+            "description": "Color scheme reference for a color palette.",
+            "properties": {
+                "count": {
+                    "description": "The number of colors to use in the scheme.",
+                    "type": "integer"
+                },
+                "scheme": {
+                    "description": "The name of the color scheme to use or an array of color values.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "scheme",
+                "count"
+            ],
+            "title": "ContinuousColorMapRange",
+            "type": "object"
+        },
+        "ContinuousColorScale": {
+            "additionalProperties": false,
+            "description": "A vega like scale specifically for mapping from a continuous data domain to a visual color range.",
+            "properties": {
+                "domain": {
+                    "$ref": "#/$defs/ContinuousColorDomain",
+                    "description": "The data used as a source for the visual color range"
+                },
+                "name": {
+                    "description": "color followed by '_pseudoUUID' used to refer to this scale elsewhere in the view configuration.",
+                    "pattern": "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                    "type": "string"
+                },
+                "range": {
+                    "$ref": "#/$defs/ContinuousColorMapRange",
+                    "description": "The range to which to map the data domain. In this case one that refers to a colormap range."
+                },
+                "type": {
+                    "$ref": "#/$defs/ScaleEnum",
+                    "const": "linear",
+                    "description": "Only linear is supported for an `ContinuousColorScale` for now."
+                }
+            },
+            "required": [
+                "domain",
+                "range",
+                "name",
+                "type"
+            ],
+            "title": "ContinuousColorScale",
+            "type": "object"
+        },
+        "ScaleEnum": {
+            "description": "",
+            "enum": [
+                "linear",
+                "ordinal"
+            ],
+            "title": "ScaleEnum",
+            "type": "string"
+        },
+        "Scales": {
+            "additionalProperties": false,
+            "description": "Vega like definition for scales which specifies a collection of mappings from a data domain \n(e.g., numbers, categories, dates) to a visual range (e.g., position on the screen, color spectrum, size).",
+            "properties": {
+                "scales": {
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                }
+            },
+            "title": "Scales",
+            "type": "object"
+        }
+    },
+    "$id": "https://w3id.org/scverse/vega-scverse/scales",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalProperties": true,
+    "metamodel_version": "1.7.0",
+    "title": "vega-scverse-scales",
+    "type": "object",
+    "version": "0.1.0"
+}
