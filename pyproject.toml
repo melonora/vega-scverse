@@ -35,6 +35,10 @@ dev = [
   "mknotebooks>=0.8.0",
 ]
 
+test = [
+    "pytest",
+]
+
 [tool.hatch.build]
 include = [
   "README.md",

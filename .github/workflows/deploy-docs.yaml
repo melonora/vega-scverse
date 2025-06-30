@@ -15,15 +15,12 @@ jobs:
       id-token: write  # to verify the deployment originates from an appropriate source
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # otherwise, you will failed to push refs to dest repo
+      - uses: actions/checkout@v4
 
       - name: Set up Python.
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.10
 
       - name: Install Poetry.
         run: pipx install poetry
