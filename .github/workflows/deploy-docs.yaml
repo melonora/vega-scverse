@@ -21,6 +21,7 @@ jobs:
         with:
           pixi-version: v0.49.0
           frozen: true
+          activate-environment: doc
           cache: true
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
 
