@@ -28,6 +28,6 @@ jobs:
         run: |
           mkdir -p docs
           touch docs/.nojekyll
-          pixi run -e doc gen_doc
+          pixi run gen_doc
           ([ ! -f docs/about.md ] && cp src/docs/about.md docs/) || true
-          pixi run -e doc mkdocs gh-deploy --force
+          pixi run deploy
