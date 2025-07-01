@@ -29,6 +29,7 @@ dev = [
   "linkml>=1.3.5",
   "schemasheets>=0.1.14",
   "jupyter>=1.0.0",
+  "black",
 ]
 
 test = [
@@ -55,9 +56,19 @@ dev = { features = ["dev"], solve-group = "default" }
 test = { features = ["test"], solve-group = "default" }
 doc = { features = ["doc"], solve-group = "default" }
 
+[tool.pixi.feature.dev.tasks]
+gen_project = "gen-project -d project src/vega_scverse/schema/specification.yaml"
+lint = "linkml-lint src/vega_scverse/schema/specification.yaml"
+cruft_check = "cruft check"
+cruft_diff = "cruft diff"
+update_template = "cruft update"
+update_linkml = "pip install -U linkml"
+
 [tool.pixi.feature.doc.tasks]
 mkdocs = "mkdocs"
 gen_doc = "gen-doc -d docs src/vega_scverse/schema/specification.yaml"
+serve = "mkdocs serve"
+deploy = "mkdocs gh-deploy --force"
 
 [tool.pixi.feature.test.tasks]
 test = "pytest"

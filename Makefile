@@ -14,7 +14,7 @@ else
 include config.public.mk
 endif
 
-RUN = poetry run
+RUN = pixi run -e dev
 SCHEMA_NAME = $(LINKML_SCHEMA_NAME)
 SOURCE_SCHEMA_PATH = $(LINKML_SCHEMA_SOURCE_PATH)
 SOURCE_SCHEMA_DIR = $(dir $(SOURCE_SCHEMA_PATH))
@@ -84,7 +84,7 @@ setup: check-config git-init install gen-project gen-examples gendoc git-add git
 
 # install any dependencies required for building
 install:
-	poetry install
+	pixi install -a
 .PHONY: install
 
 # ---
@@ -94,17 +94,17 @@ install:
 # check we are up to date
 check: cruft-check
 cruft-check:
-	cruft check
+	pixi run -e dev cruft_check
 cruft-diff:
-	cruft diff
+	pixi run -e dev cruft_diff
 
 update: update-template update-linkml
 update-template:
-	cruft update
+	pixi run -e dev update_template
 
 # todo: consider pinning to template
 update-linkml:
-	poetry add -D linkml@latest
+	pixi run -e dev update_linkml
 
 # EXPERIMENTAL
 create-data-harmonizer:
@@ -113,7 +113,8 @@ create-data-harmonizer:
 all: site
 site: gen-project gendoc
 %.yaml: gen-project
-deploy: all mkd-gh-deploy
+deploy: all
+	pixi run -e doc deploy
 
 compile-sheets:
 	$(RUN) sheets2linkml --gsheet-id $(SHEET_ID) $(SHEET_TABS) > $(SHEET_MODULE_PATH).tmp && mv $(SHEET_MODULE_PATH).tmp $(SHEET_MODULE_PATH)
@@ -125,7 +126,7 @@ gen-examples:
 # generates all project files
 
 gen-project: $(PYMODEL)
-	$(RUN) gen-project ${CONFIG_YAML} -d $(DEST) $(SOURCE_SCHEMA_PATH) && mv $(DEST)/*.py $(PYMODEL)
+	pixi run -e dev gen_project && mv $(DEST)/*.py $(PYMODEL)
 
 
 # non-empty arg triggers owl (workaround https://github.com/linkml/linkml/issues/1453)
@@ -146,13 +147,13 @@ endif
 test: test-schema test-python test-examples
 
 test-schema:
-	$(RUN) gen-project ${CONFIG_YAML} -d tmp $(SOURCE_SCHEMA_PATH)
+	pixi run -e dev gen_project
 
 test-python:
-	$(RUN) python -m pytest
+	pixi run -e test test
 
 lint:
-	$(RUN) linkml-lint $(SOURCE_SCHEMA_PATH)
+	pixi run -e dev lint
 
 check-config:
 ifndef LINKML_SCHEMA_NAME
@@ -184,7 +185,8 @@ examples/output: src/$(SCHEMA_NAME)/schema/$(SCHEMA_NAME).yaml
 		--schema $< > $@/README.md
 
 # Test documentation locally
-serve: mkd-serve
+serve:
+	pixi run -e doc serve
 
 # Python datamodel
 $(PYMODEL):
@@ -196,11 +198,12 @@ $(DOCDIR):
 
 gendoc: $(DOCDIR)
 	cp -rf $(SRC)/docs/files/* $(DOCDIR) ; \
-	$(RUN) gen-doc ${GEN_DOC_ARGS} -d $(DOCDIR) $(SOURCE_SCHEMA_PATH)
+	pixi run -e doc gen_doc
 
-testdoc: gendoc serve
+testdoc: gendoc
+	pixi run -e doc serve
 
-MKDOCS = $(RUN) mkdocs
+MKDOCS = pixi run -e doc mkdocs
 mkd-%:
 	$(MKDOCS) $*
 

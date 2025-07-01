@@ -1,10 +1,11 @@
 # vega-spatialdata
 
-Vega like specification for the scverse plotting ecosystem.
+Vega like specification for the scverse plotting ecosystem. Currently, only supports
+viewconfigurations for `SpatialData` visualizations. The repository includes pydantic classes
+that can be used to validate the viewconfiguration and its available components.
 
 ## Website
 
-[https://scverse.github.io/vega-spatialdata](https://scverse.github.io/vega-spatialdata)
 
 ## Repository Structure
 
@@ -20,64 +21,95 @@ Vega like specification for the scverse plotting ecosystem.
 
 ## Developer Documentation
 
+### Installing Pixi
+
+This project uses [pixi](https://pixi.sh) for dependency management. To install pixi, follow these steps:
+
+#### Windows
+You can download and run the [installer](https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.msi)
+or run the following:
+```
+# Using PowerShell (recommended)
+powershell -ExecutionPolicy ByPass -c "irm -useb https://pixi.sh/install.ps1 | iex"
+```
+The terminal needs to be restarted to make the installation effective. See details below for what this does.
 <details>
-To run commands you may use good old make or the command runner [just](https://github.com/casey/just/) which is a better choice on Windows.
-Use the `make` command or `duty` commands to generate project artefacts:
-* `make help` or `just --list`: list all pre-defined tasks
-* `make all` or `just all`: make everything
-* `make deploy` or `just deploy`: deploys site
+The above invocation will automatically download the latest version of pixi, extract it, and move the pixi binary to 
+%UserProfile%\.pixi\bin. The command will also add %UserProfile%\.pixi\bin to your PATH environment variable, allowing 
+you to invoke pixi from anywhere.
 </details>
+
+If you want to turn on autocompletion check the location of your profile by running in the
+PowerShell: `$PROFILE`. At the end of this file add the following line:
+
+```(& pixi completion --shell powershell) | Out-String | Invoke-Expression```
+#### macOS/Linux
+```
+# Using curl
+curl -fsSL https://pixi.sh/install.sh | sh
+
+# Or using wget if you don't have curl
+wget -qO- https://pixi.sh/install.sh | sh
+```
+
+Now restart your terminal or shell to make the installation effective. For what this does, see the windows section.
+To enable autocompletion, add to your `.bashrc`:
+```eval "$(pixi completion --shell bash)"```
+
+### Installing Dependencies
+
+Once pixi is installed, you can install the project dependencies:
+
+```
+# Install all dependencies
+pixi install -a
+
+# Or install specific environment dependencies:
+pixi install -E dev   # Development dependencies
+pixi install -E test  # Testing dependencies
+pixi install -E doc   # Documentation dependencies
+```
+
+### Running Tests
+
+To run tests, use:
+
+```
+pixi run -e test test
+```
+
 
 ## Documentation
 
-To generate and view the documentation locally:
+To generate and view the documentation locally one must have pixi installed. Please 
+see the developer documentation details above.
 
-> **IMPORTANT**: All commands must be run through pixi. Do not run commands like `mkdocs` directly from the command line, as they will not be found. Always use `pixi run mkdocs` instead.
-
-First, make sure you have installed the dependencies:
+If you already have pixi installed, start with ensuring the dependencies installed.
 ```
 # Install all dependencies
-pixi install
+pixi install -a
 
 # Or install only documentation dependencies
 pixi install -E doc
 ```
 
+All documentation-related commands are defined in the doc environment. You need to specify
+the environment when running these commands using the `-e doc` flag.
 1. Generate the documentation:
    ```
-   # Using make
-   make gendoc
-
-   # Using just
-   just _gendoc
-
-   # Using pixi directly
-   pixi run gen-doc
+   pixi run -e doc gen_doc
    ```
 
 2. View the documentation in a local web server:
    ```
-   # Using make
-   make serve
-
-   # Using just
-   just _serve
-
-   # Using pixi directly
-   pixi run mkdocs serve
+   pixi run -e doc serve
    ```
 
 3. Or do both in one command:
    ```
-   # Using make
-   make testdoc
-
-   # Using just
-   just testdoc
-
    # Using pixi directly (run these commands in sequence)
-   pixi run gen-doc
-   pixi run mkdocs serve
+   pixi run -e doc gen_doc
+   pixi run -e doc serve
    ```
 
 The documentation will be available at http://localhost:8000 in your web browser.
@@ -91,7 +123,8 @@ If you see an error like this:
 mkdocs : The term 'mkdocs' is not recognized as the name of a cmdlet, function, script file, or operable program.
 ```
 
-This means you're trying to run a command directly that is only available through pixi. Always prefix these commands with `pixi run`:
+This means you're trying to run a command directly that is only available through pixi. Always prefix these commands 
+with `pixi run`:
 
 ```
 pixi run mkdocs serve
