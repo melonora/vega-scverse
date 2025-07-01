@@ -21,7 +21,6 @@ jobs:
         with:
           pixi-version: v0.49.0
           frozen: true
-          activate-environment: doc
           cache: true
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
 
@@ -29,6 +28,6 @@ jobs:
         run: |
           mkdir -p docs
           touch docs/.nojekyll
-          pixi run gen_doc
+          pixi run --features doc gen_doc
           ([ ! -f docs/about.md ] && cp src/docs/about.md docs/) || true
-          pixi run deploy
+          pixi run --features doc deploy
