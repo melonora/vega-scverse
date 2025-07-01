@@ -24,6 +24,9 @@ jobs:
           cache: true
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
 
+      - name: Install doc env
+        run: pixi install -e doc
+
       - name: Build documentation.
         run: |
           mkdir -p docs
