@@ -21,8 +21,8 @@ jobs:
         with:
           pixi-version: v0.49.0
           frozen: true
-        cache: true
-        cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+          cache: true
+          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
 
       - name: Build documentation.
         run: |

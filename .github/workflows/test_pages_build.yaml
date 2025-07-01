@@ -19,8 +19,6 @@ jobs:
         with:
           pixi-version: v0.49.0
           frozen: true
-          cache: true
-          cache-write: false
 
       - name: Build documentation
         run: |
