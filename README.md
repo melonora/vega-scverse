@@ -5,7 +5,8 @@ viewconfigurations for `SpatialData` visualizations. The repository includes pyd
 that can be used to validate the viewconfiguration and its available components.
 
 ## Website
-
+Documentation on the specification can be found here:
+https://melonora.github.io/vega-scverse/
 
 ## Repository Structure
 
@@ -68,7 +69,15 @@ pixi install -a
 pixi install -E dev   # Development dependencies
 pixi install -E test  # Testing dependencies
 pixi install -E doc   # Documentation dependencies
+pixi install -E all   # All environments above combined
 ```
+
+### Activating Environments
+
+After the environment(s) are installed, you can activate a specific environment by entering
+the following in your terminal (doc environment in this example):
+
+```pixi shell -e doc```
 
 ### Running Tests
 
@@ -81,10 +90,10 @@ pixi run -e test test
 
 ## Documentation
 
-To generate and view the documentation locally one must have pixi installed. Please 
+To generate and view the documentation locally, one must have pixi installed. Please 
 see the developer documentation details above.
 
-If you already have pixi installed, start with ensuring the dependencies installed.
+If you already have pixi installed, start with ensuring the dependencies are installed.
 ```
 # Install all dependencies
 pixi install -a
@@ -93,42 +102,28 @@ pixi install -a
 pixi install -E doc
 ```
 
-All documentation-related commands are defined in the doc environment. You need to specify
-the environment when running these commands using the `-e doc` flag.
+All documentation-related commands are defined in the doc environment. Because they are unique
+to this environment, you don't have to specify or be in the environment to run the commands.
 1. Generate the documentation:
    ```
-   pixi run -e doc gen_doc
+   pixi run gen_doc
    ```
 
 2. View the documentation in a local web server:
    ```
-   pixi run -e doc serve
+   pixi run serve
    ```
 
 3. Or do both in one command:
    ```
    # Using pixi directly (run these commands in sequence)
-   pixi run -e doc gen_doc
-   pixi run -e doc serve
+   pixi run gen_doc
+   pixi run serve
    ```
 
-The documentation will be available at http://localhost:8000 in your web browser.
+The documentation will be available at http://localhost:8000 in your web browser. 
 
-## Troubleshooting
-
-### Command not found errors
-
-If you see an error like this:
-```
-mkdocs : The term 'mkdocs' is not recognized as the name of a cmdlet, function, script file, or operable program.
-```
-
-This means you're trying to run a command directly that is only available through pixi. Always prefix these commands 
-with `pixi run`:
-
-```
-pixi run mkdocs serve
-```
+Deploying the documentation is not necessary. This is taken care of by a GitHub action.
 
 ## Credits
 
