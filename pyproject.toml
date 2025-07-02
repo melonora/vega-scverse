@@ -58,6 +58,7 @@ default = { solve-group = "default" }
 dev = { features = ["dev"], solve-group = "default" }
 test = { features = ["test"], solve-group = "default" }
 doc = { features = ["doc"], solve-group = "default" }
+all = { features = ["dev", "test", "doc"], solve-group = "default" }
 
 [tool.pixi.feature.dev.tasks]
 gen_project = "gen-project -d project src/vega_scverse/schema/specification.yaml"
