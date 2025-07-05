@@ -43,6 +43,20 @@ slots:
     description: |-
       Object containing a value which is a hexadecimal string representing a RGB color.
     range: RGBHex
+  rgbHexSlot:
+    description: |-
+      Hex string representing a RGB value.
+    pattern: "^#([A-Fa-f0-9]{6})$"
+  rgbaHexSlot:
+    description: |-
+      Hex string representing a RGBA value.
+    pattern: "^#([A-Fa-f0-9]{8})$"
+  opacityValueSlot:
+    description:
+      Opacity value between 0 and 1.
+    range: float
+    minimum_value: 0
+    maximum_value: 1
 
 classes:
   ColorItem:

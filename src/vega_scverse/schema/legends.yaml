@@ -18,6 +18,225 @@ default_range: string
 
 imports:
   - linkml:types
+  - slots
 
 created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
+
+classes:
+  Legend:
+    description: |-
+      Vega like configuration for specifying legends in the SpatialData visualization ecosystem.
+    abstract: true
+    attributes:
+      type:
+        description: |-
+          The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).
+        range: LegendType
+        required: true
+      direction:
+        description: |-
+          The direction of the legend, one of 'vertical' or 'horizontal'.
+        range: LegendDirections
+        required: true
+      orient:
+        description: |-
+          The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+          Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
+          pixel coordinates. If there is demand, this can be changed.
+        equals_string: none
+        ifabsent: string(none)
+      padding:
+        description: |-
+          The padding between the border and content of the legend group in pixels.
+        range: float
+      fill:
+        description: |- 
+          The name of a scale that maps to a fill color. This represents the color used to visualize discrete classes
+          or continuous data in the legend.
+        pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        required: true
+      fillColor:
+        description: |-
+          Hex string representing a RGBA color, which is the background color of the legend.
+        slot_uri: rgbaHexSlot
+      strokeColor:
+        description: |-
+          Hex string representing a RGBA color, which is the color of the legend border.
+        slot_uri: rgbaHexSlot
+      strokeWidth:
+        description: |-
+          The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
+          vega equivalent expects a 'Scale'.
+        range: float
+      labelOffset:
+        description: |-
+          Offset in pixels between legend labels their corresponding symbol or gradient.
+        range: float
+        required: true
+      labelAlign:
+        description: |-
+          Horizontal text alignment for legend labels. In short this means where the label text is relative to the
+          anchor point of the labels (this could be defined as the coordinates where the labels are specified to be).
+        range: labelAlignValues
+        required: true
+      labelColor:
+        description: |-
+          Text color for legend labels represented by a RGB hex string.
+        slot_uri: rgbHexSlot
+        required: true
+      labelOpacity:
+        description: |-
+          The opacity of legend labels.
+        slot_uri: opacityValueSlot
+        required: true
+      labelFont:
+        description: |-
+          Font name for legend labels.
+        range: string
+        ifabsent: string(Arial)
+      labelFontSize:
+        description: |-
+          Font size in pixels for legend labels.
+        range: float
+        required: true
+      labelFontStyle:
+        description: |-
+          Font style of legend labels
+        range: labelFontStyleValues
+        required: true
+      labelFontWeight:
+        description: |-
+          Font weight of legend labels.
+        range: labelFontWeightValues
+        required: true
+      legendX:
+        description: |-
+          The pixel x-coordinate of the legend group.
+        range: float
+        required: true
+      legendY:
+        description: |-
+          The pixel y-coordinate of the legend group.
+        range: float
+        required: true
+      zindex:
+        definition: |-
+          The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
+          legend groups.
+        range: integer
+        required: true
+
+  CategoricalLegend:
+    is_a: Legend
+    attributes:
+      columns:
+        description: |-
+          The number of columns in which to arrange symbol legend entries. A value of 0 or lower indicates a single row 
+          with one column per entry. The default is 0 for horizontal symbol legends and 1 for vertical symbol legends.
+        range: integer
+      columnPadding:
+        description: |-
+          The horizontal padding in pixels between symbol legend entries.
+        range: float
+      rowPadding:
+        description: |-
+          The vertical padding in pixels between symbol legend entries.
+        range: float
+
+  ColorBarLegend:
+    is_a: Legend
+    attributes:
+      gradientLength:
+        definition: |-
+          The length in pixels of the primary axis of a color gradient. This value corresponds to the height of a 
+          vertical gradient or the width of a horizontal gradient.
+        range: float
+        required: true
+      gradientOpacity:
+        definition: |-
+          Opacity of the color gradient.
+        range: opacityValueSlot
+        required: true
+      gradientStrokeColor:
+        definition: |-
+          Stroke color of the color gradient border.
+        range: rgbHexSlot
+        required: true
+      gradientStrokeWidth:
+        definition: |-
+          Stroke width of the color gradient border.
+        range: float
+        required: true
+
+enums:
+  LegendType:
+    description: |-
+      The valid mark types within the scverse plotting / visualization ecosystem.
+    permissible_values:
+      discrete: legend type for categorical data
+      gradient: legend type for continuous data
+  LegendDirections:
+    description: |-
+      The possible directions of the legend.
+    permissible_values:
+      horizontal: legend direction with the longest axis oriented along the horizontal axis.
+      vertical: legend direction with the longest axis oriented along the vertical axis.
+  LabelAlignValues:
+    description: |-
+      The possible values for horizontal alignment of the legend labels.
+    permissible_values:
+      left: The anchor point of the labels is left of the label text.
+      center: The anchor point of the labels is at the center of the label text.
+      right: The anchor point of the labels is right of the label text.
+  labelFontStyleValues:
+    description: |-
+      Possible font styles of legend labels. These are all the possible css font styles. These include styles,
+      weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale 
+      standardized in CSS to represent font weight.
+    see_also:
+      - https://www.w3.org/Style/Examples/007/fonts.en.html#font-style
+    permissible_values:
+      normal: Regular CSS font style with a font weight of 400.
+      italic: A cursive CSS font style.
+      bold: |-
+        A font with a thicker stroke weight relative to a regular font used to emphasize the text. It has a font weight
+        of 700.
+      100: The thinnest font weight available for a given font family.
+      200:
+      300:
+      500:
+      600:
+      800:
+      900: The thickest font weight available for a given font family.
+      small-caps: |-
+        Uppercase letterforms designed at approximately the same height and weight as the font’s lowercase letters.
+      ultra-condensed: |-
+        The most horizontally narrow font stretch. The visual representation of each character is narrowed to its most
+        compressed form.
+      extra-condensed:
+      condensed:
+      semi-condensed:
+      semi-expanded:
+      expanded:
+      extra-expanded:
+      ultra-expanded: |-
+        The most horizontally expanded font stretch. The visual representation of each character is expanded to its most
+        expanded form.
+    labelFontWeightValues:
+      description: |-
+        Possible font weight values of legend labels. These are all the possible css font styles. These include styles,
+        weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale 
+        standardized in CSS to represent font weight.
+      permissible_values:
+        100: The thinnest font weight available for a given font family.
+        200:
+        300:
+        400:
+        500:
+        600:
+        700:
+        800:
+        900: The thickest font weight available for a given font family.
+        bold: Font with a font weight of 700.
+        normal: Font with a font weight of 400.

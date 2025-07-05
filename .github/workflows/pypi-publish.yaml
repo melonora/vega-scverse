@@ -11,20 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: prefix-dev/setup-pixi@v0.8.1
         with:
           pixi-version: v0.49.0
           frozen: true
-        cache: true
-        cache-write: ${{ github.event_name == 'release' }}
+          cache: true
+          cache-write: ${{ github.event_name == 'release' }}
+
+      - name: Install build dependencies
+        run: pixi run pip install build
 
       - name: Build source and wheel archives
         run: pixi run python -m build
 
       - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.2.2
+        uses: pypa/gh-action-pypi-publish@v1.8.1
         with:
           user: __token__
           password: ${{ secrets.PYPI_PASSWORD }}
