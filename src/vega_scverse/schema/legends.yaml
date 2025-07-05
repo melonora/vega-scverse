@@ -124,7 +124,7 @@ classes:
         definition: |-
           The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
           legend groups.
-        range: integer
+        range: float
         required: true
 
   CategoricalLegend:
