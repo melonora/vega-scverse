@@ -7,6 +7,7 @@ DEST_DIR = Path("docs")
 FILES = [
     "about.md",
     "home.md",
+    "assets/vega-scverse-logo.png"
     # Add more filenames here
 ]
 
@@ -16,8 +17,5 @@ for filename in FILES:
 
     dst.parent.mkdir(parents=True, exist_ok=True)
 
-    if not dst.exists():
-        shutil.copy2(src, dst)
-        print(f"Copied '{src}' -> '{dst}'")
-    else:
-        print(f"'{dst}' already exists. Skipping.")
+    shutil.copy2(src, dst)
+    print(f"Copied '{src}' -> '{dst}'")

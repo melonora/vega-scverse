@@ -15,6 +15,7 @@ theme:
   name: material
   language: en
   features:
+    - header.autohide
     - announce
     - announce.dismiss
     - navigation.tabs
@@ -33,9 +34,11 @@ theme:
       toggle:
         icon: material/lightbulb-outline
         name: Switch to light mode
-  logo: ./docs/assets/vega-scverse-logo.png
-  favicon: ./docs/assets/vega-scverse-logo.png
+  logo: assets/vega-scverse-logo.png
+  favicon: assets/vega-scverse-logo.png
 
+extra_css:
+  - stylesheets/extra.css
 
 extra:
   social:
