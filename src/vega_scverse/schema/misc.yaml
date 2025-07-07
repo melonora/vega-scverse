@@ -66,3 +66,55 @@ classes:
         equals_string: "rgb(random()*255, random()*255, random()*255)"
         ifabsent: string(rgb(random()*255, random()*255, random()*255))
 
+enums:
+  FontStyleValues:
+    description: |-
+      Possible font styles. These are all the possible css font styles. These include styles,
+      weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale 
+      standardized in CSS to represent font weight.
+    see_also:
+      - https://www.w3.org/Style/Examples/007/fonts.en.html#font-style
+    permissible_values:
+      normal: Regular CSS font style with a font weight of 400.
+      italic: A cursive CSS font style.
+      bold: |-
+        A font with a thicker stroke weight relative to a regular font used to emphasize the text. It has a font weight
+        of 700.
+      100: The thinnest font weight available for a given font family.
+      200:
+      300:
+      500:
+      600:
+      800:
+      900: The thickest font weight available for a given font family.
+      small-caps: |-
+        Uppercase letterforms designed at approximately the same height and weight as the font’s lowercase letters.
+      ultra-condensed: |-
+        The most horizontally narrow font stretch. The visual representation of each character is narrowed to its most
+        compressed form.
+      extra-condensed:
+      condensed:
+      semi-condensed:
+      semi-expanded:
+      expanded:
+      extra-expanded:
+      ultra-expanded: |-
+        The most horizontally expanded font stretch. The visual representation of each character is expanded to its most
+        expanded form.
+  FontWeightValues:
+    description: |-
+      Possible font weight values. In case of font weights (100-900), it represents a unitless numeric scale 
+      standardized in CSS to represent font weight.
+    permissible_values:
+      100: The thinnest font weight available for a given font family.
+      200:
+      300:
+      400:
+      500:
+      600:
+      700:
+      800:
+      900: The thickest font weight available for a given font family.
+      bold: Font with a font weight of 700.
+      normal: Font with a font weight of 400.
+

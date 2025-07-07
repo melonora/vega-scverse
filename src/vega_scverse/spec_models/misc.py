@@ -49,12 +49,12 @@ linkml_meta = LinkMLMeta(
         "created_on": "2025-06-01T00:00:00",
         "default_prefix": "vega_scverse",
         "default_range": "string",
-        "description": "Vega like specification for the marks used in view "
-        "configurations for the scverse visualization ecosystem.",
-        "id": "https://w3id.org/scverse/vega-scverse/slots",
-        "imports": ["linkml:types", "misc"],
+        "description": "Vega like specification for miscellaneous classes used in "
+        "view configurations for the scverse visualization ecosystem.",
+        "id": "https://w3id.org/scverse/vega-scverse/marks",
+        "imports": ["linkml:types"],
         "license": "BSD-3",
-        "name": "vega-scverse-marks",
+        "name": "vega-scverse-misc",
         "prefixes": {
             "linkml": {"prefix_prefix": "linkml", "prefix_reference": "https://w3id.org/linkml/"},
             "orcid": {"prefix_prefix": "orcid", "prefix_reference": "https://orcid.org/"},
@@ -64,8 +64,8 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": "src\\vega_scverse\\schema\\slots.yaml",
-        "title": "vega-scverse-marks",
+        "source_file": "src\\vega_scverse\\schema\\misc.yaml",
+        "title": "vega-scverse-misc",
     }
 )
 
@@ -156,17 +156,6 @@ class FontWeightValues(str, Enum):
     """
 
 
-class AxisEnum(str, Enum):
-    x = "x"
-    """
-    x-axis of the visualization. Typically referring to the horizontal axis.
-    """
-    y = "y"
-    """
-    y-axis of the visualization. Typically referring to the vertical axis.
-    """
-
-
 class Value(ConfiguredBaseModel):
     """
     Represents either a literal value or a signal-based dynamic value.
@@ -177,8 +166,7 @@ class Value(ConfiguredBaseModel):
     )
 
     value: Optional[float] = Field(
-        default=None,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
+        default=None, json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex"]}}
     )
 
 
@@ -201,7 +189,7 @@ class OpacityValue(Value):
         default=None,
         ge=0,
         le=1,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
+        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex"]}},
     )
 
 
@@ -218,9 +206,7 @@ class PositiveValue(Value):
     )
 
     value: Optional[float] = Field(
-        default=None,
-        ge=0,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
+        default=None, ge=0, json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex"]}}
     )
 
 
@@ -232,8 +218,7 @@ class RGBHex(ConfiguredBaseModel):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
     value: Optional[str] = Field(
-        default=None,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
+        default=None, json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex"]}}
     )
 
     @field_validator("value")
@@ -270,91 +255,6 @@ class RandomRGBSignal(ConfiguredBaseModel):
     )
 
 
-class ColorItem(ConfiguredBaseModel):
-    """
-    A single color item definition specifying the scale on which the color is based and the value / field
-    to which to apply the color.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/slots"})
-
-    scale: str = Field(
-        default=...,
-        description="""The color scale.""",
-        json_schema_extra={"linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem"]}},
-    )
-    field: str = Field(
-        default=...,
-        description="""The value or field to which to apply the color.""",
-        json_schema_extra={"linkml_meta": {"alias": "field", "domain_of": ["ColorItem", "AxisItem"]}},
-    )
-
-    @field_validator("scale")
-    def pattern_scale(cls, v):
-        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
-        if isinstance(v, list):
-            for element in v:
-                if isinstance(element, str) and not pattern.match(element):
-                    err_msg = f"Invalid scale format: {element}"
-                    raise ValueError(err_msg)
-        elif isinstance(v, str) and not pattern.match(v):
-            err_msg = f"Invalid scale format: {v}"
-            raise ValueError(err_msg)
-        return v
-
-
-class CircleShape(ConfiguredBaseModel):
-    """
-    Circle shape definition used in symbol mark.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/slots"})
-
-    value: Optional[Literal["circle"]] = Field(
-        default="circle",
-        json_schema_extra={
-            "linkml_meta": {
-                "alias": "value",
-                "domain_of": ["Value", "RGBHex", "CircleShape"],
-                "equals_string": "circle",
-                "ifabsent": "string(circle)",
-            }
-        },
-    )
-
-
-class AxisItem(ConfiguredBaseModel):
-    """
-    A axis item which for a mark can define the scale and field used for the axis definition in the mark.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/slots"})
-
-    scale: str = Field(
-        default=...,
-        description="""The scale on which the axis is based.""",
-        json_schema_extra={"linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem"]}},
-    )
-    field: AxisEnum = Field(
-        default=...,
-        description="""The mark's field value transformed by the scale. Either x or y.""",
-        json_schema_extra={"linkml_meta": {"alias": "field", "domain_of": ["ColorItem", "AxisItem"]}},
-    )
-
-    @field_validator("scale")
-    def pattern_scale(cls, v):
-        pattern = re.compile(r"^[XY]_scale(_\d+)?$")
-        if isinstance(v, list):
-            for element in v:
-                if isinstance(element, str) and not pattern.match(element):
-                    err_msg = f"Invalid scale format: {element}"
-                    raise ValueError(err_msg)
-        elif isinstance(v, str) and not pattern.match(v):
-            err_msg = f"Invalid scale format: {v}"
-            raise ValueError(err_msg)
-        return v
-
-
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
 Value.model_rebuild()
@@ -362,7 +262,4 @@ OpacityValue.model_rebuild()
 PositiveValue.model_rebuild()
 RGBHex.model_rebuild()
 RandomRGBSignal.model_rebuild()
-ColorItem.model_rebuild()
-CircleShape.model_rebuild()
-AxisItem.model_rebuild()
 

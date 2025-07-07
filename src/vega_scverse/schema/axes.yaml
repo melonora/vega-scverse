@@ -18,10 +18,149 @@ default_range: string
 
 imports:
   - linkml:types
+  - misc
+  - slots
 
 created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
 classes:
   Axis:
-    definition: |-
+    description: |-
+      An axis visualizes a spatial scale mapping for cartesian coordinates using ticks, grid lines and labels.
+    attributes:
+      scale:
+        description: |-
+          Name of the 'AxisScale' to visualize as axis object.
+        pattern: "^[XY]_scale(_\\d+)?$"
+        required: true
+      orient:
+        description: |-
+          The orientation of the axis, either 'left', 'right', 'top' or 'bottom'.
+        range: AxisOrientEnum
+        required: true
+      domain:
+        description: |-
+          A boolean flag indicating if the domain (the axis baseline, the line that the ticks connect to) should be 
+          included as part of the axis.
+        range: boolean
+        required: true
+      domainOpacity:
+        description: |-
+          Opacity of axis domain line.
+        slot_uri: opacityValueSlot
+      domainColor:
+        description: |-
+          Color of axis domain line.
+        slot_uri: rgbHexSlot
+      domainWidth:
+        description: |-
+          Stroke width of axis domain line.
+        range: float
+      grid:
+        description: |-
+          A boolean flag indicating if grid lines should be included as part of the axis.
+        range: boolean
+        ifabsent: false
+      gridOpacity:
+        description: |-
+          Opacity of axis grid lines.
+        slot_uri: opacityValueSlot
+      gridCap:
+        description: |-
+          The stroke cap for axis grid lines. One of 'butt' (default), 'round' or 'square'.
+        range: CapEnum
+      gridColor:
+        description: |-
+          Color of axis grid lines.
+        slot_uri: rgbHexSlot
+      gridWidth:
+        description: |-
+          Stroke width of axis grid lines.
+        range: float
+      labelColor:
+        description: |-
+          Text color of axis tick labels.
+        slot_uri: rgbHexSlot
+      labelOpacity:
+        description: |-
+          Opacity of axis tick labels.
+        slot_uri: opacityValueSlot
+      labelFont:
+        description: |-
+          Font name for axis tick labels.
+        range: string
+      labelFontSize:
+        description: |-
+          Font size of axis tick labels.
+        range: float
+      labelFontStyle:
+        description: |-
+          Font style of axis tick labels
+        slot_uri: FontStyleValues
+      labelFontWeight:
+        description: |-
+          Font weight of axis tick labels.
+        slot_uri: FontWeightValues
+      ticks:
+        description: |-
+          A boolean flag indicating if ticks should be included as part of the axis.
+        range: boolean
+        ifabsent: true
+      tickOpacity:
+        description: |-
+          Opacity of axis ticks.
+        slot_uri: opacityValueSlot
+      tickColor:
+        description: |-
+          Color of axis ticks.
+        slot_uri: rgbHexSlot
+      tickCap:
+        description: |-
+          The stroke cap for axis tick marks. One of "butt" (default), "round" or "square".
+        range: CapEnum
+      tickWidth:
+        description: |-
+          Width in pixels of axis ticks.
+        slot_uri: nonNegativeFloatSlot
+      tickSize:
+        description: |-
+          The length in pixels of axis ticks.
+        slot_uri: nonNegativeFloatSlot
+      values:
+        description: |-
+          Explicitly set the visible axis tick and label values. The array entries should be legal values in the 
+          backing scale domain.
+        multivalued: true
+        any_of:
+          - range: float
+          - range: integer
+        required: true
+      zindex:
+        description: |-
+          The integer z-index indicating the layering of the axis group relative to other axis, mark, and legend groups. 
+          The default value is 0 and axes and grid lines are drawn behind any marks defined in the same specification 
+          level. Higher values (1) will cause axes and grid lines to be drawn on top of marks.
+        range: float
+        required: true
+
+enums:
+  AxisOrientEnum:
+    permissible_values:
+      left: Place a y-axis along the left edge of the chart.
+      right: Place a y-axis along the right edge of the chart.
+      top: Place an x-axis along the top edge of the chart.
+      bottom: Place an x-axis along the bottom edge of the chart.
+  CapEnum:
+    permissible_values:
+      butt: |-
+        The line ends exactly at its endpoint, producing a flat, squared-off edge perpendicular to the path. 
+        There is no extension beyond the endpoint.
+      round: |-
+        The line ends with a semi-circular extension beyond its endpoint, creating a rounded cap with a radius equal to 
+        half the line’s thickness. This softens sharp edges and creates smooth joins.
+      square: |-
+        The line ends with a square extension beyond its endpoint. It is similar to butt but extends the line slightly 
+        past the endpoint, by half the line’s thickness, resulting in a squared-off cap that projects outward.
+
+        

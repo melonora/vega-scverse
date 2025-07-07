@@ -57,6 +57,11 @@ slots:
     range: float
     minimum_value: 0
     maximum_value: 1
+  nonNegativeFloatSlot:
+    description: |-
+      A positive float value
+    range: float
+    minimum_value: 0
 
 classes:
   ColorItem:

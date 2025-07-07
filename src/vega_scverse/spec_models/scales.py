@@ -1,6 +1,9 @@
-Ôªøfrom __future__ import annotations
+from __future__ import annotations
 
 import re
+import sys
+from datetime import date, datetime, time
+from decimal import Decimal
 from enum import Enum
 from typing import Any, ClassVar, Literal, Optional, Union
 
@@ -62,7 +65,7 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": "scales.yaml",
+        "source_file": "src\\vega_scverse\\schema\\scales.yaml",
         "title": "vega-scverse-scales",
     }
 )
@@ -164,8 +167,8 @@ class AxisScale(Scale):
         }
     )
 
-    domain: Optional[list[float]] = Field(
-        default=None,
+    domain: list[float] = Field(
+        default=...,
         description="""The set of input data values that the scale maps from. In the case of a linear scale,
 this should be a two-element list representing the minimum and maximum numeric values
 to be transformed. For example, [512.0, 0.0] maps the data range from 512 (top) to 0 (bottom),
@@ -179,13 +182,13 @@ which is typical for Y-axis scales in image coordinate systems where the origin 
             }
         },
     )
-    range: Optional[AxisRangeEnum] = Field(
-        default=None,
-        description="""Defines the target visual dimension for the axis scale√Üs output range. Must be either 'width' for an X-axis 
+    range: AxisRangeEnum = Field(
+        default=...,
+        description="""Defines the target visual dimension for the axis scaleís output range. Must be either 'width' for an X-axis 
 scale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the 
 full canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically 
 defined by the top-level 'width' and 'height' properties of a Vega specification. For example, setting 
-\"range\": \"height\" in a Y-axis scale maps the scale√Üs domain to pixel positions from top to bottom within the 
+\"range\": \"height\" in a Y-axis scale maps the scaleís domain to pixel positions from top to bottom within the 
 plot area. This is commonly used to align data values with positional axes in coordinate-based visualizations.""",
         json_schema_extra={
             "linkml_meta": {
@@ -292,8 +295,8 @@ class ContinuousColorScale(ColorScale):
         }
     )
 
-    domain: Optional[ContinuousColorDomain] = Field(
-        default=None,
+    domain: ContinuousColorDomain = Field(
+        default=...,
         description="""The data used as a source for the visual color range""",
         json_schema_extra={
             "linkml_meta": {
@@ -302,8 +305,8 @@ class ContinuousColorScale(ColorScale):
             }
         },
     )
-    range: Optional[ContinuousColorMapRange] = Field(
-        default=None,
+    range: ContinuousColorMapRange = Field(
+        default=...,
         description="""The range to which to map the data domain. In this case one that refers to a colormap range.""",
         json_schema_extra={
             "linkml_meta": {
@@ -356,8 +359,8 @@ class CategoricalColorScale(ColorScale):
         }
     )
 
-    domain: Optional[list[str]] = Field(
-        default=None,
+    domain: list[str] = Field(
+        default=...,
         description="""The data domain as a list of discrete string values.""",
         json_schema_extra={
             "linkml_meta": {
@@ -366,8 +369,8 @@ class CategoricalColorScale(ColorScale):
             }
         },
     )
-    range: Optional[list[str]] = Field(
-        default=None,
+    range: list[str] = Field(
+        default=...,
         description="""List of RGB colors as hexadecimal strings""",
         json_schema_extra={
             "linkml_meta": {
@@ -429,15 +432,15 @@ class ContinuousColorDomain(ConfiguredBaseModel):
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/scales"})
 
-    data: Optional[str] = Field(
-        default=None,
+    data: str = Field(
+        default=...,
         description="""The identifier of the particular data object in the data array to which the color mapping in 
 ContinuousColorScale must be applied. In Vega this is only defined when the type of Scale is
 ordinal, but we deviate from that.""",
         json_schema_extra={"linkml_meta": {"alias": "data", "domain_of": ["ContinuousColorDomain"]}},
     )
-    field: Optional[str] = Field(
-        default=None,
+    field: str = Field(
+        default=...,
         description="""If the data source is a table, then the field is the column within the table that is used as 
 a source for the color mapping. In case of raster data with a single channel, the field equals
 \"value\" and if multichannel raster data it is the name or index of the image channel.""",
@@ -470,8 +473,8 @@ class ContinuousColorMapRange(ConfiguredBaseModel):
         description="""The name of the color scheme to use or an array of color values.""",
         json_schema_extra={"linkml_meta": {"alias": "scheme", "domain_of": ["ContinuousColorMapRange"]}},
     )
-    count: Optional[int] = Field(
-        default=None,
+    count: int = Field(
+        default=...,
         description="""The number of colors to use in the scheme.""",
         json_schema_extra={"linkml_meta": {"alias": "count", "domain_of": ["ContinuousColorMapRange"]}},
     )

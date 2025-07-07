@@ -1,4 +1,4 @@
-Ôªøfrom __future__ import annotations
+from __future__ import annotations
 
 import re
 import sys
@@ -64,7 +64,7 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": ".\\src\\vega_scverse\\schema\\specification.yaml",
+        "source_file": "src\\vega_scverse\\schema\\specification.yaml",
         "title": "vega-scverse-specification",
     }
 )
@@ -89,6 +89,92 @@ class AxisRangeEnum(str, Enum):
     width = "width"
     """
     Referring to the width of the plotting area.
+    """
+
+
+class FontStyleValues(str, Enum):
+    """
+        Possible font styles. These are all the possible css font styles. These include styles,
+    weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale
+    standardized in CSS to represent font weight.
+    """
+
+    normal = "normal"
+    """
+    Regular CSS font style with a font weight of 400.
+    """
+    italic = "italic"
+    """
+    A cursive CSS font style.
+    """
+    bold = "bold"
+    """
+    A font with a thicker stroke weight relative to a regular font used to emphasize the text. It has a font weight
+    of 700.
+    """
+    number_100 = "100"
+    """
+    The thinnest font weight available for a given font family.
+    """
+    number_200 = "200"
+    number_300 = "300"
+    number_500 = "500"
+    number_600 = "600"
+    number_800 = "800"
+    number_900 = "900"
+    """
+    The thickest font weight available for a given font family.
+    """
+    small_caps = "small-caps"
+    """
+    Uppercase letterforms designed at approximately the same height and weight as the fontís lowercase letters.
+    """
+    ultra_condensed = "ultra-condensed"
+    """
+    The most horizontally narrow font stretch. The visual representation of each character is narrowed to its most
+    compressed form.
+    """
+    extra_condensed = "extra-condensed"
+    condensed = "condensed"
+    semi_condensed = "semi-condensed"
+    semi_expanded = "semi-expanded"
+    expanded = "expanded"
+    extra_expanded = "extra-expanded"
+    ultra_expanded = "ultra-expanded"
+    """
+    The most horizontally expanded font stretch. The visual representation of each character is expanded to its most
+    expanded form.
+    """
+
+
+class FontWeightValues(str, Enum):
+    """
+        Possible font weight values. In case of font weights (100-900), it represents a unitless numeric scale
+    standardized in CSS to represent font weight.
+    """
+
+    number_100 = "100"
+    """
+    The thinnest font weight available for a given font family.
+    """
+    number_200 = "200"
+    number_300 = "300"
+    number_400 = "400"
+    number_500 = "500"
+    number_600 = "600"
+    number_700 = "700"
+    number_800 = "800"
+    number_900 = "900"
+    """
+    The thickest font weight available for a given font family.
+    """
+    bold = "bold"
+    """
+    Font with a font weight of 700.
+    """
+    normal = "normal"
+    """
+    Font with a font weight of 400.
     """
 
 
@@ -217,11 +303,11 @@ which is typical for Y-axis scales in image coordinate systems where the origin 
     )
     range: AxisRangeEnum = Field(
         default=...,
-        description="""Defines the target visual dimension for the axis scale√Üs output range. Must be either 'width' for an X-axis 
+        description="""Defines the target visual dimension for the axis scaleís output range. Must be either 'width' for an X-axis 
 scale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the 
 full canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically 
 defined by the top-level 'width' and 'height' properties of a Vega specification. For example, setting 
-\"range\": \"height\" in a Y-axis scale maps the scale√Üs domain to pixel positions from top to bottom within the 
+\"range\": \"height\" in a Y-axis scale maps the scaleís domain to pixel positions from top to bottom within the 
 plot area. This is commonly used to align data values with positional axes in coordinate-based visualizations.""",
         json_schema_extra={
             "linkml_meta": {
@@ -1429,7 +1515,7 @@ class Padding(ConfiguredBaseModel):
     """
     padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner
     view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes,
-    titles, and legends don√Üt touch or overflow the chart√Üs outer boundaries.
+    titles, and legends donít touch or overflow the chartís outer boundaries.
     When combined with \"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}, this padding is included within the chart's
     specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
     is defined with this class. This class should at least have one attribute defined.
@@ -1476,7 +1562,7 @@ excluding titles, legends, and margins.""",
         default=None,
         description="""padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner 
 view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes, 
-titles, and legends don√Üt touch or overflow the chart√Üs outer boundaries.
+titles, and legends donít touch or overflow the chartís outer boundaries.
 When combined with \"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}, this padding is included within the chart's 
 specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
 is defined with this class. This class should at least have one attribute defined.""",

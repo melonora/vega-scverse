@@ -1,4 +1,4 @@
-﻿from __future__ import annotations 
+from __future__ import annotations 
 
 import re
 import sys
@@ -78,7 +78,7 @@ linkml_meta = LinkMLMeta({'created_by': 'orcid:0000-0003-1666-5421',
                   'vega_scverse': {'prefix_prefix': 'vega_scverse',
                                    'prefix_reference': 'https://w3id.org/scverse/vega-scverse/'}},
      'see_also': ['https://scverse.github.io/vega-scverse'],
-     'source_file': '.\\data.yaml',
+     'source_file': 'src\\vega_scverse\\schema\\data.yaml',
      'title': 'vega-scverse-data'} )
 
 class TransformTypeEnum(str, Enum):
@@ -359,7 +359,7 @@ class FilterChannelTransform(Transform):
                                  'equals_string': 'filter_channel',
                                  'name': 'type'}}})
 
-    expr: Optional[list[Union[int, str]]] = Field(default=None, description="""The channel(s) to filter the input data stream on. Either a list of integers that correspond to the channel
+    expr: list[Union[int, str]] = Field(default=..., description="""The channel(s) to filter the input data stream on. Either a list of integers that correspond to the channel
 indices or list of strings that refer to the name of the channels. Preferably, it SHOULD be the latter to
 prevent a different context when ordering of the channels changes.""", json_schema_extra = { "linkml_meta": {'alias': 'expr',
          'any_of': [{'range': 'string'}, {'range': 'integer'}],

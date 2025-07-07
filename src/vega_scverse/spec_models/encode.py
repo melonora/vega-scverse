@@ -49,12 +49,12 @@ linkml_meta = LinkMLMeta(
         "created_on": "2025-06-01T00:00:00",
         "default_prefix": "vega_scverse",
         "default_range": "string",
-        "description": "Vega like specification for the marks used in view "
-        "configurations for the scverse visualization ecosystem.",
-        "id": "https://w3id.org/scverse/vega-scverse/marks",
-        "imports": ["linkml:types", "encode"],
+        "description": "Vega like specification for the encodings used to specify the "
+        "visuals representation of marks.",
+        "id": "https://w3id.org/scverse/vega-scverse/encode",
+        "imports": ["linkml:types", "misc", "slots"],
         "license": "BSD-3",
-        "name": "vega-scverse-marks",
+        "name": "vega-scverse-encode",
         "prefixes": {
             "linkml": {"prefix_prefix": "linkml", "prefix_reference": "https://w3id.org/linkml/"},
             "orcid": {"prefix_prefix": "orcid", "prefix_reference": "https://orcid.org/"},
@@ -64,8 +64,8 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": "src\\vega_scverse\\schema\\marks.yaml",
-        "title": "vega-scverse-marks",
+        "source_file": "src\\vega_scverse\\schema\\encode.yaml",
+        "title": "vega-scverse-encode",
     }
 )
 
@@ -164,29 +164,6 @@ class AxisEnum(str, Enum):
     y = "y"
     """
     y-axis of the visualization. Typically referring to the vertical axis.
-    """
-
-
-class MarkTypeEnum(str, Enum):
-    """
-    The valid mark types within the scverse plotting / visualization ecosystem.
-    """
-
-    raster_image = "raster_image"
-    """
-    Mark used for a SpatialData image element.
-    """
-    raster_label = "raster_label"
-    """
-    Mark used for SpatialData label element.
-    """
-    symbol = "symbol"
-    """
-    The mark used for points data.
-    """
-    path = "path"
-    """
-    The mark used for circle and shapes geometries.
     """
 
 
@@ -795,294 +772,6 @@ https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'tr
         return v
 
 
-class Mark(ConfiguredBaseModel):
-    """
-    Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting symbols.
-    Marks are the basic visual building block of a visualization, providing basic shapes whose properties can be set
-    according to backing data. Mark property definitions may be simple constants or data fields, or scales can be
-    used to map data values to visual values.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {"abstract": True, "from_schema": "https://w3id.org/scverse/vega-scverse/marks"}
-    )
-
-    type: MarkTypeEnum = Field(
-        default=...,
-        description="""The type of mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "type", "domain_of": ["Mark"]}},
-    )
-    from_: MarkDataSource = Field(
-        default=...,
-        description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["Mark"]}},
-    )
-    encode: str = Field(
-        default=...,
-        description="""A set of visual encoding properties that determine the position and appearance of mark instances. In Vega, 
-there are three primary property sets: enter, update, exit. The enter properties are evaluated when data is 
-processed for the first time and a mark instance is newly added to a scene. The update properties are 
-evaluated for all existing (non-exiting) mark instances. The exit properties are evaluated when the data 
-backing a mark is removed, and so the mark is leaving the visual scene. However, in this specification we 
-currently only support enter and update property sets.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
-    )
-    zindex: int = Field(
-        default=...,
-        description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
-(1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
-    )
-
-
-class MarkDataSource(ConfiguredBaseModel):
-    """
-    Object with a data field pointing to the name of the datastream that serves as data source for the mark.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
-
-    data: str = Field(
-        default=...,
-        description="""name of the datastream""",
-        json_schema_extra={"linkml_meta": {"alias": "data", "domain_of": ["MarkDataSource"]}},
-    )
-
-    @field_validator("data")
-    def pattern_data(cls, v):
-        pattern = re.compile(r"^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
-        if isinstance(v, list):
-            for element in v:
-                if isinstance(element, str) and not pattern.match(element):
-                    err_msg = f"Invalid data format: {element}"
-                    raise ValueError(err_msg)
-        elif isinstance(v, str) and not pattern.match(v):
-            err_msg = f"Invalid data format: {v}"
-            raise ValueError(err_msg)
-        return v
-
-
-class RasterImageMark(Mark):
-    """
-    Graphical mark encoding an image.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {
-            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
-            "slot_usage": {
-                "encode": {
-                    "description": "A set of visual encoding properties "
-                    "that determine the position and "
-                    "appearance of the raster_image "
-                    "mark.",
-                    "name": "encode",
-                    "range": "ImageEncode",
-                },
-                "type": {
-                    "description": "The type of the mark. In this case, " "it is always 'raster_image'",
-                    "equals_string": "raster_image",
-                    "ifabsent": "string(raster_image)",
-                    "name": "type",
-                },
-            },
-        }
-    )
-
-    type: Literal["raster_image"] = Field(
-        default="raster_image",
-        description="""The type of the mark. In this case, it is always 'raster_image'""",
-        json_schema_extra={
-            "linkml_meta": {
-                "alias": "type",
-                "domain_of": ["Mark"],
-                "equals_string": "raster_image",
-                "ifabsent": "string(raster_image)",
-            }
-        },
-    )
-    from_: MarkDataSource = Field(
-        default=...,
-        description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["Mark"]}},
-    )
-    encode: ImageEncode = Field(
-        default=...,
-        description="""A set of visual encoding properties that determine the position and appearance of the raster_image mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
-    )
-    zindex: int = Field(
-        default=...,
-        description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
-(1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
-    )
-
-
-class RasterLabelMark(Mark):
-    """
-    Graphical mark encoding a label image.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {
-            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
-            "slot_usage": {
-                "encode": {
-                    "description": "A set of visual encoding properties "
-                    "that determine the position and "
-                    "appearance of the raster_image "
-                    "mark.",
-                    "name": "encode",
-                    "range": "LabelEncode",
-                },
-                "type": {
-                    "description": "The type of the mark. In this case, " "it is always 'raster_label'",
-                    "equals_string": "raster_label",
-                    "ifabsent": "string(raster_label)",
-                    "name": "type",
-                },
-            },
-        }
-    )
-
-    type: Literal["raster_label"] = Field(
-        default="raster_label",
-        description="""The type of the mark. In this case, it is always 'raster_label'""",
-        json_schema_extra={
-            "linkml_meta": {
-                "alias": "type",
-                "domain_of": ["Mark"],
-                "equals_string": "raster_label",
-                "ifabsent": "string(raster_label)",
-            }
-        },
-    )
-    from_: MarkDataSource = Field(
-        default=...,
-        description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["Mark"]}},
-    )
-    encode: LabelEncode = Field(
-        default=...,
-        description="""A set of visual encoding properties that determine the position and appearance of the raster_image mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
-    )
-    zindex: int = Field(
-        default=...,
-        description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
-(1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
-    )
-
-
-class PointsMark(Mark):
-    """
-    Graphical mark for encoding points data, using a vega like symbol mark.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {
-            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
-            "slot_usage": {
-                "encode": {
-                    "description": "A set of visual encoding properties "
-                    "that determine the position and "
-                    "appearance of the symbol mark.",
-                    "name": "encode",
-                    "range": "SymbolEncode",
-                },
-                "type": {
-                    "description": "The type of the mark. In this case, " "it is always 'symbol'.",
-                    "equals_string": "symbol",
-                    "ifabsent": "string(symbol)",
-                    "name": "type",
-                },
-            },
-        }
-    )
-
-    type: Literal["symbol"] = Field(
-        default="symbol",
-        description="""The type of the mark. In this case, it is always 'symbol'.""",
-        json_schema_extra={
-            "linkml_meta": {
-                "alias": "type",
-                "domain_of": ["Mark"],
-                "equals_string": "symbol",
-                "ifabsent": "string(symbol)",
-            }
-        },
-    )
-    from_: MarkDataSource = Field(
-        default=...,
-        description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["Mark"]}},
-    )
-    encode: SymbolEncode = Field(
-        default=...,
-        description="""A set of visual encoding properties that determine the position and appearance of the symbol mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
-    )
-    zindex: int = Field(
-        default=...,
-        description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
-(1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
-    )
-
-
-class ShapesMark(Mark):
-    """
-    Graphical mark for encoding shapes data, using a vega like path mark.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {
-            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
-            "slot_usage": {
-                "encode": {
-                    "description": "A set of visual encoding properties "
-                    "that determine the position and "
-                    "appearance of the symbol mark.",
-                    "name": "encode",
-                    "range": "PathEncode",
-                },
-                "type": {
-                    "description": "The type of the mark. In this case, " "it is always 'symbol'.",
-                    "equals_string": "path",
-                    "ifabsent": "string(path)",
-                    "name": "type",
-                },
-            },
-        }
-    )
-
-    type: Literal["path"] = Field(
-        default="path",
-        description="""The type of the mark. In this case, it is always 'symbol'.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "type", "domain_of": ["Mark"], "equals_string": "path", "ifabsent": "string(path)"}
-        },
-    )
-    from_: MarkDataSource = Field(
-        default=...,
-        description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["Mark"]}},
-    )
-    encode: PathEncode = Field(
-        default=...,
-        description="""A set of visual encoding properties that determine the position and appearance of the symbol mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
-    )
-    zindex: int = Field(
-        default=...,
-        description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
-(1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
-    )
-
-
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
 Value.model_rebuild()
@@ -1103,10 +792,4 @@ PointsEncodeEnter.model_rebuild()
 PathEncodeEnter.model_rebuild()
 MarkEncodeUpdate.model_rebuild()
 ConditionalFillUpdate.model_rebuild()
-Mark.model_rebuild()
-MarkDataSource.model_rebuild()
-RasterImageMark.model_rebuild()
-RasterLabelMark.model_rebuild()
-PointsMark.model_rebuild()
-ShapesMark.model_rebuild()
 

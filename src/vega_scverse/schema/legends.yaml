@@ -19,6 +19,7 @@ default_range: string
 imports:
   - linkml:types
   - slots
+  - misc
 
 created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
@@ -32,12 +33,12 @@ classes:
       type:
         description: |-
           The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).
-        range: LegendType
+        range: legendType
         required: true
       direction:
         description: |-
           The direction of the legend, one of 'vertical' or 'horizontal'.
-        range: LegendDirections
+        range: legendDirections
         required: true
       orient:
         description: |-
@@ -103,12 +104,12 @@ classes:
       labelFontStyle:
         description: |-
           Font style of legend labels
-        range: labelFontStyleValues
+        slot_uri: FontStyleValues
         required: true
       labelFontWeight:
         description: |-
           Font weight of legend labels.
-        range: labelFontWeightValues
+        slot_uri: FontWeightValues
         required: true
       legendX:
         description: |-
@@ -121,7 +122,7 @@ classes:
         range: float
         required: true
       zindex:
-        definition: |-
+        description: |-
           The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
           legend groups.
         range: float
@@ -148,95 +149,44 @@ classes:
     is_a: Legend
     attributes:
       gradientLength:
-        definition: |-
+        description: |-
           The length in pixels of the primary axis of a color gradient. This value corresponds to the height of a 
           vertical gradient or the width of a horizontal gradient.
         range: float
         required: true
       gradientOpacity:
-        definition: |-
+        description: |-
           Opacity of the color gradient.
-        range: opacityValueSlot
+        slot_uri: opacityValueSlot
         required: true
       gradientStrokeColor:
-        definition: |-
+        description: |-
           Stroke color of the color gradient border.
-        range: rgbHexSlot
+        slot_uri: rgbHexSlot
         required: true
       gradientStrokeWidth:
-        definition: |-
+        description: |-
           Stroke width of the color gradient border.
         range: float
         required: true
 
 enums:
-  LegendType:
+  legendType:
     description: |-
       The valid mark types within the scverse plotting / visualization ecosystem.
     permissible_values:
       discrete: legend type for categorical data
       gradient: legend type for continuous data
-  LegendDirections:
+  legendDirections:
     description: |-
       The possible directions of the legend.
     permissible_values:
       horizontal: legend direction with the longest axis oriented along the horizontal axis.
       vertical: legend direction with the longest axis oriented along the vertical axis.
-  LabelAlignValues:
+  labelAlignValues:
     description: |-
       The possible values for horizontal alignment of the legend labels.
     permissible_values:
       left: The anchor point of the labels is left of the label text.
       center: The anchor point of the labels is at the center of the label text.
       right: The anchor point of the labels is right of the label text.
-  labelFontStyleValues:
-    description: |-
-      Possible font styles of legend labels. These are all the possible css font styles. These include styles,
-      weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale 
-      standardized in CSS to represent font weight.
-    see_also:
-      - https://www.w3.org/Style/Examples/007/fonts.en.html#font-style
-    permissible_values:
-      normal: Regular CSS font style with a font weight of 400.
-      italic: A cursive CSS font style.
-      bold: |-
-        A font with a thicker stroke weight relative to a regular font used to emphasize the text. It has a font weight
-        of 700.
-      100: The thinnest font weight available for a given font family.
-      200:
-      300:
-      500:
-      600:
-      800:
-      900: The thickest font weight available for a given font family.
-      small-caps: |-
-        Uppercase letterforms designed at approximately the same height and weight as the font’s lowercase letters.
-      ultra-condensed: |-
-        The most horizontally narrow font stretch. The visual representation of each character is narrowed to its most
-        compressed form.
-      extra-condensed:
-      condensed:
-      semi-condensed:
-      semi-expanded:
-      expanded:
-      extra-expanded:
-      ultra-expanded: |-
-        The most horizontally expanded font stretch. The visual representation of each character is expanded to its most
-        expanded form.
-    labelFontWeightValues:
-      description: |-
-        Possible font weight values of legend labels. These are all the possible css font styles. These include styles,
-        weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale 
-        standardized in CSS to represent font weight.
-      permissible_values:
-        100: The thinnest font weight available for a given font family.
-        200:
-        300:
-        400:
-        500:
-        600:
-        700:
-        800:
-        900: The thickest font weight available for a given font family.
-        bold: Font with a font weight of 700.
-        normal: Font with a font weight of 400.

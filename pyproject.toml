@@ -61,6 +61,7 @@ doc = { features = ["doc"], solve-group = "default" }
 all = { features = ["dev", "test", "doc"], solve-group = "default" }
 
 [tool.pixi.feature.dev.tasks]
+gen_all_pydantic = "python ./src/vega_scverse/linkml_utils/gen_all_pydantic.py"
 gen_project = "gen-project -d project src/vega_scverse/schema/specification.yaml"
 lint = "linkml-lint src/vega_scverse/schema/specification.yaml"
 cruft_check = "cruft check"
