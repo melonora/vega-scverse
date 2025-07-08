@@ -70,17 +70,6 @@ linkml_meta = LinkMLMeta(
 )
 
 
-class AxisEnum(str, Enum):
-    x = "x"
-    """
-    x-axis of the visualization. Typically referring to the horizontal axis.
-    """
-    y = "y"
-    """
-    y-axis of the visualization. Typically referring to the vertical axis.
-    """
-
-
 class FontStyleValues(str, Enum):
     """
         Possible font styles. These are all the possible css font styles. These include styles,
@@ -167,13 +156,186 @@ class FontWeightValues(str, Enum):
     """
 
 
+class AxisEnum(str, Enum):
+    x = "x"
+    """
+    x-axis of the visualization. Typically referring to the horizontal axis.
+    """
+    y = "y"
+    """
+    y-axis of the visualization. Typically referring to the vertical axis.
+    """
+
+
+class OrientEnum(str, Enum):
+    """
+    The position relative to the chart for either a (sub)title or axis.
+    """
+
+    left = "left"
+    """
+    Place a y-axis or title along the left side of the chart.
+    """
+    right = "right"
+    """
+    Place a y-axis or title along the right side of the chart.
+    """
+    top = "top"
+    """
+    Place an x-axis or title along the top side of the chart.
+    """
+    bottom = "bottom"
+    """
+    Place an x-axis or title along the bottom side of the chart.
+    """
+
+
+class BaseLineEnum(str, Enum):
+    """
+        The possible vertical alignments of the text relative to its y-coordinate.
+    See the link for an explanation of the meaning of EM square. We do not currently
+    support "line-bottom" and "line-top".
+    """
+
+    top = "top"
+    """
+    The highest part of all characters aligns with the y-coordinate.
+    """
+    middle = "middle"
+    """
+    The middle of the fonts EM square aligns with the y-coordinate.
+    """
+    bottom = "bottom"
+    """
+    The bottom of all characters combined aligns with the y-coordinate.
+    """
+    alphabetic = "alphabetic"
+    """
+    aligns the main body of lowercase letters (like a, e, x) so that their base sits exactly on the anchor line 
+    (y coordinate). Descenders on letters like g, p, or y extend below this line.
+    """
+
+
+class RGBHexItem(ConfiguredBaseModel):
+    """
+    RGB value represented by a hexadecimal string value.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: Optional[str] = Field(
+        default=None,
+        json_schema_extra={
+            "linkml_meta": {"alias": "value", "domain_of": ["RGBHexItem", "CircleShape"], "slot_uri": "rgbHexSlot"}
+        },
+    )
+
+
+class RandomRGBSignal(ConfiguredBaseModel):
+    """
+    RGB value represented by a hexadecimal string value.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    signal: Optional[Literal["rgb(random()*255, random()*255, random()*255)"]] = Field(
+        default="rgb",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "signal",
+                "domain_of": ["RandomRGBSignal"],
+                "equals_string": "rgb(random()*255, random()*255, random()*255)",
+                "ifabsent": "string(rgb(random()*255, random()*255, random()*255))",
+            }
+        },
+    )
+
+
+class Title(ConfiguredBaseModel):
+    """
+    The title directive adds a descriptive title to a chart. Similar to scales, axes, and legends, a title can be
+    defined at the top-level of a specification or as part of a group mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    text: list[str] = Field(
+        default=...,
+        description="""The title text. Either a string or an array of strings. The latter specifies multiple lines of text.""",
+        json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title"]}},
+    )
+    orient: OrientEnum = Field(
+        default=...,
+        description="""The orientation of the title relative to the chart.""",
+        json_schema_extra={"linkml_meta": {"alias": "orient", "domain_of": ["Title"]}},
+    )
+    baseline: BaseLineEnum = Field(
+        default=...,
+        description="""The baseline attribute specifies the vertical alignment (baseline) of the text relative to its y-coordinate.""",
+        json_schema_extra={"linkml_meta": {"alias": "baseline", "domain_of": ["Title"]}},
+    )
+    color: str = Field(
+        default=...,
+        description="""Text color of the title text.""",
+        json_schema_extra={"linkml_meta": {"alias": "color", "domain_of": ["Title"], "slot_uri": "rgbaHexSlot"}},
+    )
+    font: str = Field(
+        default=...,
+        description="""Font name of the title text.""",
+        json_schema_extra={"linkml_meta": {"alias": "font", "domain_of": ["Title"]}},
+    )
+    fontSize: str = Field(
+        default=...,
+        description="""Font size in pixels of the title text.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "fontSize", "domain_of": ["Title"], "slot_uri": "nonNegativeFloatSlot"}
+        },
+    )
+    fontStyle: FontStyleValues = Field(
+        default=...,
+        description="""Fontstyle of the title.""",
+        json_schema_extra={"linkml_meta": {"alias": "fontStyle", "domain_of": ["Title"]}},
+    )
+    fontWeight: FontWeightValues = Field(
+        default=...,
+        description="""Font weight of the title""",
+        json_schema_extra={"linkml_meta": {"alias": "fontWeight", "domain_of": ["Title"]}},
+    )
+
+
+class Padding(ConfiguredBaseModel):
+    """
+    padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner
+    view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes,
+    titles, and legends don’t touch or overflow the chart’s outer boundaries.
+    When combined with \"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}, this padding is included within the chart's
+    specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
+    is defined with this class. This class should at least have one attribute defined.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    left: Optional[int] = Field(
+        default=None, json_schema_extra={"linkml_meta": {"alias": "left", "domain_of": ["Padding"]}}
+    )
+    top: Optional[int] = Field(
+        default=None, json_schema_extra={"linkml_meta": {"alias": "top", "domain_of": ["Padding"]}}
+    )
+    right: Optional[int] = Field(
+        default=None, json_schema_extra={"linkml_meta": {"alias": "right", "domain_of": ["Padding"]}}
+    )
+    bottom: Optional[int] = Field(
+        default=None, json_schema_extra={"linkml_meta": {"alias": "bottom", "domain_of": ["Padding"]}}
+    )
+
+
 class ColorItem(ConfiguredBaseModel):
     """
     A single color item definition specifying the scale on which the color is based and the value / field
     to which to apply the color.
     """
 
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/slots"})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
     scale: str = Field(
         default=...,
@@ -205,14 +367,14 @@ class CircleShape(ConfiguredBaseModel):
     Circle shape definition used in symbol mark.
     """
 
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/slots"})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
     value: Optional[Literal["circle"]] = Field(
         default="circle",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
-                "domain_of": ["CircleShape", "RGBHexItem"],
+                "domain_of": ["RGBHexItem", "CircleShape"],
                 "equals_string": "circle",
                 "ifabsent": "string(circle)",
             }
@@ -225,7 +387,7 @@ class AxisItem(ConfiguredBaseModel):
     A axis item which for a mark can define the scale and field used for the axis definition in the mark.
     """
 
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/slots"})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
     scale: str = Field(
         default=...,
@@ -252,46 +414,13 @@ class AxisItem(ConfiguredBaseModel):
         return v
 
 
-class RGBHexItem(ConfiguredBaseModel):
-    """
-    RGB value represented by a hexadecimal string value.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
-
-    value: Optional[str] = Field(
-        default=None,
-        json_schema_extra={
-            "linkml_meta": {"alias": "value", "domain_of": ["CircleShape", "RGBHexItem"], "slot_uri": "rgbHexSlot"}
-        },
-    )
-
-
-class RandomRGBSignal(ConfiguredBaseModel):
-    """
-    RGB value represented by a hexadecimal string value.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
-
-    signal: Optional[Literal["rgb(random()*255, random()*255, random()*255)"]] = Field(
-        default="rgb",
-        json_schema_extra={
-            "linkml_meta": {
-                "alias": "signal",
-                "domain_of": ["RandomRGBSignal"],
-                "equals_string": "rgb(random()*255, random()*255, random()*255)",
-                "ifabsent": "string(rgb(random()*255, random()*255, random()*255))",
-            }
-        },
-    )
-
-
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
+RGBHexItem.model_rebuild()
+RandomRGBSignal.model_rebuild()
+Title.model_rebuild()
+Padding.model_rebuild()
 ColorItem.model_rebuild()
 CircleShape.model_rebuild()
 AxisItem.model_rebuild()
-RGBHexItem.model_rebuild()
-RandomRGBSignal.model_rebuild()
 

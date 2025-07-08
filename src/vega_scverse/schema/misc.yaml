@@ -39,6 +39,116 @@ classes:
         equals_string: "rgb(random()*255, random()*255, random()*255)"
         ifabsent: string(rgb(random()*255, random()*255, random()*255))
 
+  Title:
+    description: |-
+      The title directive adds a descriptive title to a chart. Similar to scales, axes, and legends, a title can be 
+      defined at the top-level of a specification or as part of a group mark.
+    attributes:
+      text:
+        description: |-
+          The title text. Either a string or an array of strings. The latter specifies multiple lines of text.
+        range: string
+        multivalued: true
+        required: true
+      orient:
+        description: |-
+          The orientation of the title relative to the chart.
+        range: OrientEnum
+        required: true
+      baseline:
+        description: |-
+          The baseline attribute specifies the vertical alignment (baseline) of the text relative to its y-coordinate.
+        range: BaseLineEnum
+        required: true
+      color:
+        description: |-
+          Text color of the title text.
+        slot_uri: rgbaHexSlot
+        required: true
+      font:
+        description: |-
+          Font name of the title text.
+        range: string
+        required: true
+      fontSize:
+        description: |-
+          Font size in pixels of the title text.
+        slot_uri: nonNegativeFloatSlot
+        required: true
+      fontStyle:
+        description: |-
+          Fontstyle of the title.
+        range: FontStyleValues
+        required: true
+      fontWeight:
+        description: |-
+          Font weight of the title
+        range: FontWeightValues
+        required: true
+
+  Padding:
+    description: |-
+      padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner 
+      view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes, 
+      titles, and legends don’t touch or overflow the chart’s outer boundaries.
+      When combined with "autosize": {"type": "fit", "contains": "padding"}, this padding is included within the chart's 
+      specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
+      is defined with this class. This class should at least have one attribute defined.
+    # TODO linkml does not currently support json like minProperties to state that at least one attribute would be
+    # required.
+    attributes:
+      left:
+        range: integer
+        required: false
+      top:
+        range: integer
+        required: false
+      right:
+        range: integer
+        required: false
+      bottom:
+        range: integer
+        required: false
+
+  ColorItem:
+    description: |-
+      A single color item definition specifying the scale on which the color is based and the value / field
+      to which to apply the color.
+    attributes:
+      scale:
+        description: |-
+          The color scale.
+        pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        required: true
+      field:
+        description: |-
+          The value or field to which to apply the color.
+        range: string
+        required: true
+
+  CircleShape:
+    description: |-
+      Circle shape definition used in symbol mark.
+    attributes:
+      value:
+        equals_string: circle
+        ifabsent: string(circle)
+
+  AxisItem:
+    description: |-
+      A axis item which for a mark can define the scale and field used for the axis definition in the mark.
+    attributes:
+      scale:
+        description: |-
+          The scale on which the axis is based.
+        pattern: "^[XY]_scale(_\\d+)?$"
+        required: true
+      field:
+        description: |-
+          The mark's field value transformed by the scale. Either x or y.
+        range: AxisEnum
+        required: true
+
 enums:
   FontStyleValues:
     description: |-
@@ -90,4 +200,29 @@ enums:
       900: The thickest font weight available for a given font family.
       bold: Font with a font weight of 700.
       normal: Font with a font weight of 400.
+  AxisEnum:
+    permissible_values:
+      x: x-axis of the visualization. Typically referring to the horizontal axis.
+      y: y-axis of the visualization. Typically referring to the vertical axis.
+  OrientEnum:
+    description: |-
+      The position relative to the chart for either a (sub)title or axis.
+    permissible_values:
+      left: Place a y-axis or title along the left side of the chart.
+      right: Place a y-axis or title along the right side of the chart.
+      top: Place an x-axis or title along the top side of the chart.
+      bottom: Place an x-axis or title along the bottom side of the chart.
+  BaseLineEnum:
+    description: |-
+      The possible vertical alignments of the text relative to its y-coordinate.
+      See the link for an explanation of the meaning of EM square. We do not currently
+      support "line-bottom" and "line-top".
+    see_also: http://designwithfontforge.com/en-US/The_EM_Square.html
+    permissible_values:
+      top: The highest part of all characters aligns with the y-coordinate.
+      middle: The middle of the fonts EM square aligns with the y-coordinate.
+      bottom: The bottom of all characters combined aligns with the y-coordinate.
+      alphabetic: |-
+        aligns the main body of lowercase letters (like a, e, x) so that their base sits exactly on the anchor line 
+        (y coordinate). Descenders on letters like g, p, or y extend below this line.
 

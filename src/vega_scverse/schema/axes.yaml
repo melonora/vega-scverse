@@ -37,7 +37,7 @@ classes:
       orient:
         description: |-
           The orientation of the axis, either 'left', 'right', 'top' or 'bottom'.
-        range: AxisOrientEnum
+        range: OrientEnum
         required: true
       domain:
         description: |-
@@ -145,12 +145,6 @@ classes:
         required: true
 
 enums:
-  AxisOrientEnum:
-    permissible_values:
-      left: Place a y-axis along the left edge of the chart.
-      right: Place a y-axis along the right edge of the chart.
-      top: Place an x-axis along the top edge of the chart.
-      bottom: Place an x-axis along the bottom edge of the chart.
   CapEnum:
     permissible_values:
       butt: |-
