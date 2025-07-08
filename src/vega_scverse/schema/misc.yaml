@@ -18,6 +18,7 @@ default_range: string
 
 imports:
   - linkml:types
+  - slots
 
 created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
@@ -28,7 +29,7 @@ classes:
       RGB value represented by a hexadecimal string value.
     attributes:
       value:
-        pattern: "^#([A-Fa-f0-9]{6})$"
+        slot_uri: rgbHexSlot
 
   RandomRGBSignal:
     description: |-

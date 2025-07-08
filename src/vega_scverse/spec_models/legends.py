@@ -70,6 +70,17 @@ linkml_meta = LinkMLMeta(
 )
 
 
+class AxisEnum(str, Enum):
+    x = "x"
+    """
+    x-axis of the visualization. Typically referring to the horizontal axis.
+    """
+    y = "y"
+    """
+    y-axis of the visualization. Typically referring to the vertical axis.
+    """
+
+
 class FontStyleValues(str, Enum):
     """
         Possible font styles. These are all the possible css font styles. These include styles,
@@ -156,17 +167,6 @@ class FontWeightValues(str, Enum):
     """
 
 
-class AxisEnum(str, Enum):
-    x = "x"
-    """
-    x-axis of the visualization. Typically referring to the horizontal axis.
-    """
-    y = "y"
-    """
-    y-axis of the visualization. Typically referring to the vertical axis.
-    """
-
-
 class LegendType(str, Enum):
     """
     The valid mark types within the scverse plotting / visualization ecosystem.
@@ -216,109 +216,6 @@ class LabelAlignValues(str, Enum):
     """
 
 
-class Value(ConfiguredBaseModel):
-    """
-    Represents either a literal value or a signal-based dynamic value.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {"abstract": True, "from_schema": "https://w3id.org/scverse/vega-scverse/marks"}
-    )
-
-    value: Optional[float] = Field(
-        default=None,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
-    )
-
-
-class OpacityValue(Value):
-    """
-    A numeric value representing the transparency level of a visual element, typically ranging from 0 to 1.
-      - 0 means fully transparent (invisible).
-      - 1 means fully opaque (no transparency).
-      - Values in between represent varying levels of transparency.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {
-            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
-            "slot_usage": {"value": {"maximum_value": 1, "minimum_value": 0, "name": "value"}},
-        }
-    )
-
-    value: Optional[float] = Field(
-        default=None,
-        ge=0,
-        le=1,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
-    )
-
-
-class PositiveValue(Value):
-    """
-    A value above 0.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {
-            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
-            "slot_usage": {"value": {"minimum_value": 0, "name": "value"}},
-        }
-    )
-
-    value: Optional[float] = Field(
-        default=None,
-        ge=0,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
-    )
-
-
-class RGBHex(ConfiguredBaseModel):
-    """
-    RGB value represented by a hexadecimal string value.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
-
-    value: Optional[str] = Field(
-        default=None,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
-    )
-
-    @field_validator("value")
-    def pattern_value(cls, v):
-        pattern = re.compile(r"^#([A-Fa-f0-9]{6})$")
-        if isinstance(v, list):
-            for element in v:
-                if isinstance(element, str) and not pattern.match(element):
-                    err_msg = f"Invalid value format: {element}"
-                    raise ValueError(err_msg)
-        elif isinstance(v, str) and not pattern.match(v):
-            err_msg = f"Invalid value format: {v}"
-            raise ValueError(err_msg)
-        return v
-
-
-class RandomRGBSignal(ConfiguredBaseModel):
-    """
-    RGB value represented by a hexadecimal string value.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
-
-    signal: Optional[Literal["rgb(random()*255, random()*255, random()*255)"]] = Field(
-        default="rgb",
-        json_schema_extra={
-            "linkml_meta": {
-                "alias": "signal",
-                "domain_of": ["RandomRGBSignal"],
-                "equals_string": "rgb(random()*255, random()*255, random()*255)",
-                "ifabsent": "string(rgb(random()*255, random()*255, random()*255))",
-            }
-        },
-    )
-
-
 class ColorItem(ConfiguredBaseModel):
     """
     A single color item definition specifying the scale on which the color is based and the value / field
@@ -364,7 +261,7 @@ class CircleShape(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
-                "domain_of": ["Value", "RGBHex", "CircleShape"],
+                "domain_of": ["CircleShape", "RGBHexItem"],
                 "equals_string": "circle",
                 "ifabsent": "string(circle)",
             }
@@ -402,6 +299,41 @@ class AxisItem(ConfiguredBaseModel):
             err_msg = f"Invalid scale format: {v}"
             raise ValueError(err_msg)
         return v
+
+
+class RGBHexItem(ConfiguredBaseModel):
+    """
+    RGB value represented by a hexadecimal string value.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: Optional[str] = Field(
+        default=None,
+        json_schema_extra={
+            "linkml_meta": {"alias": "value", "domain_of": ["CircleShape", "RGBHexItem"], "slot_uri": "rgbHexSlot"}
+        },
+    )
+
+
+class RandomRGBSignal(ConfiguredBaseModel):
+    """
+    RGB value represented by a hexadecimal string value.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    signal: Optional[Literal["rgb(random()*255, random()*255, random()*255)"]] = Field(
+        default="rgb",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "signal",
+                "domain_of": ["RandomRGBSignal"],
+                "equals_string": "rgb(random()*255, random()*255, random()*255)",
+                "ifabsent": "string(rgb(random()*255, random()*255, random()*255))",
+            }
+        },
+    )
 
 
 class Legend(ConfiguredBaseModel):
@@ -849,14 +781,11 @@ legend groups.""",
 
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
-Value.model_rebuild()
-OpacityValue.model_rebuild()
-PositiveValue.model_rebuild()
-RGBHex.model_rebuild()
-RandomRGBSignal.model_rebuild()
 ColorItem.model_rebuild()
 CircleShape.model_rebuild()
 AxisItem.model_rebuild()
+RGBHexItem.model_rebuild()
+RandomRGBSignal.model_rebuild()
 Legend.model_rebuild()
 CategoricalLegend.model_rebuild()
 ColorBarLegend.model_rebuild()

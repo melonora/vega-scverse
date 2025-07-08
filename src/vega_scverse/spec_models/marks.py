@@ -190,64 +190,7 @@ class MarkTypeEnum(str, Enum):
     """
 
 
-class Value(ConfiguredBaseModel):
-    """
-    Represents either a literal value or a signal-based dynamic value.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {"abstract": True, "from_schema": "https://w3id.org/scverse/vega-scverse/marks"}
-    )
-
-    value: Optional[float] = Field(
-        default=None,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
-    )
-
-
-class OpacityValue(Value):
-    """
-    A numeric value representing the transparency level of a visual element, typically ranging from 0 to 1.
-      - 0 means fully transparent (invisible).
-      - 1 means fully opaque (no transparency).
-      - Values in between represent varying levels of transparency.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {
-            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
-            "slot_usage": {"value": {"maximum_value": 1, "minimum_value": 0, "name": "value"}},
-        }
-    )
-
-    value: Optional[float] = Field(
-        default=None,
-        ge=0,
-        le=1,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
-    )
-
-
-class PositiveValue(Value):
-    """
-    A value above 0.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
-        {
-            "from_schema": "https://w3id.org/scverse/vega-scverse/marks",
-            "slot_usage": {"value": {"minimum_value": 0, "name": "value"}},
-        }
-    )
-
-    value: Optional[float] = Field(
-        default=None,
-        ge=0,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
-    )
-
-
-class RGBHex(ConfiguredBaseModel):
+class RGBHexItem(ConfiguredBaseModel):
     """
     RGB value represented by a hexadecimal string value.
     """
@@ -256,21 +199,10 @@ class RGBHex(ConfiguredBaseModel):
 
     value: Optional[str] = Field(
         default=None,
-        json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["Value", "RGBHex", "CircleShape"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "value", "domain_of": ["RGBHexItem", "CircleShape"], "slot_uri": "rgbHexSlot"}
+        },
     )
-
-    @field_validator("value")
-    def pattern_value(cls, v):
-        pattern = re.compile(r"^#([A-Fa-f0-9]{6})$")
-        if isinstance(v, list):
-            for element in v:
-                if isinstance(element, str) and not pattern.match(element):
-                    err_msg = f"Invalid value format: {element}"
-                    raise ValueError(err_msg)
-        elif isinstance(v, str) and not pattern.match(v):
-            err_msg = f"Invalid value format: {v}"
-            raise ValueError(err_msg)
-        return v
 
 
 class RandomRGBSignal(ConfiguredBaseModel):
@@ -342,7 +274,7 @@ class CircleShape(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
-                "domain_of": ["Value", "RGBHex", "CircleShape"],
+                "domain_of": ["RGBHexItem", "CircleShape"],
                 "equals_string": "circle",
                 "ifabsent": "string(circle)",
             }
@@ -612,24 +544,24 @@ class PointsEncodeEnter(ConfiguredBaseModel):
         description="""The y coordinates""",
         json_schema_extra={"linkml_meta": {"alias": "y", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
     )
-    stroke: Union[ColorItem, RGBHex] = Field(
+    stroke: Union[ColorItem, RGBHexItem] = Field(
         default=...,
         description="""The color of the outline of each individual label.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "stroke",
-                "any_of": [{"range": "ColorItem"}, {"range": "RGBHex"}],
+                "any_of": [{"range": "ColorItem"}, {"range": "RGBHexItem"}],
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
             }
         },
     )
-    fill: Union[ColorItem, RGBHex] = Field(
+    fill: Union[ColorItem, RGBHexItem] = Field(
         default=...,
         description="""The color fill of each individual label.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fill",
-                "any_of": [{"range": "ColorItem"}, {"range": "RGBHex"}],
+                "any_of": [{"range": "ColorItem"}, {"range": "RGBHexItem"}],
                 "domain_of": [
                     "ImageEncodeEnter",
                     "LabelEncodeEnter",
@@ -697,13 +629,13 @@ class PathEncodeEnter(ConfiguredBaseModel):
         description="""The y coordinates""",
         json_schema_extra={"linkml_meta": {"alias": "y", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
     )
-    fill: Union[ColorItem, RGBHex] = Field(
+    fill: Union[ColorItem, RGBHexItem] = Field(
         default=...,
         description="""The color fill of each individual label.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fill",
-                "any_of": [{"range": "ColorItem"}, {"range": "RGBHex"}],
+                "any_of": [{"range": "ColorItem"}, {"range": "RGBHexItem"}],
                 "domain_of": [
                     "ImageEncodeEnter",
                     "LabelEncodeEnter",
@@ -733,13 +665,13 @@ class MarkEncodeUpdate(ConfiguredBaseModel):
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
 
-    fill: Optional[list[Union[ConditionalFillUpdate, RGBHex]]] = Field(
+    fill: Optional[list[Union[ConditionalFillUpdate, RGBHexItem]]] = Field(
         default=None,
         description="""Update of fill color based on a test condition and optional a backup static fill value""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fill",
-                "any_of": [{"range": "ConditionalFillUpdate"}, {"range": "RGBHex"}],
+                "any_of": [{"range": "ConditionalFillUpdate"}, {"range": "RGBHexItem"}],
                 "domain_of": [
                     "ImageEncodeEnter",
                     "LabelEncodeEnter",
@@ -1085,10 +1017,7 @@ class ShapesMark(Mark):
 
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
-Value.model_rebuild()
-OpacityValue.model_rebuild()
-PositiveValue.model_rebuild()
-RGBHex.model_rebuild()
+RGBHexItem.model_rebuild()
 RandomRGBSignal.model_rebuild()
 ColorItem.model_rebuild()
 CircleShape.model_rebuild()

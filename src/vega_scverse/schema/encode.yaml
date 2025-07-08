@@ -173,14 +173,14 @@ classes:
           The color of the outline of each individual label.
         any_of:
           - range: ColorItem
-          - range: RGBHex
+          - range: RGBHexItem
         required: true
       fill:
         description: |-
           The color fill of each individual label.
         any_of:
           - range: ColorItem
-          - range: RGBHex
+          - range: RGBHexItem
         required: true
       fillOpacity:
         slot_uri: fillOpacity
@@ -218,7 +218,7 @@ classes:
           The color fill of each individual label.
         any_of:
           - range: ColorItem
-          - range: RGBHex
+          - range: RGBHexItem
         required: true
       fillOpacity:
         slot_uri: fillOpacity
@@ -234,7 +234,7 @@ classes:
         # TODO: exactly_one_of not properly implemented on linkml side.
         any_of:
           - range: ConditionalFillUpdate
-          - range: RGBHex
+          - range: RGBHexItem
         multivalued: true
 
   ConditionalFillUpdate:

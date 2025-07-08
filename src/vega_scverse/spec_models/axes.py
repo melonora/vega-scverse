@@ -212,21 +212,11 @@ class RGBHexItem(ConfiguredBaseModel):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
     value: Optional[str] = Field(
-        default=None, json_schema_extra={"linkml_meta": {"alias": "value", "domain_of": ["RGBHexItem", "CircleShape"]}}
+        default=None,
+        json_schema_extra={
+            "linkml_meta": {"alias": "value", "domain_of": ["RGBHexItem", "CircleShape"], "slot_uri": "rgbHexSlot"}
+        },
     )
-
-    @field_validator("value")
-    def pattern_value(cls, v):
-        pattern = re.compile(r"^#([A-Fa-f0-9]{6})$")
-        if isinstance(v, list):
-            for element in v:
-                if isinstance(element, str) and not pattern.match(element):
-                    err_msg = f"Invalid value format: {element}"
-                    raise ValueError(err_msg)
-        elif isinstance(v, str) and not pattern.match(v):
-            err_msg = f"Invalid value format: {v}"
-            raise ValueError(err_msg)
-        return v
 
 
 class RandomRGBSignal(ConfiguredBaseModel):
