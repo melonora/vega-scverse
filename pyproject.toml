@@ -4,7 +4,6 @@ build-backend = "hatchling.build"
 
 [project]
 name = "vega_scverse"
-version = "0.0.1"
 description = "Vega like specification for the scverse plotting / visualization ecosystem."
 authors = [
   {name = "Wouter-Michiel Vierdag", email = "michiel.vierdag@scverse.org"},
@@ -43,12 +42,14 @@ test = [
 [tool.hatch.build]
 include = [
   "README.md",
-  "src/vega_scverse/schema/**",
   "project/**"
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/vega_scverse"]
+
+[tool.hatch.version]
+path = "src/vega_scverse/__about__.py"
 
 [tool.pixi.project]
 channels = ["conda-forge"]
@@ -81,3 +82,6 @@ test = "pytest"
 
 [tool.pixi.dependencies]
 pixi-pycharm = ">=0.0.8,<0.0.9"
+
+[tool.pixi.pypi-dependencies]
+vega-scverse = { path = ".", editable = true }
