@@ -93,30 +93,6 @@ class AxisRangeEnum(str, Enum):
     """
 
 
-class Scales(ConfiguredBaseModel):
-    """
-    Vega like definition for scales which specifies a collection of mappings from a data domain
-    (e.g., numbers, categories, dates) to a visual range (e.g., position on the screen, color spectrum, size).
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/scales"})
-
-    scales: Optional[list[str]] = Field(
-        default=None,
-        json_schema_extra={
-            "linkml_meta": {
-                "alias": "scales",
-                "any_of": [
-                    {"range": "AxisScale"},
-                    {"range": "CategoricalColorScale"},
-                    {"range": "ContinuousColorScale"},
-                ],
-                "domain_of": ["Scales"],
-            }
-        },
-    )
-
-
 class Scale(ConfiguredBaseModel):
     """
     Base class for vega like scales which map from a data domain to a visual range, be it axis or color.
@@ -482,7 +458,6 @@ class ContinuousColorMapRange(ConfiguredBaseModel):
 
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
-Scales.model_rebuild()
 Scale.model_rebuild()
 AxisScale.model_rebuild()
 ColorScale.model_rebuild()

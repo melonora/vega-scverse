@@ -24,17 +24,17 @@ created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
 classes:
-  Scales:
-    description: |-
-      Vega like definition for scales which specifies a collection of mappings from a data domain 
-      (e.g., numbers, categories, dates) to a visual range (e.g., position on the screen, color spectrum, size).
-    attributes:
-      scales:
-        multivalued: true
-        any_of:
-          - range: AxisScale
-          - range: CategoricalColorScale
-          - range: ContinuousColorScale
+#  Scales:
+#    description: |-
+#      Vega like definition for scales which specifies a collection of mappings from a data domain
+#      (e.g., numbers, categories, dates) to a visual range (e.g., position on the screen, color spectrum, size).
+#    attributes:
+#      scales:
+#        multivalued: true
+#        any_of:
+#          - range: AxisScale
+#          - range: CategoricalColorScale
+#          - range: ContinuousColorScale
 
   Scale:
     abstract: true

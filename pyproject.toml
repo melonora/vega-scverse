@@ -63,7 +63,8 @@ doc = { features = ["doc"], solve-group = "default" }
 all = { features = ["dev", "test", "doc"], solve-group = "default" }
 
 [tool.pixi.feature.dev.tasks]
-gen_all_pydantic = "python ./src/vega_scverse/linkml_utils/gen_all_pydantic.py"
+gen_all_pydantic = "python ./src/repo_util_scripts/gen_all_pydantic.py"
+gen-json-schema = "python ./src/repo_util_scripts/gen_all_jsonschema.py"
 gen_project = "gen-project -d project src/vega_scverse/schema/specification.yaml"
 lint = "linkml-lint src/vega_scverse/schema/specification.yaml"
 cruft_check = "cruft check"
@@ -74,14 +75,11 @@ update_linkml = "pip install -U linkml"
 [tool.pixi.feature.doc.tasks]
 mkdocs = "mkdocs"
 gen_doc = "gen-doc -d docs src/vega_scverse/schema/specification.yaml"
-serve = "python ./src/vega_scverse/linkml_utils/copy_docs.py && mkdocs serve"
+serve = "python ./src/repo_util_scripts/copy_docs.py && mkdocs serve"
 deploy = "mkdocs gh-deploy --force"
 
 [tool.pixi.feature.test.tasks]
 test = "pytest"
-
-[tool.pixi.dependencies]
-pixi-pycharm = ">=0.0.8,<0.0.9"
 
 [tool.pixi.pypi-dependencies]
 vega-scverse = { path = ".", editable = true }
