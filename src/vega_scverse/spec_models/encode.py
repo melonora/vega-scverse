@@ -70,7 +70,7 @@ linkml_meta = LinkMLMeta(
 )
 
 
-class FontStyleValues(str, Enum):
+class FontStyleEnum(str, Enum):
     """
         Possible font styles. These are all the possible css font styles. These include styles,
     weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale
@@ -125,7 +125,7 @@ class FontStyleValues(str, Enum):
     """
 
 
-class FontWeightValues(str, Enum):
+class FontWeightEnum(str, Enum):
     """
         Possible font weight values. In case of font weights (100-900), it represents a unitless numeric scale
     standardized in CSS to represent font weight.
@@ -216,6 +216,222 @@ class BaseLineEnum(str, Enum):
     """
 
 
+class HorizontalAlignEnum(str, Enum):
+    """
+    The horizontal text alignment relative to the anchor point of the text. One of left, center, or right.
+    """
+
+    left = "left"
+    """
+    The anchor point of the text is left of the text.
+    """
+    center = "center"
+    """
+    The anchor point of the text is at the center of the text.
+    """
+    right = "right"
+    """
+    The anchor point of the text is right of the text.
+    """
+
+
+class PositionItem(ConfiguredBaseModel):
+    """
+    X or y position of an item.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: float = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class TextItem(ConfiguredBaseModel):
+    """
+    Text to be displayed. Value is an array where each element corresponds to 1 line.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: list[str] = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class BaselineItem(ConfiguredBaseModel):
+    """
+    The  vertical alignment of the text relative to its y-coordinate.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: BaseLineEnum = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class FontItem(ConfiguredBaseModel):
+    """
+    The  name of the font to be used.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class FontSizeItem(ConfiguredBaseModel):
+    """
+    Fontsize in pixels of text.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+                "slot_uri": "nonNegativeFloatSlot",
+            }
+        },
+    )
+
+
+class FontWeightItem(ConfiguredBaseModel):
+    """
+    Font weight of the text
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: FontWeightEnum = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class FontStyleItem(ConfiguredBaseModel):
+    """
+    Fontstyle of the text.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: FontStyleEnum = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
 class RGBHexItem(ConfiguredBaseModel):
     """
     RGB value represented by a hexadecimal string value.
@@ -226,7 +442,21 @@ class RGBHexItem(ConfiguredBaseModel):
     value: Optional[str] = Field(
         default=None,
         json_schema_extra={
-            "linkml_meta": {"alias": "value", "domain_of": ["RGBHexItem", "CircleShape"], "slot_uri": "rgbHexSlot"}
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+                "slot_uri": "rgbHexSlot",
+            }
         },
     )
 
@@ -262,7 +492,7 @@ class Title(ConfiguredBaseModel):
     text: list[str] = Field(
         default=...,
         description="""The title text. Either a string or an array of strings. The latter specifies multiple lines of text.""",
-        json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
     orient: OrientEnum = Field(
         default=...,
@@ -272,7 +502,7 @@ class Title(ConfiguredBaseModel):
     baseline: BaseLineEnum = Field(
         default=...,
         description="""The baseline attribute specifies the vertical alignment (baseline) of the text relative to its y-coordinate.""",
-        json_schema_extra={"linkml_meta": {"alias": "baseline", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "baseline", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
     color: str = Field(
         default=...,
@@ -282,24 +512,28 @@ class Title(ConfiguredBaseModel):
     font: str = Field(
         default=...,
         description="""Font name of the title text.""",
-        json_schema_extra={"linkml_meta": {"alias": "font", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "font", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
     fontSize: str = Field(
         default=...,
         description="""Font size in pixels of the title text.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "fontSize", "domain_of": ["Title"], "slot_uri": "nonNegativeFloatSlot"}
+            "linkml_meta": {
+                "alias": "fontSize",
+                "domain_of": ["Title", "TextEncodeEnter"],
+                "slot_uri": "nonNegativeFloatSlot",
+            }
         },
     )
-    fontStyle: FontStyleValues = Field(
+    fontStyle: FontStyleEnum = Field(
         default=...,
         description="""Fontstyle of the title.""",
-        json_schema_extra={"linkml_meta": {"alias": "fontStyle", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "fontStyle", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
-    fontWeight: FontWeightValues = Field(
+    fontWeight: FontWeightEnum = Field(
         default=...,
         description="""Font weight of the title""",
-        json_schema_extra={"linkml_meta": {"alias": "fontWeight", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "fontWeight", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
 
 
@@ -378,7 +612,17 @@ class CircleShape(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
-                "domain_of": ["RGBHexItem", "CircleShape"],
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
                 "equals_string": "circle",
                 "ifabsent": "string(circle)",
             }
@@ -437,7 +681,10 @@ class ImageEncode(ConfiguredBaseModel):
         description="""Enter properties that are evaluated when image data is processed for the first time and the raster_image mark 
 is newly added to a scene.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
 
@@ -459,7 +706,10 @@ class LabelEncode(ConfiguredBaseModel):
         description="""Enter properties that are evaluated when label data is processed for the first time and the raster_label mark 
 is newly added to a scene.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
     update: Optional[MarkEncodeUpdate] = Field(
@@ -489,7 +739,10 @@ class SymbolEncode(ConfiguredBaseModel):
         description="""Enter properties that are evaluated when points data is processed for the first time and the points mark 
 is newly added to a scene.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
     update: Optional[MarkEncodeUpdate] = Field(
@@ -519,7 +772,10 @@ class PathEncode(ConfiguredBaseModel):
         description="""Enter properties that are evaluated when points data is processed for the first time and the points mark 
 is newly added to a scene.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
     update: Optional[MarkEncodeUpdate] = Field(
@@ -528,6 +784,52 @@ is newly added to a scene.""",
 user specified a color to be used for the PointsMark.""",
         json_schema_extra={
             "linkml_meta": {"alias": "update", "domain_of": ["LabelEncode", "SymbolEncode", "PathEncode"]}
+        },
+    )
+
+
+class TextEncode(ConfiguredBaseModel):
+    """
+    A set of visual encoding properties that determine the position and appearance of a text mark.
+    In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data
+    is processed for the first time and a mark instance is newly added to a scene and are the only properties
+    supported for a text mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    enter: TextEncodeEnter = Field(
+        default=...,
+        description="""Enter properties that are evaluated when data for a text mark is processed for the first time and the 
+group mark is newly added to a scene.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
+        },
+    )
+
+
+class GroupEncode(ConfiguredBaseModel):
+    """
+    A set of visual encoding properties that determine the position of a group mark, which are used for subplots.
+    In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data
+    is processed for the first time and a mark instance is newly added to a scene and are the only properties
+    supported for a group mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    enter: GroupEncodeEnter = Field(
+        default=...,
+        description="""Enter properties that are evaluated when data for a group mark is processed for the first time and the 
+group mark is newly added to a scene.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
 
@@ -557,6 +859,7 @@ class ImageEncodeEnter(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
                 ],
             }
@@ -593,6 +896,7 @@ class LabelEncodeEnter(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
                 ],
             }
@@ -603,7 +907,7 @@ class LabelEncodeEnter(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
                 "slot_uri": "fillOpacity",
             }
         },
@@ -641,12 +945,22 @@ class PointsEncodeEnter(ConfiguredBaseModel):
     x: AxisItem = Field(
         default=...,
         description="""The x coordinates""",
-        json_schema_extra={"linkml_meta": {"alias": "x", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "x",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
     )
     y: AxisItem = Field(
         default=...,
         description="""The y coordinates""",
-        json_schema_extra={"linkml_meta": {"alias": "y", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "y",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
     )
     stroke: Union[ColorItem, RGBHexItem] = Field(
         default=...,
@@ -671,6 +985,7 @@ class PointsEncodeEnter(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
                 ],
             }
@@ -681,7 +996,7 @@ class PointsEncodeEnter(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
                 "slot_uri": "fillOpacity",
             }
         },
@@ -726,12 +1041,22 @@ class PathEncodeEnter(ConfiguredBaseModel):
     x: AxisItem = Field(
         default=...,
         description="""The x coordinates""",
-        json_schema_extra={"linkml_meta": {"alias": "x", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "x",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
     )
     y: AxisItem = Field(
         default=...,
         description="""The y coordinates""",
-        json_schema_extra={"linkml_meta": {"alias": "y", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "y",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
     )
     fill: Union[ColorItem, RGBHexItem] = Field(
         default=...,
@@ -745,6 +1070,7 @@ class PathEncodeEnter(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
                 ],
             }
@@ -755,10 +1081,136 @@ class PathEncodeEnter(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
                 "slot_uri": "fillOpacity",
             }
         },
+    )
+
+
+class TextEncodeEnter(ConfiguredBaseModel):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    x: PositionItem = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "x",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
+    )
+    y: PositionItem = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "y",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
+    )
+    text: TextItem = Field(
+        default=..., json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title", "TextEncodeEnter"]}}
+    )
+    align: HorizontalAlignEnum = Field(
+        default=...,
+        description="""The horizontal text alignment relative to the text anchor point.""",
+        json_schema_extra={"linkml_meta": {"alias": "align", "domain_of": ["TextEncodeEnter"]}},
+    )
+    angle: Optional[float] = Field(
+        default=None,
+        description="""The rotation angle of the text in degrees.""",
+        ge=0,
+        le=359,
+        json_schema_extra={"linkml_meta": {"alias": "angle", "domain_of": ["TextEncodeEnter"]}},
+    )
+    baseline: BaseLineEnum = Field(
+        default=...,
+        description="""The baseline attribute specifies the vertical alignment (baseline) of the text relative to its y-coordinate.""",
+        json_schema_extra={"linkml_meta": {"alias": "baseline", "domain_of": ["Title", "TextEncodeEnter"]}},
+    )
+    font: FontItem = Field(
+        default=..., json_schema_extra={"linkml_meta": {"alias": "font", "domain_of": ["Title", "TextEncodeEnter"]}}
+    )
+    fontSize: FontSizeItem = Field(
+        default=..., json_schema_extra={"linkml_meta": {"alias": "fontSize", "domain_of": ["Title", "TextEncodeEnter"]}}
+    )
+    fontWeight: FontWeightItem = Field(
+        default=...,
+        json_schema_extra={"linkml_meta": {"alias": "fontWeight", "domain_of": ["Title", "TextEncodeEnter"]}},
+    )
+    fontStyle: FontStyleItem = Field(
+        default=...,
+        json_schema_extra={"linkml_meta": {"alias": "fontStyle", "domain_of": ["Title", "TextEncodeEnter"]}},
+    )
+    fill: RGBHexItem = Field(
+        default=...,
+        description="""The color of the text""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fill",
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "TextEncodeEnter",
+                    "MarkEncodeUpdate",
+                ],
+            }
+        },
+    )
+    fillOpacity: Optional[str] = Field(
+        default=None,
+        description="""Opacity of the text.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fillOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
+                "slot_uri": "opacityValueSlot",
+            }
+        },
+    )
+
+
+class GroupEncodeEnter(ConfiguredBaseModel):
+    """
+    Encoding for the position, width and height of a group mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    x: float = Field(
+        default=...,
+        description="""Placing of the group mark along the x axis (width of the complete charter). The origin
+is on the left side.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "x",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
+    )
+    y: float = Field(
+        default=...,
+        description="""Placing of the group mark along the y axis (height of the complete charter). The origin
+is on the top side.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "y",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
+    )
+    width: float = Field(
+        default=...,
+        description="""The width of the mark in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "width", "domain_of": ["GroupEncodeEnter"]}},
+    )
+    height: float = Field(
+        default=...,
+        description="""The height of the mark in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "height", "domain_of": ["GroupEncodeEnter"]}},
     )
 
 
@@ -781,6 +1233,7 @@ class MarkEncodeUpdate(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
                 ],
             }
@@ -833,6 +1286,13 @@ https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'tr
 
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
+PositionItem.model_rebuild()
+TextItem.model_rebuild()
+BaselineItem.model_rebuild()
+FontItem.model_rebuild()
+FontSizeItem.model_rebuild()
+FontWeightItem.model_rebuild()
+FontStyleItem.model_rebuild()
 RGBHexItem.model_rebuild()
 RandomRGBSignal.model_rebuild()
 Title.model_rebuild()
@@ -844,10 +1304,14 @@ ImageEncode.model_rebuild()
 LabelEncode.model_rebuild()
 SymbolEncode.model_rebuild()
 PathEncode.model_rebuild()
+TextEncode.model_rebuild()
+GroupEncode.model_rebuild()
 ImageEncodeEnter.model_rebuild()
 LabelEncodeEnter.model_rebuild()
 PointsEncodeEnter.model_rebuild()
 PathEncodeEnter.model_rebuild()
+TextEncodeEnter.model_rebuild()
+GroupEncodeEnter.model_rebuild()
 MarkEncodeUpdate.model_rebuild()
 ConditionalFillUpdate.model_rebuild()
 

@@ -90,7 +90,9 @@ classes:
           symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose 
           properties can be set according to backing data. Mark property definitions may be simple constants or data 
           fields, or scales can be used to map data values to visual values.
-        range: Mark
+        any_of:
+          - range: Mark
+          - range: GroupMark
         multivalued: true
         required: true
 

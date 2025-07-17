@@ -97,11 +97,11 @@ classes:
       labelFontStyle:
         description: |-
           Font style of axis tick labels
-        slot_uri: FontStyleValues
+        range: FontStyleEnum
       labelFontWeight:
         description: |-
           Font weight of axis tick labels.
-        slot_uri: FontWeightValues
+        range: FontWeightEnum
       ticks:
         description: |-
           A boolean flag indicating if ticks should be included as part of the axis.

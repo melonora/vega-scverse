@@ -24,6 +24,63 @@ created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
 classes:
+  PositionItem:
+    description: |-
+      X or y position of an item.
+    attributes:
+      value:
+        range: float
+        required: true
+
+  TextItem:
+    description: |-
+      Text to be displayed. Value is an array where each element corresponds to 1 line.
+    attributes:
+      value:
+        range: string
+        multivalued: true
+        required: true
+
+  baselineItem:
+    description: |-
+      The  vertical alignment of the text relative to its y-coordinate.
+    attributes:
+      value:
+        range: BaseLineEnum
+        required: true
+
+  FontItem:
+    description: |-
+      The  name of the font to be used.
+    attributes:
+      value:
+        range: string
+        required: true
+
+  FontSizeItem:
+    description: |-
+      Fontsize in pixels of text.
+    attributes:
+      value:
+        slot_uri: nonNegativeFloatSlot
+        required: true
+
+  FontWeightItem:
+    description: |-
+      Font weight of the text
+    attributes:
+      value:
+        range: FontWeightEnum
+        required: true
+
+  FontStyleItem:
+    description: |-
+      Fontstyle of the text.
+    attributes:
+      value:
+        range: FontStyleEnum
+        required: true
+
   RGBHexItem:
     description: |-
       RGB value represented by a hexadecimal string value.
@@ -78,12 +135,12 @@ classes:
       fontStyle:
         description: |-
           Fontstyle of the title.
-        range: FontStyleValues
+        range: FontStyleEnum
         required: true
       fontWeight:
         description: |-
           Font weight of the title
-        range: FontWeightValues
+        range: FontWeightEnum
         required: true
 
   Padding:
@@ -150,7 +207,7 @@ classes:
         required: true
 
 enums:
-  FontStyleValues:
+  FontStyleEnum:
     description: |-
       Possible font styles. These are all the possible css font styles. These include styles,
       weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale 
@@ -184,7 +241,7 @@ enums:
       ultra-expanded: |-
         The most horizontally expanded font stretch. The visual representation of each character is expanded to its most
         expanded form.
-  FontWeightValues:
+  FontWeightEnum:
     description: |-
       Possible font weight values. In case of font weights (100-900), it represents a unitless numeric scale 
       standardized in CSS to represent font weight.
@@ -225,4 +282,11 @@ enums:
       alphabetic: |-
         aligns the main body of lowercase letters (like a, e, x) so that their base sits exactly on the anchor line 
         (y coordinate). Descenders on letters like g, p, or y extend below this line.
+  HorizontalAlignEnum:
+    description: |-
+      The horizontal text alignment relative to the anchor point of the text. One of left, center, or right.
+    permissible_values:
+      left: The anchor point of the text is left of the text.
+      center: The anchor point of the text is at the center of the text.
+      right: The anchor point of the text is right of the text.
 

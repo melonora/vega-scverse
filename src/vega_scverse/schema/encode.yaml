@@ -106,6 +106,34 @@ classes:
         range: MarkEncodeUpdate
         required: false
 
+  TextEncode:
+    description: |-
+      A set of visual encoding properties that determine the position and appearance of a text mark.
+      In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data 
+      is processed for the first time and a mark instance is newly added to a scene and are the only properties 
+      supported for a text mark.
+    attributes:
+      enter:
+        description: |-
+          Enter properties that are evaluated when data for a text mark is processed for the first time and the 
+          group mark is newly added to a scene.
+        range: TextEncodeEnter
+        required: true
+
+  GroupEncode:
+    description: |-
+      A set of visual encoding properties that determine the position of a group mark, which are used for subplots. 
+      In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data 
+      is processed for the first time and a mark instance is newly added to a scene and are the only properties 
+      supported for a group mark.
+    attributes:
+      enter:
+        description: |-
+          Enter properties that are evaluated when data for a group mark is processed for the first time and the 
+          group mark is newly added to a scene.
+        range: GroupEncodeEnter
+        required: true
+
 ############################### EncodeEnter
   ImageEncodeEnter:
     description: |-
@@ -223,6 +251,83 @@ classes:
       fillOpacity:
         slot_uri: fillOpacity
         required: true
+
+  TextEncodeEnter:
+    attributes:
+      x:
+        range: PositionItem
+        required: true
+      y:
+        range: PositionItem
+        required: true
+      text:
+        range: TextItem
+        required: true
+      align:
+        description: |-
+          The horizontal text alignment relative to the text anchor point.
+        range: HorizontalAlignEnum
+        required: true
+      angle:
+        description: |-
+          The rotation angle of the text in degrees.
+        range: float
+        minimum_value: 0
+        maximum_value: 359
+      baseline:
+        description: |-
+          The baseline attribute specifies the vertical alignment (baseline) of the text relative to its y-coordinate.
+        range: BaseLineEnum
+        required: true
+      font:
+        range: FontItem
+        required: true
+      fontSize:
+        range: FontSizeItem
+        required: true
+      fontWeight:
+        range: FontWeightItem
+        required: true
+      fontStyle:
+        range: FontStyleItem
+        required: true
+      fill:
+        description: |-
+          The color of the text
+        range: RGBHexItem
+        required: true
+      fillOpacity:
+        description: |-
+          Opacity of the text.
+        slot_uri: opacityValueSlot
+
+  GroupEncodeEnter:
+    description: |-
+      Encoding for the position, width and height of a group mark.
+    attributes:
+      x:
+        description: |-
+          Placing of the group mark along the x axis (width of the complete charter). The origin
+          is on the left side.
+        range: float
+        required: true
+      y:
+        description: |-
+          Placing of the group mark along the y axis (height of the complete charter). The origin
+          is on the top side.
+        range: float
+        required: true
+      width:
+        description: |-
+          The width of the mark in pixels.
+        range: float
+        required: true
+      height:
+        description: |-
+          The height of the mark in pixels.
+        range: float
+        required: true
+        
 
 ############################### EncodeUpdate
   MarkEncodeUpdate:

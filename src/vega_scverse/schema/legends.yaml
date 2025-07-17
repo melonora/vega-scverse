@@ -79,7 +79,7 @@ classes:
         description: |-
           Horizontal text alignment for legend labels. In short this means where the label text is relative to the
           anchor point of the labels (this could be defined as the coordinates where the labels are specified to be).
-        range: labelAlignValues
+        range: HorizontalAlignEnum
         required: true
       labelColor:
         description: |-
@@ -104,12 +104,12 @@ classes:
       labelFontStyle:
         description: |-
           Font style of legend labels
-        slot_uri: FontStyleValues
+        range: FontStyleEnum
         required: true
       labelFontWeight:
         description: |-
           Font weight of legend labels.
-        slot_uri: FontWeightValues
+        range: FontWeightEnum
         required: true
       legendX:
         description: |-
@@ -183,10 +183,3 @@ enums:
     permissible_values:
       horizontal: legend direction with the longest axis oriented along the horizontal axis.
       vertical: legend direction with the longest axis oriented along the vertical axis.
-  labelAlignValues:
-    description: |-
-      The possible values for horizontal alignment of the legend labels.
-    permissible_values:
-      left: The anchor point of the labels is left of the label text.
-      center: The anchor point of the labels is at the center of the label text.
-      right: The anchor point of the labels is right of the label text.

@@ -52,7 +52,7 @@ linkml_meta = LinkMLMeta(
         "description": "Vega like specification for the marks used in view "
         "configurations for the scverse visualization ecosystem.",
         "id": "https://w3id.org/scverse/vega-scverse/marks",
-        "imports": ["linkml:types", "encode"],
+        "imports": ["linkml:types", "encode", "scales", "axes", "legends"],
         "license": "BSD-3",
         "name": "vega-scverse-marks",
         "prefixes": {
@@ -70,7 +70,7 @@ linkml_meta = LinkMLMeta(
 )
 
 
-class FontStyleValues(str, Enum):
+class FontStyleEnum(str, Enum):
     """
         Possible font styles. These are all the possible css font styles. These include styles,
     weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale
@@ -125,7 +125,7 @@ class FontStyleValues(str, Enum):
     """
 
 
-class FontWeightValues(str, Enum):
+class FontWeightEnum(str, Enum):
     """
         Possible font weight values. In case of font weights (100-900), it represents a unitless numeric scale
     standardized in CSS to represent font weight.
@@ -216,6 +216,95 @@ class BaseLineEnum(str, Enum):
     """
 
 
+class HorizontalAlignEnum(str, Enum):
+    """
+    The horizontal text alignment relative to the anchor point of the text. One of left, center, or right.
+    """
+
+    left = "left"
+    """
+    The anchor point of the text is left of the text.
+    """
+    center = "center"
+    """
+    The anchor point of the text is at the center of the text.
+    """
+    right = "right"
+    """
+    The anchor point of the text is right of the text.
+    """
+
+
+class ScaleEnum(str, Enum):
+    linear = "linear"
+    """
+    Maps continuous numeric data to a continuous range.
+    """
+    ordinal = "ordinal"
+    """
+    Maps discrete values (categories) to distinct values in the output range.
+    """
+
+
+class AxisRangeEnum(str, Enum):
+    height = "height"
+    """
+    Referring to the height of the plotting area.
+    """
+    width = "width"
+    """
+    Referring to the width of the plotting area.
+    """
+
+
+class CapEnum(str, Enum):
+    butt = "butt"
+    """
+    The line ends exactly at its endpoint, producing a flat, squared-off edge perpendicular to the path. 
+    There is no extension beyond the endpoint.
+    """
+    round = "round"
+    """
+    The line ends with a semi-circular extension beyond its endpoint, creating a rounded cap with a radius equal to 
+    half the line’s thickness. This softens sharp edges and creates smooth joins.
+    """
+    square = "square"
+    """
+    The line ends with a square extension beyond its endpoint. It is similar to butt but extends the line slightly 
+    past the endpoint, by half the line’s thickness, resulting in a squared-off cap that projects outward.
+    """
+
+
+class LegendType(str, Enum):
+    """
+    The valid mark types within the scverse plotting / visualization ecosystem.
+    """
+
+    discrete = "discrete"
+    """
+    legend type for categorical data
+    """
+    gradient = "gradient"
+    """
+    legend type for continuous data
+    """
+
+
+class LegendDirections(str, Enum):
+    """
+    The possible directions of the legend.
+    """
+
+    horizontal = "horizontal"
+    """
+    legend direction with the longest axis oriented along the horizontal axis.
+    """
+    vertical = "vertical"
+    """
+    legend direction with the longest axis oriented along the vertical axis.
+    """
+
+
 class MarkTypeEnum(str, Enum):
     """
     The valid mark types within the scverse plotting / visualization ecosystem.
@@ -239,6 +328,203 @@ class MarkTypeEnum(str, Enum):
     """
 
 
+class PositionItem(ConfiguredBaseModel):
+    """
+    X or y position of an item.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: float = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class TextItem(ConfiguredBaseModel):
+    """
+    Text to be displayed. Value is an array where each element corresponds to 1 line.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: list[str] = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class BaselineItem(ConfiguredBaseModel):
+    """
+    The  vertical alignment of the text relative to its y-coordinate.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: BaseLineEnum = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class FontItem(ConfiguredBaseModel):
+    """
+    The  name of the font to be used.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class FontSizeItem(ConfiguredBaseModel):
+    """
+    Fontsize in pixels of text.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+                "slot_uri": "nonNegativeFloatSlot",
+            }
+        },
+    )
+
+
+class FontWeightItem(ConfiguredBaseModel):
+    """
+    Font weight of the text
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: FontWeightEnum = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class FontStyleItem(ConfiguredBaseModel):
+    """
+    Fontstyle of the text.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: FontStyleEnum = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
 class RGBHexItem(ConfiguredBaseModel):
     """
     RGB value represented by a hexadecimal string value.
@@ -249,7 +535,21 @@ class RGBHexItem(ConfiguredBaseModel):
     value: Optional[str] = Field(
         default=None,
         json_schema_extra={
-            "linkml_meta": {"alias": "value", "domain_of": ["RGBHexItem", "CircleShape"], "slot_uri": "rgbHexSlot"}
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+                "slot_uri": "rgbHexSlot",
+            }
         },
     )
 
@@ -285,17 +585,17 @@ class Title(ConfiguredBaseModel):
     text: list[str] = Field(
         default=...,
         description="""The title text. Either a string or an array of strings. The latter specifies multiple lines of text.""",
-        json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
     orient: OrientEnum = Field(
         default=...,
         description="""The orientation of the title relative to the chart.""",
-        json_schema_extra={"linkml_meta": {"alias": "orient", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "orient", "domain_of": ["Title", "Axis", "Legend"]}},
     )
     baseline: BaseLineEnum = Field(
         default=...,
         description="""The baseline attribute specifies the vertical alignment (baseline) of the text relative to its y-coordinate.""",
-        json_schema_extra={"linkml_meta": {"alias": "baseline", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "baseline", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
     color: str = Field(
         default=...,
@@ -305,24 +605,28 @@ class Title(ConfiguredBaseModel):
     font: str = Field(
         default=...,
         description="""Font name of the title text.""",
-        json_schema_extra={"linkml_meta": {"alias": "font", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "font", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
     fontSize: str = Field(
         default=...,
         description="""Font size in pixels of the title text.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "fontSize", "domain_of": ["Title"], "slot_uri": "nonNegativeFloatSlot"}
+            "linkml_meta": {
+                "alias": "fontSize",
+                "domain_of": ["Title", "TextEncodeEnter"],
+                "slot_uri": "nonNegativeFloatSlot",
+            }
         },
     )
-    fontStyle: FontStyleValues = Field(
+    fontStyle: FontStyleEnum = Field(
         default=...,
         description="""Fontstyle of the title.""",
-        json_schema_extra={"linkml_meta": {"alias": "fontStyle", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "fontStyle", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
-    fontWeight: FontWeightValues = Field(
+    fontWeight: FontWeightEnum = Field(
         default=...,
         description="""Font weight of the title""",
-        json_schema_extra={"linkml_meta": {"alias": "fontWeight", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "fontWeight", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
 
 
@@ -364,14 +668,17 @@ class ColorItem(ConfiguredBaseModel):
         default=...,
         description="""The color scale.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate", "Axis"]}
         },
     )
     field: str = Field(
         default=...,
         description="""The value or field to which to apply the color.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "field", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+            "linkml_meta": {
+                "alias": "field",
+                "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate", "ContinuousColorDomain"],
+            }
         },
     )
 
@@ -401,7 +708,17 @@ class CircleShape(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
-                "domain_of": ["RGBHexItem", "CircleShape"],
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
                 "equals_string": "circle",
                 "ifabsent": "string(circle)",
             }
@@ -420,14 +737,17 @@ class AxisItem(ConfiguredBaseModel):
         default=...,
         description="""The scale on which the axis is based.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate", "Axis"]}
         },
     )
     field: AxisEnum = Field(
         default=...,
         description="""The mark's field value transformed by the scale. Either x or y.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "field", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+            "linkml_meta": {
+                "alias": "field",
+                "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate", "ContinuousColorDomain"],
+            }
         },
     )
 
@@ -460,7 +780,10 @@ class ImageEncode(ConfiguredBaseModel):
         description="""Enter properties that are evaluated when image data is processed for the first time and the raster_image mark 
 is newly added to a scene.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
 
@@ -482,7 +805,10 @@ class LabelEncode(ConfiguredBaseModel):
         description="""Enter properties that are evaluated when label data is processed for the first time and the raster_label mark 
 is newly added to a scene.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
     update: Optional[MarkEncodeUpdate] = Field(
@@ -512,7 +838,10 @@ class SymbolEncode(ConfiguredBaseModel):
         description="""Enter properties that are evaluated when points data is processed for the first time and the points mark 
 is newly added to a scene.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
     update: Optional[MarkEncodeUpdate] = Field(
@@ -542,7 +871,10 @@ class PathEncode(ConfiguredBaseModel):
         description="""Enter properties that are evaluated when points data is processed for the first time and the points mark 
 is newly added to a scene.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "enter", "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode"]}
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
     update: Optional[MarkEncodeUpdate] = Field(
@@ -551,6 +883,52 @@ is newly added to a scene.""",
 user specified a color to be used for the PointsMark.""",
         json_schema_extra={
             "linkml_meta": {"alias": "update", "domain_of": ["LabelEncode", "SymbolEncode", "PathEncode"]}
+        },
+    )
+
+
+class TextEncode(ConfiguredBaseModel):
+    """
+    A set of visual encoding properties that determine the position and appearance of a text mark.
+    In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data
+    is processed for the first time and a mark instance is newly added to a scene and are the only properties
+    supported for a text mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    enter: TextEncodeEnter = Field(
+        default=...,
+        description="""Enter properties that are evaluated when data for a text mark is processed for the first time and the 
+group mark is newly added to a scene.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
+        },
+    )
+
+
+class GroupEncode(ConfiguredBaseModel):
+    """
+    A set of visual encoding properties that determine the position of a group mark, which are used for subplots.
+    In Vega, there are three primary property sets: enter, update, exit. The enter properties are evaluated when data
+    is processed for the first time and a mark instance is newly added to a scene and are the only properties
+    supported for a group mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    enter: GroupEncodeEnter = Field(
+        default=...,
+        description="""Enter properties that are evaluated when data for a group mark is processed for the first time and the 
+group mark is newly added to a scene.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "enter",
+                "domain_of": ["ImageEncode", "LabelEncode", "SymbolEncode", "PathEncode", "TextEncode", "GroupEncode"],
+            }
         },
     )
 
@@ -580,7 +958,9 @@ class ImageEncodeEnter(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
+                    "Legend",
                 ],
             }
         },
@@ -616,7 +996,9 @@ class LabelEncodeEnter(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
+                    "Legend",
                 ],
             }
         },
@@ -626,7 +1008,7 @@ class LabelEncodeEnter(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
                 "slot_uri": "fillOpacity",
             }
         },
@@ -646,7 +1028,7 @@ class LabelEncodeEnter(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "strokeWidth",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "Legend"],
                 "slot_uri": "strokeWidth",
             }
         },
@@ -664,12 +1046,22 @@ class PointsEncodeEnter(ConfiguredBaseModel):
     x: AxisItem = Field(
         default=...,
         description="""The x coordinates""",
-        json_schema_extra={"linkml_meta": {"alias": "x", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "x",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
     )
     y: AxisItem = Field(
         default=...,
         description="""The y coordinates""",
-        json_schema_extra={"linkml_meta": {"alias": "y", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "y",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
     )
     stroke: Union[ColorItem, RGBHexItem] = Field(
         default=...,
@@ -694,7 +1086,9 @@ class PointsEncodeEnter(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
+                    "Legend",
                 ],
             }
         },
@@ -704,7 +1098,7 @@ class PointsEncodeEnter(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
                 "slot_uri": "fillOpacity",
             }
         },
@@ -724,7 +1118,7 @@ class PointsEncodeEnter(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "strokeWidth",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "Legend"],
                 "slot_uri": "strokeWidth",
             }
         },
@@ -749,12 +1143,22 @@ class PathEncodeEnter(ConfiguredBaseModel):
     x: AxisItem = Field(
         default=...,
         description="""The x coordinates""",
-        json_schema_extra={"linkml_meta": {"alias": "x", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "x",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
     )
     y: AxisItem = Field(
         default=...,
         description="""The y coordinates""",
-        json_schema_extra={"linkml_meta": {"alias": "y", "domain_of": ["PointsEncodeEnter", "PathEncodeEnter"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "y",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
     )
     fill: Union[ColorItem, RGBHexItem] = Field(
         default=...,
@@ -768,7 +1172,9 @@ class PathEncodeEnter(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
+                    "Legend",
                 ],
             }
         },
@@ -778,10 +1184,137 @@ class PathEncodeEnter(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
                 "slot_uri": "fillOpacity",
             }
         },
+    )
+
+
+class TextEncodeEnter(ConfiguredBaseModel):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    x: PositionItem = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "x",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
+    )
+    y: PositionItem = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "y",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
+    )
+    text: TextItem = Field(
+        default=..., json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title", "TextEncodeEnter"]}}
+    )
+    align: HorizontalAlignEnum = Field(
+        default=...,
+        description="""The horizontal text alignment relative to the text anchor point.""",
+        json_schema_extra={"linkml_meta": {"alias": "align", "domain_of": ["TextEncodeEnter"]}},
+    )
+    angle: Optional[float] = Field(
+        default=None,
+        description="""The rotation angle of the text in degrees.""",
+        ge=0,
+        le=359,
+        json_schema_extra={"linkml_meta": {"alias": "angle", "domain_of": ["TextEncodeEnter"]}},
+    )
+    baseline: BaseLineEnum = Field(
+        default=...,
+        description="""The baseline attribute specifies the vertical alignment (baseline) of the text relative to its y-coordinate.""",
+        json_schema_extra={"linkml_meta": {"alias": "baseline", "domain_of": ["Title", "TextEncodeEnter"]}},
+    )
+    font: FontItem = Field(
+        default=..., json_schema_extra={"linkml_meta": {"alias": "font", "domain_of": ["Title", "TextEncodeEnter"]}}
+    )
+    fontSize: FontSizeItem = Field(
+        default=..., json_schema_extra={"linkml_meta": {"alias": "fontSize", "domain_of": ["Title", "TextEncodeEnter"]}}
+    )
+    fontWeight: FontWeightItem = Field(
+        default=...,
+        json_schema_extra={"linkml_meta": {"alias": "fontWeight", "domain_of": ["Title", "TextEncodeEnter"]}},
+    )
+    fontStyle: FontStyleItem = Field(
+        default=...,
+        json_schema_extra={"linkml_meta": {"alias": "fontStyle", "domain_of": ["Title", "TextEncodeEnter"]}},
+    )
+    fill: RGBHexItem = Field(
+        default=...,
+        description="""The color of the text""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fill",
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "TextEncodeEnter",
+                    "MarkEncodeUpdate",
+                    "Legend",
+                ],
+            }
+        },
+    )
+    fillOpacity: Optional[str] = Field(
+        default=None,
+        description="""Opacity of the text.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fillOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
+                "slot_uri": "opacityValueSlot",
+            }
+        },
+    )
+
+
+class GroupEncodeEnter(ConfiguredBaseModel):
+    """
+    Encoding for the position, width and height of a group mark.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    x: float = Field(
+        default=...,
+        description="""Placing of the group mark along the x axis (width of the complete charter). The origin
+is on the left side.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "x",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
+    )
+    y: float = Field(
+        default=...,
+        description="""Placing of the group mark along the y axis (height of the complete charter). The origin
+is on the top side.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "y",
+                "domain_of": ["PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter", "GroupEncodeEnter"],
+            }
+        },
+    )
+    width: float = Field(
+        default=...,
+        description="""The width of the mark in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "width", "domain_of": ["GroupEncodeEnter"]}},
+    )
+    height: float = Field(
+        default=...,
+        description="""The height of the mark in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "height", "domain_of": ["GroupEncodeEnter"]}},
     )
 
 
@@ -804,7 +1337,9 @@ class MarkEncodeUpdate(ConfiguredBaseModel):
                     "LabelEncodeEnter",
                     "PointsEncodeEnter",
                     "PathEncodeEnter",
+                    "TextEncodeEnter",
                     "MarkEncodeUpdate",
+                    "Legend",
                 ],
             }
         },
@@ -829,14 +1364,17 @@ https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'tr
         default=...,
         description="""The scale to use for applying the fill color. This scale MUST exist in the view configuration Scales array.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate", "Axis"]}
         },
     )
     field: str = Field(
         default=...,
         description="""The column that serves as data input, in the test condition this corresponds to 'datum'.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "field", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate"]}
+            "linkml_meta": {
+                "alias": "field",
+                "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate", "ContinuousColorDomain"],
+            }
         },
     )
 
@@ -850,6 +1388,1050 @@ https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'tr
                     raise ValueError(err_msg)
         elif isinstance(v, str) and not pattern.match(v):
             err_msg = f"Invalid scale format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class Scale(ConfiguredBaseModel):
+    """
+    Base class for vega like scales which map from a data domain to a visual range, be it axis or color.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {"abstract": True, "from_schema": "https://w3id.org/scverse/vega-scverse/scales"}
+    )
+
+    name: str = Field(
+        default=...,
+        description="""Name of the scale. Is used to refer to the scale in the rest of the view configuration. For scales used for
+axes typically `Y_scale` or `X_scale` optionally followed by `_n` where n stands for the index of the subplot.
+In case of a color mapping it is `color_` followed by a pseudo UUID.""",
+        json_schema_extra={"linkml_meta": {"alias": "name", "domain_of": ["Scale"]}},
+    )
+    type: ScaleEnum = Field(
+        default=...,
+        description="""The type of scale which is a description of what kind of mapping is performed between data domain and 
+visual range, e.g. `linear`.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+        },
+    )
+
+
+class AxisScale(Scale):
+    """
+    A vega like scale specifically for mapping from a data domain to an axis range.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {
+            "from_schema": "https://w3id.org/scverse/vega-scverse/scales",
+            "slot_usage": {
+                "name": {
+                    "description": "`Y_scale` or `X_scale` optionally "
+                    "followed by `_n` where n stands for "
+                    "the index of the subplot.",
+                    "name": "name",
+                    "pattern": "^[XY]_scale(_\\d+)?$",
+                },
+                "type": {
+                    "description": "Only linear is supported for an " "`AxisScale` for now.",
+                    "equals_string": "linear",
+                    "ifabsent": "string(linear)",
+                    "name": "type",
+                },
+            },
+        }
+    )
+
+    domain: list[float] = Field(
+        default=...,
+        description="""The set of input data values that the scale maps from. In the case of a linear scale,
+this should be a two-element list representing the minimum and maximum numeric values
+to be transformed. For example, [512.0, 0.0] maps the data range from 512 (top) to 0 (bottom),
+which is typical for Y-axis scales in image coordinate systems where the origin is at the top-left.""",
+        min_length=2,
+        max_length=2,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "domain",
+                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale", "Axis"],
+            }
+        },
+    )
+    range: AxisRangeEnum = Field(
+        default=...,
+        description="""Defines the target visual dimension for the axis scale’s output range. Must be either 'width' for an X-axis 
+scale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the 
+full canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically 
+defined by the top-level 'width' and 'height' properties of a Vega specification. For example, setting 
+\"range\": \"height\" in a Y-axis scale maps the scale’s domain to pixel positions from top to bottom within the 
+plot area. This is commonly used to align data values with positional axes in coordinate-based visualizations.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "range",
+                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale"],
+            }
+        },
+    )
+    name: str = Field(
+        default=...,
+        description="""`Y_scale` or `X_scale` optionally followed by `_n` where n stands for the index of the subplot.""",
+        json_schema_extra={"linkml_meta": {"alias": "name", "domain_of": ["Scale"]}},
+    )
+    type: Literal["linear"] = Field(
+        default="linear",
+        description="""Only linear is supported for an `AxisScale` for now.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "equals_string": "linear",
+                "ifabsent": "string(linear)",
+            }
+        },
+    )
+
+    @field_validator("name")
+    def pattern_name(cls, v):
+        pattern = re.compile(r"^[XY]_scale(_\d+)?$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid name format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid name format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class ColorScale(Scale):
+    """
+    Abstract class to map a data domain to a color range. Not to be used on its own.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {
+            "abstract": True,
+            "from_schema": "https://w3id.org/scverse/vega-scverse/scales",
+            "slot_usage": {
+                "name": {
+                    "description": "color followed by '_pseudoUUID' used "
+                    "to refer to this scale elsewhere in "
+                    "the view configuration.",
+                    "name": "name",
+                    "pattern": "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                }
+            },
+        }
+    )
+
+    name: str = Field(
+        default=...,
+        description="""color followed by '_pseudoUUID' used to refer to this scale elsewhere in the view configuration.""",
+        json_schema_extra={"linkml_meta": {"alias": "name", "domain_of": ["Scale"]}},
+    )
+    type: ScaleEnum = Field(
+        default=...,
+        description="""The type of scale which is a description of what kind of mapping is performed between data domain and 
+visual range, e.g. `linear`.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+        },
+    )
+
+    @field_validator("name")
+    def pattern_name(cls, v):
+        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid name format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid name format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class ContinuousColorScale(ColorScale):
+    """
+    A vega like scale specifically for mapping from a continuous data domain to a visual color range.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {
+            "from_schema": "https://w3id.org/scverse/vega-scverse/scales",
+            "slot_usage": {
+                "type": {
+                    "description": "Only linear is supported for an " "`ContinuousColorScale` for now.",
+                    "equals_string": "linear",
+                    "ifabsent": "string(linear)",
+                    "name": "type",
+                }
+            },
+        }
+    )
+
+    domain: ContinuousColorDomain = Field(
+        default=...,
+        description="""The data used as a source for the visual color range""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "domain",
+                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale", "Axis"],
+            }
+        },
+    )
+    range: ContinuousColorMapRange = Field(
+        default=...,
+        description="""The range to which to map the data domain. In this case one that refers to a colormap range.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "range",
+                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale"],
+            }
+        },
+    )
+    name: str = Field(
+        default=...,
+        description="""color followed by '_pseudoUUID' used to refer to this scale elsewhere in the view configuration.""",
+        json_schema_extra={"linkml_meta": {"alias": "name", "domain_of": ["Scale"]}},
+    )
+    type: Literal["linear"] = Field(
+        default="linear",
+        description="""Only linear is supported for an `ContinuousColorScale` for now.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "equals_string": "linear",
+                "ifabsent": "string(linear)",
+            }
+        },
+    )
+
+    @field_validator("name")
+    def pattern_name(cls, v):
+        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid name format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid name format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class CategoricalColorScale(ColorScale):
+    """
+    A scale to map a discrete data domain to discrete colors
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {
+            "from_schema": "https://w3id.org/scverse/vega-scverse/scales",
+            "slot_usage": {"type": {"equals_string": "ordinal", "ifabsent": "string(ordinal)", "name": "type"}},
+        }
+    )
+
+    domain: list[str] = Field(
+        default=...,
+        description="""The data domain as a list of discrete string values.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "domain",
+                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale", "Axis"],
+            }
+        },
+    )
+    range: list[str] = Field(
+        default=...,
+        description="""List of RGB colors as hexadecimal strings""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "range",
+                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale"],
+            }
+        },
+    )
+    name: str = Field(
+        default=...,
+        description="""color followed by '_pseudoUUID' used to refer to this scale elsewhere in the view configuration.""",
+        json_schema_extra={"linkml_meta": {"alias": "name", "domain_of": ["Scale"]}},
+    )
+    type: Literal["ordinal"] = Field(
+        default="ordinal",
+        description="""The type of scale which is a description of what kind of mapping is performed between data domain and 
+visual range, e.g. `linear`.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "equals_string": "ordinal",
+                "ifabsent": "string(ordinal)",
+            }
+        },
+    )
+
+    @field_validator("range")
+    def pattern_range(cls, v):
+        pattern = re.compile(r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid range format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid range format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+    @field_validator("name")
+    def pattern_name(cls, v):
+        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid name format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid name format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class ContinuousColorDomain(ConfiguredBaseModel):
+    """
+    A data domain or source for a ContinuousColorScale.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/scales"})
+
+    data: str = Field(
+        default=...,
+        description="""The identifier of the particular data object in the data array to which the color mapping in 
+ContinuousColorScale must be applied. In Vega this is only defined when the type of Scale is
+ordinal, but we deviate from that.""",
+        json_schema_extra={"linkml_meta": {"alias": "data", "domain_of": ["ContinuousColorDomain", "MarkDataSource"]}},
+    )
+    field: str = Field(
+        default=...,
+        description="""If the data source is a table, then the field is the column within the table that is used as 
+a source for the color mapping. In case of raster data with a single channel, the field equals
+\"value\" and if multichannel raster data it is the name or index of the image channel.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "field",
+                "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate", "ContinuousColorDomain"],
+            }
+        },
+    )
+
+    @field_validator("data")
+    def pattern_data(cls, v):
+        pattern = re.compile(r"^.*_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid data format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid data format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class ContinuousColorMapRange(ConfiguredBaseModel):
+    """
+    Color scheme reference for a color palette.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/scales"})
+
+    scheme: str = Field(
+        default=...,
+        description="""The name of the color scheme to use or an array of color values.""",
+        json_schema_extra={"linkml_meta": {"alias": "scheme", "domain_of": ["ContinuousColorMapRange"]}},
+    )
+    count: int = Field(
+        default=...,
+        description="""The number of colors to use in the scheme.""",
+        json_schema_extra={"linkml_meta": {"alias": "count", "domain_of": ["ContinuousColorMapRange"]}},
+    )
+
+
+class Axis(ConfiguredBaseModel):
+    """
+    An axis visualizes a spatial scale mapping for cartesian coordinates using ticks, grid lines and labels.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/axes"})
+
+    scale: str = Field(
+        default=...,
+        description="""Name of the 'AxisScale' to visualize as axis object.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "ConditionalFillUpdate", "Axis"]}
+        },
+    )
+    orient: OrientEnum = Field(
+        default=...,
+        description="""The orientation of the axis, either 'left', 'right', 'top' or 'bottom'.""",
+        json_schema_extra={"linkml_meta": {"alias": "orient", "domain_of": ["Title", "Axis", "Legend"]}},
+    )
+    domain: bool = Field(
+        default=...,
+        description="""A boolean flag indicating if the domain (the axis baseline, the line that the ticks connect to) should be 
+included as part of the axis.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "domain",
+                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale", "Axis"],
+            }
+        },
+    )
+    domainOpacity: Optional[str] = Field(
+        default=None,
+        description="""Opacity of axis domain line.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "domainOpacity", "domain_of": ["Axis"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    domainColor: Optional[str] = Field(
+        default=None,
+        description="""Color of axis domain line.""",
+        json_schema_extra={"linkml_meta": {"alias": "domainColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
+    )
+    domainWidth: Optional[float] = Field(
+        default=None,
+        description="""Stroke width of axis domain line.""",
+        json_schema_extra={"linkml_meta": {"alias": "domainWidth", "domain_of": ["Axis"]}},
+    )
+    grid: Optional[bool] = Field(
+        default=False,
+        description="""A boolean flag indicating if grid lines should be included as part of the axis.""",
+        json_schema_extra={"linkml_meta": {"alias": "grid", "domain_of": ["Axis"], "ifabsent": "False"}},
+    )
+    gridOpacity: Optional[str] = Field(
+        default=None,
+        description="""Opacity of axis grid lines.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "gridOpacity", "domain_of": ["Axis"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    gridCap: Optional[CapEnum] = Field(
+        default=None,
+        description="""The stroke cap for axis grid lines. One of 'butt' (default), 'round' or 'square'.""",
+        json_schema_extra={"linkml_meta": {"alias": "gridCap", "domain_of": ["Axis"]}},
+    )
+    gridColor: Optional[str] = Field(
+        default=None,
+        description="""Color of axis grid lines.""",
+        json_schema_extra={"linkml_meta": {"alias": "gridColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
+    )
+    gridWidth: Optional[float] = Field(
+        default=None,
+        description="""Stroke width of axis grid lines.""",
+        json_schema_extra={"linkml_meta": {"alias": "gridWidth", "domain_of": ["Axis"]}},
+    )
+    labelColor: Optional[str] = Field(
+        default=None,
+        description="""Text color of axis tick labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelColor", "domain_of": ["Axis", "Legend"], "slot_uri": "rgbHexSlot"}
+        },
+    )
+    labelOpacity: Optional[str] = Field(
+        default=None,
+        description="""Opacity of axis tick labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    labelFont: Optional[str] = Field(
+        default=None,
+        description="""Font name for axis tick labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFont", "domain_of": ["Axis", "Legend"]}},
+    )
+    labelFontSize: Optional[float] = Field(
+        default=None,
+        description="""Font size of axis tick labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontSize", "domain_of": ["Axis", "Legend"]}},
+    )
+    labelFontStyle: Optional[FontStyleEnum] = Field(
+        default=None,
+        description="""Font style of axis tick labels""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontStyle", "domain_of": ["Axis", "Legend"]}},
+    )
+    labelFontWeight: Optional[FontWeightEnum] = Field(
+        default=None,
+        description="""Font weight of axis tick labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontWeight", "domain_of": ["Axis", "Legend"]}},
+    )
+    ticks: Optional[bool] = Field(
+        default=True,
+        description="""A boolean flag indicating if ticks should be included as part of the axis.""",
+        json_schema_extra={"linkml_meta": {"alias": "ticks", "domain_of": ["Axis"], "ifabsent": "True"}},
+    )
+    tickOpacity: Optional[str] = Field(
+        default=None,
+        description="""Opacity of axis ticks.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "tickOpacity", "domain_of": ["Axis"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    tickColor: Optional[str] = Field(
+        default=None,
+        description="""Color of axis ticks.""",
+        json_schema_extra={"linkml_meta": {"alias": "tickColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
+    )
+    tickCap: Optional[CapEnum] = Field(
+        default=None,
+        description="""The stroke cap for axis tick marks. One of \"butt\" (default), \"round\" or \"square\".""",
+        json_schema_extra={"linkml_meta": {"alias": "tickCap", "domain_of": ["Axis"]}},
+    )
+    tickWidth: Optional[str] = Field(
+        default=None,
+        description="""Width in pixels of axis ticks.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "tickWidth", "domain_of": ["Axis"], "slot_uri": "nonNegativeFloatSlot"}
+        },
+    )
+    tickSize: Optional[str] = Field(
+        default=None,
+        description="""The length in pixels of axis ticks.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "tickSize", "domain_of": ["Axis"], "slot_uri": "nonNegativeFloatSlot"}
+        },
+    )
+    values: list[Union[float, int]] = Field(
+        default=...,
+        description="""Explicitly set the visible axis tick and label values. The array entries should be legal values in the 
+backing scale domain.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "values",
+                "any_of": [{"range": "float"}, {"range": "integer"}],
+                "domain_of": ["Axis"],
+            }
+        },
+    )
+    zindex: float = Field(
+        default=...,
+        description="""The integer z-index indicating the layering of the axis group relative to other axis, mark, and legend groups. 
+The default value is 0 and axes and grid lines are drawn behind any marks defined in the same specification 
+level. Higher values (1) will cause axes and grid lines to be drawn on top of marks.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
+    )
+
+    @field_validator("scale")
+    def pattern_scale(cls, v):
+        pattern = re.compile(r"^[XY]_scale(_\d+)?$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid scale format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid scale format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class Legend(ConfiguredBaseModel):
+    """
+    Vega like configuration for specifying legends in the SpatialData visualization ecosystem.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {"abstract": True, "from_schema": "https://w3id.org/scverse/vega-scverse/legends"}
+    )
+
+    type: LegendType = Field(
+        default=...,
+        description="""The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+        },
+    )
+    direction: LegendDirections = Field(
+        default=...,
+        description="""The direction of the legend, one of 'vertical' or 'horizontal'.""",
+        json_schema_extra={"linkml_meta": {"alias": "direction", "domain_of": ["Legend"]}},
+    )
+    orient: Optional[Literal["none"]] = Field(
+        default="none",
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
+pixel coordinates. If there is demand, this can be changed.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "orient",
+                "domain_of": ["Title", "Axis", "Legend"],
+                "equals_string": "none",
+                "ifabsent": "string(none)",
+            }
+        },
+    )
+    padding: Optional[float] = Field(
+        default=None,
+        description="""The padding between the border and content of the legend group in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend"]}},
+    )
+    fill: str = Field(
+        default=...,
+        description="""The name of a scale that maps to a fill color. This represents the color used to visualize discrete classes
+or continuous data in the legend.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fill",
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "TextEncodeEnter",
+                    "MarkEncodeUpdate",
+                    "Legend",
+                ],
+            }
+        },
+    )
+    fillColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the background color of the legend.""",
+        json_schema_extra={"linkml_meta": {"alias": "fillColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the color of the legend border.""",
+        json_schema_extra={"linkml_meta": {"alias": "strokeColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeWidth: Optional[float] = Field(
+        default=None,
+        description="""The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
+vega equivalent expects a 'Scale'.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "Legend"]}
+        },
+    )
+    labelOffset: float = Field(
+        default=...,
+        description="""Offset in pixels between legend labels their corresponding symbol or gradient.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelOffset", "domain_of": ["Legend"]}},
+    )
+    labelAlign: HorizontalAlignEnum = Field(
+        default=...,
+        description="""Horizontal text alignment for legend labels. In short this means where the label text is relative to the
+anchor point of the labels (this could be defined as the coordinates where the labels are specified to be).""",
+        json_schema_extra={"linkml_meta": {"alias": "labelAlign", "domain_of": ["Legend"]}},
+    )
+    labelColor: str = Field(
+        default=...,
+        description="""Text color for legend labels represented by a RGB hex string.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelColor", "domain_of": ["Axis", "Legend"], "slot_uri": "rgbHexSlot"}
+        },
+    )
+    labelOpacity: str = Field(
+        default=...,
+        description="""The opacity of legend labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    labelFont: Optional[str] = Field(
+        default="Arial",
+        description="""Font name for legend labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelFont", "domain_of": ["Axis", "Legend"], "ifabsent": "string(Arial)"}
+        },
+    )
+    labelFontSize: float = Field(
+        default=...,
+        description="""Font size in pixels for legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontSize", "domain_of": ["Axis", "Legend"]}},
+    )
+    labelFontStyle: FontStyleEnum = Field(
+        default=...,
+        description="""Font style of legend labels""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontStyle", "domain_of": ["Axis", "Legend"]}},
+    )
+    labelFontWeight: FontWeightEnum = Field(
+        default=...,
+        description="""Font weight of legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontWeight", "domain_of": ["Axis", "Legend"]}},
+    )
+    legendX: float = Field(
+        default=...,
+        description="""The pixel x-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendX", "domain_of": ["Legend"]}},
+    )
+    legendY: float = Field(
+        default=...,
+        description="""The pixel y-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendY", "domain_of": ["Legend"]}},
+    )
+    zindex: float = Field(
+        default=...,
+        description="""The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
+legend groups.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
+    )
+
+    @field_validator("fill")
+    def pattern_fill(cls, v):
+        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid fill format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid fill format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class CategoricalLegend(Legend):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/legends"})
+
+    columns: Optional[int] = Field(
+        default=None,
+        description="""The number of columns in which to arrange symbol legend entries. A value of 0 or lower indicates a single row 
+with one column per entry. The default is 0 for horizontal symbol legends and 1 for vertical symbol legends.""",
+        json_schema_extra={"linkml_meta": {"alias": "columns", "domain_of": ["CategoricalLegend"]}},
+    )
+    columnPadding: Optional[float] = Field(
+        default=None,
+        description="""The horizontal padding in pixels between symbol legend entries.""",
+        json_schema_extra={"linkml_meta": {"alias": "columnPadding", "domain_of": ["CategoricalLegend"]}},
+    )
+    rowPadding: Optional[float] = Field(
+        default=None,
+        description="""The vertical padding in pixels between symbol legend entries.""",
+        json_schema_extra={"linkml_meta": {"alias": "rowPadding", "domain_of": ["CategoricalLegend"]}},
+    )
+    type: LegendType = Field(
+        default=...,
+        description="""The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+        },
+    )
+    direction: LegendDirections = Field(
+        default=...,
+        description="""The direction of the legend, one of 'vertical' or 'horizontal'.""",
+        json_schema_extra={"linkml_meta": {"alias": "direction", "domain_of": ["Legend"]}},
+    )
+    orient: Optional[Literal["none"]] = Field(
+        default="none",
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
+pixel coordinates. If there is demand, this can be changed.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "orient",
+                "domain_of": ["Title", "Axis", "Legend"],
+                "equals_string": "none",
+                "ifabsent": "string(none)",
+            }
+        },
+    )
+    padding: Optional[float] = Field(
+        default=None,
+        description="""The padding between the border and content of the legend group in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend"]}},
+    )
+    fill: str = Field(
+        default=...,
+        description="""The name of a scale that maps to a fill color. This represents the color used to visualize discrete classes
+or continuous data in the legend.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fill",
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "TextEncodeEnter",
+                    "MarkEncodeUpdate",
+                    "Legend",
+                ],
+            }
+        },
+    )
+    fillColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the background color of the legend.""",
+        json_schema_extra={"linkml_meta": {"alias": "fillColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the color of the legend border.""",
+        json_schema_extra={"linkml_meta": {"alias": "strokeColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeWidth: Optional[float] = Field(
+        default=None,
+        description="""The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
+vega equivalent expects a 'Scale'.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "Legend"]}
+        },
+    )
+    labelOffset: float = Field(
+        default=...,
+        description="""Offset in pixels between legend labels their corresponding symbol or gradient.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelOffset", "domain_of": ["Legend"]}},
+    )
+    labelAlign: HorizontalAlignEnum = Field(
+        default=...,
+        description="""Horizontal text alignment for legend labels. In short this means where the label text is relative to the
+anchor point of the labels (this could be defined as the coordinates where the labels are specified to be).""",
+        json_schema_extra={"linkml_meta": {"alias": "labelAlign", "domain_of": ["Legend"]}},
+    )
+    labelColor: str = Field(
+        default=...,
+        description="""Text color for legend labels represented by a RGB hex string.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelColor", "domain_of": ["Axis", "Legend"], "slot_uri": "rgbHexSlot"}
+        },
+    )
+    labelOpacity: str = Field(
+        default=...,
+        description="""The opacity of legend labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    labelFont: Optional[str] = Field(
+        default="Arial",
+        description="""Font name for legend labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelFont", "domain_of": ["Axis", "Legend"], "ifabsent": "string(Arial)"}
+        },
+    )
+    labelFontSize: float = Field(
+        default=...,
+        description="""Font size in pixels for legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontSize", "domain_of": ["Axis", "Legend"]}},
+    )
+    labelFontStyle: FontStyleEnum = Field(
+        default=...,
+        description="""Font style of legend labels""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontStyle", "domain_of": ["Axis", "Legend"]}},
+    )
+    labelFontWeight: FontWeightEnum = Field(
+        default=...,
+        description="""Font weight of legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontWeight", "domain_of": ["Axis", "Legend"]}},
+    )
+    legendX: float = Field(
+        default=...,
+        description="""The pixel x-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendX", "domain_of": ["Legend"]}},
+    )
+    legendY: float = Field(
+        default=...,
+        description="""The pixel y-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendY", "domain_of": ["Legend"]}},
+    )
+    zindex: float = Field(
+        default=...,
+        description="""The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
+legend groups.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
+    )
+
+    @field_validator("fill")
+    def pattern_fill(cls, v):
+        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid fill format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid fill format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class ColorBarLegend(Legend):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/legends"})
+
+    gradientLength: float = Field(
+        default=...,
+        description="""The length in pixels of the primary axis of a color gradient. This value corresponds to the height of a 
+vertical gradient or the width of a horizontal gradient.""",
+        json_schema_extra={"linkml_meta": {"alias": "gradientLength", "domain_of": ["ColorBarLegend"]}},
+    )
+    gradientOpacity: str = Field(
+        default=...,
+        description="""Opacity of the color gradient.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "gradientOpacity", "domain_of": ["ColorBarLegend"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    gradientStrokeColor: str = Field(
+        default=...,
+        description="""Stroke color of the color gradient border.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "gradientStrokeColor", "domain_of": ["ColorBarLegend"], "slot_uri": "rgbHexSlot"}
+        },
+    )
+    gradientStrokeWidth: float = Field(
+        default=...,
+        description="""Stroke width of the color gradient border.""",
+        json_schema_extra={"linkml_meta": {"alias": "gradientStrokeWidth", "domain_of": ["ColorBarLegend"]}},
+    )
+    type: LegendType = Field(
+        default=...,
+        description="""The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+        },
+    )
+    direction: LegendDirections = Field(
+        default=...,
+        description="""The direction of the legend, one of 'vertical' or 'horizontal'.""",
+        json_schema_extra={"linkml_meta": {"alias": "direction", "domain_of": ["Legend"]}},
+    )
+    orient: Optional[Literal["none"]] = Field(
+        default="none",
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
+pixel coordinates. If there is demand, this can be changed.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "orient",
+                "domain_of": ["Title", "Axis", "Legend"],
+                "equals_string": "none",
+                "ifabsent": "string(none)",
+            }
+        },
+    )
+    padding: Optional[float] = Field(
+        default=None,
+        description="""The padding between the border and content of the legend group in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend"]}},
+    )
+    fill: str = Field(
+        default=...,
+        description="""The name of a scale that maps to a fill color. This represents the color used to visualize discrete classes
+or continuous data in the legend.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "fill",
+                "domain_of": [
+                    "ImageEncodeEnter",
+                    "LabelEncodeEnter",
+                    "PointsEncodeEnter",
+                    "PathEncodeEnter",
+                    "TextEncodeEnter",
+                    "MarkEncodeUpdate",
+                    "Legend",
+                ],
+            }
+        },
+    )
+    fillColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the background color of the legend.""",
+        json_schema_extra={"linkml_meta": {"alias": "fillColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the color of the legend border.""",
+        json_schema_extra={"linkml_meta": {"alias": "strokeColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeWidth: Optional[float] = Field(
+        default=None,
+        description="""The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
+vega equivalent expects a 'Scale'.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "Legend"]}
+        },
+    )
+    labelOffset: float = Field(
+        default=...,
+        description="""Offset in pixels between legend labels their corresponding symbol or gradient.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelOffset", "domain_of": ["Legend"]}},
+    )
+    labelAlign: HorizontalAlignEnum = Field(
+        default=...,
+        description="""Horizontal text alignment for legend labels. In short this means where the label text is relative to the
+anchor point of the labels (this could be defined as the coordinates where the labels are specified to be).""",
+        json_schema_extra={"linkml_meta": {"alias": "labelAlign", "domain_of": ["Legend"]}},
+    )
+    labelColor: str = Field(
+        default=...,
+        description="""Text color for legend labels represented by a RGB hex string.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelColor", "domain_of": ["Axis", "Legend"], "slot_uri": "rgbHexSlot"}
+        },
+    )
+    labelOpacity: str = Field(
+        default=...,
+        description="""The opacity of legend labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    labelFont: Optional[str] = Field(
+        default="Arial",
+        description="""Font name for legend labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelFont", "domain_of": ["Axis", "Legend"], "ifabsent": "string(Arial)"}
+        },
+    )
+    labelFontSize: float = Field(
+        default=...,
+        description="""Font size in pixels for legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontSize", "domain_of": ["Axis", "Legend"]}},
+    )
+    labelFontStyle: FontStyleEnum = Field(
+        default=...,
+        description="""Font style of legend labels""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontStyle", "domain_of": ["Axis", "Legend"]}},
+    )
+    labelFontWeight: FontWeightEnum = Field(
+        default=...,
+        description="""Font weight of legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontWeight", "domain_of": ["Axis", "Legend"]}},
+    )
+    legendX: float = Field(
+        default=...,
+        description="""The pixel x-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendX", "domain_of": ["Legend"]}},
+    )
+    legendY: float = Field(
+        default=...,
+        description="""The pixel y-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendY", "domain_of": ["Legend"]}},
+    )
+    zindex: float = Field(
+        default=...,
+        description="""The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
+legend groups.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
+    )
+
+    @field_validator("fill")
+    def pattern_fill(cls, v):
+        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid fill format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid fill format: {v}"
             raise ValueError(err_msg)
         return v
 
@@ -869,7 +2451,9 @@ class Mark(ConfiguredBaseModel):
     type: MarkTypeEnum = Field(
         default=...,
         description="""The type of mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "type", "domain_of": ["Mark"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+        },
     )
     from_: MarkDataSource = Field(
         default=...,
@@ -884,13 +2468,13 @@ processed for the first time and a mark instance is newly added to a scene. The 
 evaluated for all existing (non-exiting) mark instances. The exit properties are evaluated when the data 
 backing a mark is removed, and so the mark is leaving the visual scene. However, in this specification we 
 currently only support enter and update property sets.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
     )
     zindex: int = Field(
         default=...,
         description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
 (1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
     )
 
 
@@ -904,7 +2488,7 @@ class MarkDataSource(ConfiguredBaseModel):
     data: str = Field(
         default=...,
         description="""name of the datastream""",
-        json_schema_extra={"linkml_meta": {"alias": "data", "domain_of": ["MarkDataSource"]}},
+        json_schema_extra={"linkml_meta": {"alias": "data", "domain_of": ["ContinuousColorDomain", "MarkDataSource"]}},
     )
 
     @field_validator("data")
@@ -954,7 +2538,7 @@ class RasterImageMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Mark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "raster_image",
                 "ifabsent": "string(raster_image)",
             }
@@ -968,13 +2552,13 @@ class RasterImageMark(Mark):
     encode: ImageEncode = Field(
         default=...,
         description="""A set of visual encoding properties that determine the position and appearance of the raster_image mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
     )
     zindex: int = Field(
         default=...,
         description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
 (1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
     )
 
 
@@ -1011,7 +2595,7 @@ class RasterLabelMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Mark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "raster_label",
                 "ifabsent": "string(raster_label)",
             }
@@ -1025,13 +2609,13 @@ class RasterLabelMark(Mark):
     encode: LabelEncode = Field(
         default=...,
         description="""A set of visual encoding properties that determine the position and appearance of the raster_image mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
     )
     zindex: int = Field(
         default=...,
         description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
 (1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
     )
 
 
@@ -1067,7 +2651,7 @@ class PointsMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Mark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "symbol",
                 "ifabsent": "string(symbol)",
             }
@@ -1081,13 +2665,13 @@ class PointsMark(Mark):
     encode: SymbolEncode = Field(
         default=...,
         description="""A set of visual encoding properties that determine the position and appearance of the symbol mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
     )
     zindex: int = Field(
         default=...,
         description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
 (1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
     )
 
 
@@ -1121,7 +2705,12 @@ class ShapesMark(Mark):
         default="path",
         description="""The type of the mark. In this case, it is always 'symbol'.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "type", "domain_of": ["Mark"], "equals_string": "path", "ifabsent": "string(path)"}
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "equals_string": "path",
+                "ifabsent": "string(path)",
+            }
         },
     )
     from_: MarkDataSource = Field(
@@ -1132,18 +2721,109 @@ class ShapesMark(Mark):
     encode: PathEncode = Field(
         default=...,
         description="""A set of visual encoding properties that determine the position and appearance of the symbol mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
     )
     zindex: int = Field(
         default=...,
         description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
 (1) will cause marks to be drawn on top of those with lower z-index values.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
+    )
+
+
+class TextMark(ConfiguredBaseModel):
+    """
+    Text marks can be used to annotate data and provide labels and titles for axes and legends.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    type: Optional[Literal["text"]] = Field(
+        default="text",
+        description="""The type of the mark. In this case, it is always 'text'.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "equals_string": "text",
+                "ifabsent": "string(text)",
+            }
+        },
+    )
+    encode: Optional[TextEncode] = Field(
+        default=None,
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
+    )
+    zindex: int = Field(
+        default=...,
+        description="""An integer z-index indicating the layering order of sibling mark items. The default value is 0. Higher values 
+(1) will cause marks to be drawn on top of those with lower z-index values.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
+    )
+
+
+class GroupMark(ConfiguredBaseModel):
+    """
+    Group marks are containers for other marks, and used to create visualizations with multiple views or layers. Each
+    group instance recursively defines its own nested visualization specification. Group marks provide their own
+    coordinate space and can include nested data, signal, scale, axis, legend, title and mark definitions.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    type: Optional[Literal["group"]] = Field(
+        default="group",
+        description="""The type of the mark. In this case, it is always 'group'.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "equals_string": "group",
+                "ifabsent": "string(group)",
+            }
+        },
+    )
+    encode: GroupEncode = Field(
+        default=...,
+        description="""A set of visual encoding properties that determine the position of the group mark.""",
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
+    )
+    scales: list[str] = Field(
+        default=...,
+        description="""Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes). 
+Scales are a fundamental building block of data visualization, as they determine the nature of visual 
+encodings.""",
+        json_schema_extra={"linkml_meta": {"alias": "scales", "domain_of": ["GroupMark"]}},
+    )
+    axes: list[Axis] = Field(
+        default=...,
+        description="""Axes visualize spatial scale mappings using ticks, grid lines and labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "axes", "domain_of": ["GroupMark"]}},
+    )
+    legends: Optional[list[Legend]] = Field(
+        default=None,
+        description="""Legends visualize scale mappings for visual values such as color, shape and size.""",
+        json_schema_extra={"linkml_meta": {"alias": "legends", "domain_of": ["GroupMark"]}},
+    )
+    marks: list[Mark] = Field(
+        default=...,
+        description="""Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting 
+symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose 
+properties can be set according to backing data. Mark property definitions may be simple constants or data 
+fields, or scales can be used to map data values to visual values.""",
+        json_schema_extra={"linkml_meta": {"alias": "marks", "domain_of": ["GroupMark"]}},
     )
 
 
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
+PositionItem.model_rebuild()
+TextItem.model_rebuild()
+BaselineItem.model_rebuild()
+FontItem.model_rebuild()
+FontSizeItem.model_rebuild()
+FontWeightItem.model_rebuild()
+FontStyleItem.model_rebuild()
 RGBHexItem.model_rebuild()
 RandomRGBSignal.model_rebuild()
 Title.model_rebuild()
@@ -1155,16 +2835,33 @@ ImageEncode.model_rebuild()
 LabelEncode.model_rebuild()
 SymbolEncode.model_rebuild()
 PathEncode.model_rebuild()
+TextEncode.model_rebuild()
+GroupEncode.model_rebuild()
 ImageEncodeEnter.model_rebuild()
 LabelEncodeEnter.model_rebuild()
 PointsEncodeEnter.model_rebuild()
 PathEncodeEnter.model_rebuild()
+TextEncodeEnter.model_rebuild()
+GroupEncodeEnter.model_rebuild()
 MarkEncodeUpdate.model_rebuild()
 ConditionalFillUpdate.model_rebuild()
+Scale.model_rebuild()
+AxisScale.model_rebuild()
+ColorScale.model_rebuild()
+ContinuousColorScale.model_rebuild()
+CategoricalColorScale.model_rebuild()
+ContinuousColorDomain.model_rebuild()
+ContinuousColorMapRange.model_rebuild()
+Axis.model_rebuild()
+Legend.model_rebuild()
+CategoricalLegend.model_rebuild()
+ColorBarLegend.model_rebuild()
 Mark.model_rebuild()
 MarkDataSource.model_rebuild()
 RasterImageMark.model_rebuild()
 RasterLabelMark.model_rebuild()
 PointsMark.model_rebuild()
 ShapesMark.model_rebuild()
+TextMark.model_rebuild()
+GroupMark.model_rebuild()
 

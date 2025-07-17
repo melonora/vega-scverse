@@ -70,7 +70,7 @@ linkml_meta = LinkMLMeta(
 )
 
 
-class FontStyleValues(str, Enum):
+class FontStyleEnum(str, Enum):
     """
         Possible font styles. These are all the possible css font styles. These include styles,
     weights, variants and stretch. In case of font weights (100-900), it represents a unitless numeric scale
@@ -125,7 +125,7 @@ class FontStyleValues(str, Enum):
     """
 
 
-class FontWeightValues(str, Enum):
+class FontWeightEnum(str, Enum):
     """
         Possible font weight values. In case of font weights (100-900), it represents a unitless numeric scale
     standardized in CSS to represent font weight.
@@ -216,6 +216,222 @@ class BaseLineEnum(str, Enum):
     """
 
 
+class HorizontalAlignEnum(str, Enum):
+    """
+    The horizontal text alignment relative to the anchor point of the text. One of left, center, or right.
+    """
+
+    left = "left"
+    """
+    The anchor point of the text is left of the text.
+    """
+    center = "center"
+    """
+    The anchor point of the text is at the center of the text.
+    """
+    right = "right"
+    """
+    The anchor point of the text is right of the text.
+    """
+
+
+class PositionItem(ConfiguredBaseModel):
+    """
+    X or y position of an item.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: float = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class TextItem(ConfiguredBaseModel):
+    """
+    Text to be displayed. Value is an array where each element corresponds to 1 line.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: list[str] = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class BaselineItem(ConfiguredBaseModel):
+    """
+    The  vertical alignment of the text relative to its y-coordinate.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: BaseLineEnum = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class FontItem(ConfiguredBaseModel):
+    """
+    The  name of the font to be used.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class FontSizeItem(ConfiguredBaseModel):
+    """
+    Fontsize in pixels of text.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: str = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+                "slot_uri": "nonNegativeFloatSlot",
+            }
+        },
+    )
+
+
+class FontWeightItem(ConfiguredBaseModel):
+    """
+    Font weight of the text
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: FontWeightEnum = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
+class FontStyleItem(ConfiguredBaseModel):
+    """
+    Fontstyle of the text.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: FontStyleEnum = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+            }
+        },
+    )
+
+
 class RGBHexItem(ConfiguredBaseModel):
     """
     RGB value represented by a hexadecimal string value.
@@ -226,7 +442,21 @@ class RGBHexItem(ConfiguredBaseModel):
     value: Optional[str] = Field(
         default=None,
         json_schema_extra={
-            "linkml_meta": {"alias": "value", "domain_of": ["RGBHexItem", "CircleShape"], "slot_uri": "rgbHexSlot"}
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
+                "slot_uri": "rgbHexSlot",
+            }
         },
     )
 
@@ -291,12 +521,12 @@ class Title(ConfiguredBaseModel):
             "linkml_meta": {"alias": "fontSize", "domain_of": ["Title"], "slot_uri": "nonNegativeFloatSlot"}
         },
     )
-    fontStyle: FontStyleValues = Field(
+    fontStyle: FontStyleEnum = Field(
         default=...,
         description="""Fontstyle of the title.""",
         json_schema_extra={"linkml_meta": {"alias": "fontStyle", "domain_of": ["Title"]}},
     )
-    fontWeight: FontWeightValues = Field(
+    fontWeight: FontWeightEnum = Field(
         default=...,
         description="""Font weight of the title""",
         json_schema_extra={"linkml_meta": {"alias": "fontWeight", "domain_of": ["Title"]}},
@@ -374,7 +604,17 @@ class CircleShape(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
-                "domain_of": ["RGBHexItem", "CircleShape"],
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "CircleShape",
+                ],
                 "equals_string": "circle",
                 "ifabsent": "string(circle)",
             }
@@ -416,6 +656,13 @@ class AxisItem(ConfiguredBaseModel):
 
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
+PositionItem.model_rebuild()
+TextItem.model_rebuild()
+BaselineItem.model_rebuild()
+FontItem.model_rebuild()
+FontSizeItem.model_rebuild()
+FontWeightItem.model_rebuild()
+FontStyleItem.model_rebuild()
 RGBHexItem.model_rebuild()
 RandomRGBSignal.model_rebuild()
 Title.model_rebuild()
