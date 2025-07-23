@@ -80,6 +80,7 @@ deploy = "mkdocs gh-deploy --force"
 
 [tool.pixi.feature.test.tasks]
 test = "pytest"
+validate_all = "python ./src/repo_util_scripts/linkml_all_validate.py"
 
 [tool.pixi.pypi-dependencies]
 vega-scverse = { path = ".", editable = true }

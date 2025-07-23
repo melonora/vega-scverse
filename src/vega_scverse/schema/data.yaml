@@ -179,7 +179,7 @@ classes:
         multivalued: true
         range: AggregateOpsEnum
         required: true
-      as:
+      as_:
         description: |-
           The output field names to use for each aggregated field in fields. In the initial implementation this is
           the same as the values in 'field'.
@@ -210,7 +210,7 @@ classes:
           The amount of pixels by which to expand each pixel to make data more visible.
         range: integer
         required: true
-      as:
+      as_:
         description: |-
           The output field names to use for each field to which a spread transform is applied. In the initial 
           implementation this is the same as the values in 'field'.
@@ -233,7 +233,7 @@ classes:
           data that is normalized is indicated as 'datum.<name_of_column>'.
         pattern: "(?:clamp\\(\\s*)?\\(\\s*datum\\.\\w+\\s*[-+*/]\\s*[\\d.]+\\s*\\)\\s*[-+*/]\\s*\\(\\s*[\\d.]+\\s*[-+*/]\\s*[\\d.]+\\s*\\)(?:\\s*,\\s*[\\d.]+\\s*,\\s*[\\d.]+\\s*\\))?"
         required: true
-      as:
+      as_:
         description: |-
           The output field names to use for each field to which a normalization is applied.
         range: string
