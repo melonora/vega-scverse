@@ -66,7 +66,7 @@ all = { features = ["dev", "test", "doc"], solve-group = "default" }
 gen_all_pydantic = "python ./src/repo_util_scripts/gen_all_pydantic.py"
 gen-json-schema = "python ./src/repo_util_scripts/gen_all_jsonschema.py"
 gen_project = "gen-project -d project src/vega_scverse/schema/specification.yaml"
-lint = "linkml-lint src/vega_scverse/schema/specification.yaml"
+lint = "python ./src/repo_util_scripts/linkml_all_lint.py"
 cruft_check = "cruft check"
 cruft_diff = "cruft diff"
 update_template = "cruft update"
@@ -80,7 +80,7 @@ deploy = "mkdocs gh-deploy --force"
 
 [tool.pixi.feature.test.tasks]
 test = "pytest"
-validate_all = "python ./src/repo_util_scripts/linkml_all_validate.py"
+
 
 [tool.pixi.pypi-dependencies]
 vega-scverse = { path = ".", editable = true }

@@ -6225,7 +6225,7 @@ packages:
 - pypi: ./
   name: vega-scverse
   version: 0.0.1
-  sha256: 2d354e6ba3c578c9a2c5c5cb436c61f1cfe3cc31876176dab5a8b8e30e73f820
+  sha256: 04595c5568e1956e8cfd5bfb115d161a76fa2bd96b7c1084d47dd9e25402ed2d
   requires_dist:
   - pydantic>=2.0
   - black ; extra == 'dev'

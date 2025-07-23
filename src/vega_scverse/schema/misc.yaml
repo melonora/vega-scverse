@@ -26,9 +26,11 @@ created_by: orcid:0000-0003-1666-5421
 classes:
   PositionItem:
     description: |-
-      X or y position of an item.
+      X or y position of an item in pixels.
     attributes:
       value:
+        description:
+          The coordinate value.
         range: float
         required: true
 
@@ -37,6 +39,8 @@ classes:
       Text to be displayed. Value is an array where each element corresponds to 1 line.
     attributes:
       value:
+        description: |-
+          The value for text.
         range: string
         multivalued: true
         required: true
@@ -46,6 +50,8 @@ classes:
       The  vertical alignment of the text relative to its y-coordinate.
     attributes:
       value:
+        description: |-
+          The value for the text baseline.
         range: BaseLineEnum
         required: true
 
@@ -54,6 +60,8 @@ classes:
       The  name of the font to be used.
     attributes:
       value:
+        description: |-
+          The value for font name.
         range: string
         required: true
 
@@ -62,6 +70,8 @@ classes:
       Fontsize in pixels of text.
     attributes:
       value:
+        description: |-
+          Font size value.
         slot_uri: nonNegativeFloatSlot
         required: true
 
@@ -70,6 +80,8 @@ classes:
       Font weight of the text
     attributes:
       value:
+        description: |-
+          The font weight value.
         range: FontWeightEnum
         required: true
 
@@ -78,6 +90,8 @@ classes:
       Fontstyle of the text.
     attributes:
       value:
+        description: |-
+          The fontstyle value.
         range: FontStyleEnum
         required: true
 
@@ -86,6 +100,8 @@ classes:
       RGB value represented by a hexadecimal string value.
     attributes:
       value:
+        description: |-
+          The RGB hex string value.
         slot_uri: rgbHexSlot
 
   RandomRGBSignal:
@@ -93,6 +109,8 @@ classes:
       RGB value represented by a hexadecimal string value.
     attributes:
       signal:
+        description: |-
+          Signal creating random RGB color for labels in a label raster.
         equals_string: "rgb(random()*255, random()*255, random()*255)"
         ifabsent: string(rgb(random()*255, random()*255, random()*255))
 
@@ -155,15 +173,23 @@ classes:
     # required.
     attributes:
       left:
+        description: |-
+          The value for padding at the left side of the chart in pixels.
         range: integer
         required: false
       top:
+        description: |-
+          The value for padding at the top side of the chart in pixels.
         range: integer
         required: false
       right:
+        description: |-
+          The value for padding at the right side of the chart in pixels.
         range: integer
         required: false
       bottom:
+        description: |-
+          The value for padding at the bottom side of the chart in pixels.
         range: integer
         required: false
 
@@ -188,6 +214,8 @@ classes:
       Circle shape definition used in symbol mark.
     attributes:
       value:
+        description: |-
+          Type of shape, in this case circle.
         equals_string: circle
         ifabsent: string(circle)
 
