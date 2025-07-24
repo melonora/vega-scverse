@@ -2,14 +2,14 @@
 import os
 import glob
 import unittest
+from pathlib import Path
 
-from linkml_runtime.loaders import yaml_loader
-from src.vega_scverse.spec_models.specification import ViewConfiguration
+from linkml_runtime.loaders import yaml_loader, json_loader
+from vega_scverse.spec_models.specification import ViewConfiguration
 
-ROOT = os.path.join(os.path.dirname(__file__), '..')
-DATA_DIR = os.path.join(ROOT, "src", "data", "examples")
+DATA_DIR = Path(__file__).parent / "data" / "examples" / "valid"
 
-EXAMPLE_FILES = glob.glob(os.path.join(DATA_DIR, '*.yaml'))
+EXAMPLE_FILES = DATA_DIR.glob('*.json')
 
 
 class TestData(unittest.TestCase):
@@ -18,5 +18,5 @@ class TestData(unittest.TestCase):
     def test_data(self):
         """Data test."""
         for path in EXAMPLE_FILES:
-            obj = yaml_loader.load(path, target_class=ViewConfiguration)
+            obj = json_loader.load(path, target_class=ViewConfiguration)
             assert obj

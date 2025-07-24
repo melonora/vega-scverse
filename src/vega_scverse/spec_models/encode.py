@@ -157,6 +157,10 @@ class FontWeightEnum(str, Enum):
 
 
 class AxisEnum(str, Enum):
+    """
+    Possible values for the type of
+    """
+
     x = "x"
     """
     x-axis of the visualization. Typically referring to the horizontal axis.
@@ -237,13 +241,14 @@ class HorizontalAlignEnum(str, Enum):
 
 class PositionItem(ConfiguredBaseModel):
     """
-    X or y position of an item.
+    X or y position of an item in pixels.
     """
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
     value: float = Field(
         default=...,
+        description="""The coordinate value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -272,6 +277,7 @@ class TextItem(ConfiguredBaseModel):
 
     value: list[str] = Field(
         default=...,
+        description="""The value for text.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -300,6 +306,7 @@ class BaselineItem(ConfiguredBaseModel):
 
     value: BaseLineEnum = Field(
         default=...,
+        description="""The value for the text baseline.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -328,6 +335,7 @@ class FontItem(ConfiguredBaseModel):
 
     value: str = Field(
         default=...,
+        description="""The value for font name.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -356,6 +364,7 @@ class FontSizeItem(ConfiguredBaseModel):
 
     value: str = Field(
         default=...,
+        description="""Font size value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -385,6 +394,7 @@ class FontWeightItem(ConfiguredBaseModel):
 
     value: FontWeightEnum = Field(
         default=...,
+        description="""The font weight value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -413,6 +423,7 @@ class FontStyleItem(ConfiguredBaseModel):
 
     value: FontStyleEnum = Field(
         default=...,
+        description="""The fontstyle value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -441,6 +452,7 @@ class RGBHexItem(ConfiguredBaseModel):
 
     value: Optional[str] = Field(
         default=None,
+        description="""The RGB hex string value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -470,6 +482,7 @@ class RandomRGBSignal(ConfiguredBaseModel):
 
     signal: Optional[Literal["rgb(random()*255, random()*255, random()*255)"]] = Field(
         default="rgb",
+        description="""Signal creating random RGB color for labels in a label raster.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "signal",
@@ -549,17 +562,25 @@ class Padding(ConfiguredBaseModel):
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
-    left: Optional[int] = Field(
-        default=None, json_schema_extra={"linkml_meta": {"alias": "left", "domain_of": ["Padding"]}}
+    left: Optional[float] = Field(
+        default=None,
+        description="""The value for padding at the left side of the chart in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "left", "domain_of": ["Padding"]}},
     )
-    top: Optional[int] = Field(
-        default=None, json_schema_extra={"linkml_meta": {"alias": "top", "domain_of": ["Padding"]}}
+    top: Optional[float] = Field(
+        default=None,
+        description="""The value for padding at the top side of the chart in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "top", "domain_of": ["Padding"]}},
     )
-    right: Optional[int] = Field(
-        default=None, json_schema_extra={"linkml_meta": {"alias": "right", "domain_of": ["Padding"]}}
+    right: Optional[float] = Field(
+        default=None,
+        description="""The value for padding at the right side of the chart in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "right", "domain_of": ["Padding"]}},
     )
-    bottom: Optional[int] = Field(
-        default=None, json_schema_extra={"linkml_meta": {"alias": "bottom", "domain_of": ["Padding"]}}
+    bottom: Optional[float] = Field(
+        default=None,
+        description="""The value for padding at the bottom side of the chart in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "bottom", "domain_of": ["Padding"]}},
     )
 
 
@@ -609,6 +630,7 @@ class CircleShape(ConfiguredBaseModel):
 
     value: Optional[Literal["circle"]] = Field(
         default="circle",
+        description="""Type of shape, in this case circle.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -844,8 +866,9 @@ class ImageEncodeEnter(ConfiguredBaseModel):
 
     opacity: str = Field(
         default=...,
+        description="""The opacity of the image mark.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "opacity", "domain_of": ["ImageEncodeEnter"], "slot_uri": "opacity"}
+            "linkml_meta": {"alias": "opacity", "domain_of": ["ImageEncodeEnter"], "slot_uri": "opacityValueSlot"}
         },
     )
     fill: list[ColorItem] = Field(
@@ -904,26 +927,29 @@ class LabelEncodeEnter(ConfiguredBaseModel):
     )
     fillOpacity: str = Field(
         default=...,
+        description="""Opacity value for the label fill between 0 and 1.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
-                "slot_uri": "fillOpacity",
+                "slot_uri": "opacityValueSlot",
             }
         },
     )
     strokeOpacity: str = Field(
         default=...,
+        description="""Opacity value for the label stroke between 0 and 1.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "strokeOpacity",
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
-                "slot_uri": "strokeOpacity",
+                "slot_uri": "opacityValueSlot",
             }
         },
     )
     strokeWidth: str = Field(
         default=...,
+        description="""The width of the label outlines in pixels.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "strokeWidth",
@@ -964,7 +990,7 @@ class PointsEncodeEnter(ConfiguredBaseModel):
     )
     stroke: Union[ColorItem, RGBHexItem] = Field(
         default=...,
-        description="""The color of the outline of each individual label.""",
+        description="""The color of the outline of each individual point.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "stroke",
@@ -975,7 +1001,7 @@ class PointsEncodeEnter(ConfiguredBaseModel):
     )
     fill: Union[ColorItem, RGBHexItem] = Field(
         default=...,
-        description="""The color fill of each individual label.""",
+        description="""The color fill of each individual point.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fill",
@@ -993,26 +1019,29 @@ class PointsEncodeEnter(ConfiguredBaseModel):
     )
     fillOpacity: str = Field(
         default=...,
+        description="""Opacity value for the point fill between 0 and 1.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
-                "slot_uri": "fillOpacity",
+                "slot_uri": "opacityValueSlot",
             }
         },
     )
     strokeOpacity: str = Field(
         default=...,
+        description="""Opacity value for the point outlines between 0 and 1.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "strokeOpacity",
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
-                "slot_uri": "strokeOpacity",
+                "slot_uri": "opacityValueSlot",
             }
         },
     )
     strokeWidth: str = Field(
         default=...,
+        description="""The width of the point outlines in pixels.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "strokeWidth",
@@ -1023,10 +1052,13 @@ class PointsEncodeEnter(ConfiguredBaseModel):
     )
     size: str = Field(
         default=...,
+        description="""The points bounding box area size (typographic points are 1/72 in.).""",
         json_schema_extra={"linkml_meta": {"alias": "size", "domain_of": ["PointsEncodeEnter"], "slot_uri": "size"}},
     )
     shape: CircleShape = Field(
-        default=..., json_schema_extra={"linkml_meta": {"alias": "shape", "domain_of": ["PointsEncodeEnter"]}}
+        default=...,
+        description="""The type of shape. In this case `circle`.""",
+        json_schema_extra={"linkml_meta": {"alias": "shape", "domain_of": ["PointsEncodeEnter"]}},
     )
 
 
@@ -1082,13 +1114,18 @@ class PathEncodeEnter(ConfiguredBaseModel):
             "linkml_meta": {
                 "alias": "fillOpacity",
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
-                "slot_uri": "fillOpacity",
+                "slot_uri": "opacityValueSlot",
             }
         },
     )
 
 
 class TextEncodeEnter(ConfiguredBaseModel):
+    """
+    Enter properties that are evaluated when data for a text mark is processed for the first time and the
+    group mark is newly added to a scene.
+    """
+
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
 
     x: PositionItem = Field(

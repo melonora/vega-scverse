@@ -85,3 +85,6 @@ test = "pytest"
 
 [tool.pixi.pypi-dependencies]
 vega-scverse = { path = ".", editable = true }
+
+[tool.pixi.dependencies]
+pixi-pycharm = ">=0.0.8,<0.0.9"

@@ -175,22 +175,22 @@ classes:
       left:
         description: |-
           The value for padding at the left side of the chart in pixels.
-        range: integer
+        range: float
         required: false
       top:
         description: |-
           The value for padding at the top side of the chart in pixels.
-        range: integer
+        range: float
         required: false
       right:
         description: |-
           The value for padding at the right side of the chart in pixels.
-        range: integer
+        range: float
         required: false
       bottom:
         description: |-
           The value for padding at the bottom side of the chart in pixels.
-        range: integer
+        range: float
         required: false
 
   ColorItem:

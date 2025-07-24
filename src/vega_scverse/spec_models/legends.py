@@ -157,6 +157,10 @@ class FontWeightEnum(str, Enum):
 
 
 class AxisEnum(str, Enum):
+    """
+    Possible values for the type of
+    """
+
     x = "x"
     """
     x-axis of the visualization. Typically referring to the horizontal axis.
@@ -267,13 +271,14 @@ class LegendDirections(str, Enum):
 
 class PositionItem(ConfiguredBaseModel):
     """
-    X or y position of an item.
+    X or y position of an item in pixels.
     """
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
     value: float = Field(
         default=...,
+        description="""The coordinate value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -302,6 +307,7 @@ class TextItem(ConfiguredBaseModel):
 
     value: list[str] = Field(
         default=...,
+        description="""The value for text.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -330,6 +336,7 @@ class BaselineItem(ConfiguredBaseModel):
 
     value: BaseLineEnum = Field(
         default=...,
+        description="""The value for the text baseline.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -358,6 +365,7 @@ class FontItem(ConfiguredBaseModel):
 
     value: str = Field(
         default=...,
+        description="""The value for font name.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -386,6 +394,7 @@ class FontSizeItem(ConfiguredBaseModel):
 
     value: str = Field(
         default=...,
+        description="""Font size value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -415,6 +424,7 @@ class FontWeightItem(ConfiguredBaseModel):
 
     value: FontWeightEnum = Field(
         default=...,
+        description="""The font weight value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -443,6 +453,7 @@ class FontStyleItem(ConfiguredBaseModel):
 
     value: FontStyleEnum = Field(
         default=...,
+        description="""The fontstyle value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -471,6 +482,7 @@ class RGBHexItem(ConfiguredBaseModel):
 
     value: Optional[str] = Field(
         default=None,
+        description="""The RGB hex string value.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -500,6 +512,7 @@ class RandomRGBSignal(ConfiguredBaseModel):
 
     signal: Optional[Literal["rgb(random()*255, random()*255, random()*255)"]] = Field(
         default="rgb",
+        description="""Signal creating random RGB color for labels in a label raster.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "signal",
@@ -575,17 +588,25 @@ class Padding(ConfiguredBaseModel):
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
-    left: Optional[int] = Field(
-        default=None, json_schema_extra={"linkml_meta": {"alias": "left", "domain_of": ["Padding"]}}
+    left: Optional[float] = Field(
+        default=None,
+        description="""The value for padding at the left side of the chart in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "left", "domain_of": ["Padding"]}},
     )
-    top: Optional[int] = Field(
-        default=None, json_schema_extra={"linkml_meta": {"alias": "top", "domain_of": ["Padding"]}}
+    top: Optional[float] = Field(
+        default=None,
+        description="""The value for padding at the top side of the chart in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "top", "domain_of": ["Padding"]}},
     )
-    right: Optional[int] = Field(
-        default=None, json_schema_extra={"linkml_meta": {"alias": "right", "domain_of": ["Padding"]}}
+    right: Optional[float] = Field(
+        default=None,
+        description="""The value for padding at the right side of the chart in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "right", "domain_of": ["Padding"]}},
     )
-    bottom: Optional[int] = Field(
-        default=None, json_schema_extra={"linkml_meta": {"alias": "bottom", "domain_of": ["Padding"]}}
+    bottom: Optional[float] = Field(
+        default=None,
+        description="""The value for padding at the bottom side of the chart in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "bottom", "domain_of": ["Padding"]}},
     )
 
 
@@ -631,6 +652,7 @@ class CircleShape(ConfiguredBaseModel):
 
     value: Optional[Literal["circle"]] = Field(
         default="circle",
+        description="""Type of shape, in this case circle.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -819,6 +841,10 @@ legend groups.""",
 
 
 class CategoricalLegend(Legend):
+    """
+    Type of legend for categorical data.
+    """
+
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/legends"})
 
     columns: Optional[int] = Field(
@@ -963,6 +989,10 @@ legend groups.""",
 
 
 class ColorBarLegend(Legend):
+    """
+    Type of legend for continuous data.
+    """
+
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/legends"})
 
     gradientLength: float = Field(

@@ -72,6 +72,10 @@ linkml_meta = LinkMLMeta(
 
 
 class ScaleEnum(str, Enum):
+    """
+    Possible values for the type of Scale
+    """
+
     linear = "linear"
     """
     Maps continuous numeric data to a continuous range.
@@ -83,6 +87,10 @@ class ScaleEnum(str, Enum):
 
 
 class AxisRangeEnum(str, Enum):
+    """
+    Possible values which to map the data domain to.
+    """
+
     height = "height"
     """
     Referring to the height of the plotting area.
