@@ -9,7 +9,7 @@ for yaml_file in schema_dir.glob("*.yaml"):
         [
             "linkml-lint",
             "--config",
-            str(schema_dir.parent / "lint_config.yaml"),
+            str(Path("./lint_config.yaml")),
             "--ignore-warnings",
             str(yaml_file)
         ],
@@ -21,4 +21,3 @@ for yaml_file in schema_dir.glob("*.yaml"):
         print(f"Done linting {yaml_file}.")
         if result.stdout.strip():  # Show even if returncode is 0 but there are warnings
             print(result.stdout)
-            # print("\n")

@@ -87,6 +87,16 @@ To run tests, use:
 pixi run -e test test
 ```
 
+### Linting schemas
+
+We run the linkml linter on the schemas. For this we also have a config `.lint_config.yaml` which disables standard 
+naming rule. This because the Vega grammar of graphics on which we base the viewconfiguration, does not follow the
+standard naming rules as defined in [LinkML](https://linkml.io/). You can run the linter on all schemas as follows:
+
+```shell
+pixi run lint
+```
+
 
 ## Documentation
 
