@@ -178,12 +178,12 @@ class CapEnum(str, Enum):
     round = "round"
     """
     The line ends with a semi-circular extension beyond its endpoint, creating a rounded cap with a radius equal to 
-    half the line’s thickness. This softens sharp edges and creates smooth joins.
+    half the lineï¿½s thickness. This softens sharp edges and creates smooth joins.
     """
     square = "square"
     """
     The line ends with a square extension beyond its endpoint. It is similar to butt but extends the line slightly 
-    past the endpoint, by half the line’s thickness, resulting in a squared-off cap that projects outward.
+    past the endpoint, by half the lineï¿½s thickness, resulting in a squared-off cap that projects outward.
     """
 
 
@@ -252,7 +252,7 @@ class FontStyleEnum(str, Enum):
     """
     small_caps = "small-caps"
     """
-    Uppercase letterforms designed at approximately the same height and weight as the font’s lowercase letters.
+    Uppercase letterforms designed at approximately the same height and weight as the fontï¿½s lowercase letters.
     """
     ultra_condensed = "ultra-condensed"
     """
@@ -1048,11 +1048,11 @@ which is typical for Y-axis scales in image coordinate systems where the origin 
     )
     range: AxisRangeEnum = Field(
         default=...,
-        description="""Defines the target visual dimension for the axis scale’s output range. Must be either 'width' for an X-axis 
+        description="""Defines the target visual dimension for the axis scaleï¿½s output range. Must be either 'width' for an X-axis 
 scale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the 
 full canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically 
 defined by the top-level 'width' and 'height' properties of a Vega specification. For example, setting 
-\"range\": \"height\" in a Y-axis scale maps the scale’s domain to pixel positions from top to bottom within the 
+\"range\": \"height\" in a Y-axis scale maps the scaleï¿½s domain to pixel positions from top to bottom within the 
 plot area. This is commonly used to align data values with positional axes in coordinate-based visualizations.""",
         json_schema_extra={
             "linkml_meta": {
@@ -1570,7 +1570,7 @@ class Legend(ConfiguredBaseModel):
     )
     orient: Optional[Literal["none"]] = Field(
         default="none",
-        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+        description="""The orientation of the legend, determining where the legend is placed relative to a chartï¿½s data rectangle. 
 Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
 pixel coordinates. If there is demand, this can be changed.""",
         json_schema_extra={
@@ -1738,7 +1738,7 @@ with one column per entry. The default is 0 for horizontal symbol legends and 1 
     )
     orient: Optional[Literal["none"]] = Field(
         default="none",
-        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+        description="""The orientation of the legend, determining where the legend is placed relative to a chartï¿½s data rectangle. 
 Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
 pixel coordinates. If there is demand, this can be changed.""",
         json_schema_extra={
@@ -1915,7 +1915,7 @@ vertical gradient or the width of a horizontal gradient.""",
     )
     orient: Optional[Literal["none"]] = Field(
         default="none",
-        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+        description="""The orientation of the legend, determining where the legend is placed relative to a chartï¿½s data rectangle. 
 Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
 pixel coordinates. If there is demand, this can be changed.""",
         json_schema_extra={
@@ -2353,7 +2353,7 @@ class Padding(ConfiguredBaseModel):
     """
     padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner
     view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes,
-    titles, and legends don’t touch or overflow the chart’s outer boundaries.
+    titles, and legends donï¿½t touch or overflow the chartï¿½s outer boundaries.
     When combined with \"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}, this padding is included within the chart's
     specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
     is defined with this class. This class should at least have one attribute defined.
@@ -3542,7 +3542,7 @@ excluding titles, legends, and margins.""",
         default=None,
         description="""padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner 
 view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes, 
-titles, and legends don’t touch or overflow the chart’s outer boundaries.
+titles, and legends donï¿½t touch or overflow the chartï¿½s outer boundaries.
 When combined with \"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}, this padding is included within the chart's 
 specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
 is defined with this class. This class should at least have one attribute defined.""",

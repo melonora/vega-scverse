@@ -36,7 +36,8 @@ dev = [
 ]
 
 test = [
-    "pytest",
+  "pytest",
+  "linkml-runtime >=1.1.24"
 ]
 
 [tool.hatch.build]

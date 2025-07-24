@@ -1,5 +1,5 @@
 from pathlib import Path
-from .vega_scverse import *
+from vega_scverse import *
 
 THIS_PATH = Path(__file__).parent
 
