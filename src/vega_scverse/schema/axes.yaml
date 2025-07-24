@@ -146,6 +146,8 @@ classes:
 
 enums:
   CapEnum:
+    description: |-
+      The style of the stroke end for axis tick marks.
     permissible_values:
       butt: |-
         The line ends exactly at its endpoint, producing a flat, squared-off edge perpendicular to the path. 

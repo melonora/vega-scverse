@@ -129,6 +129,8 @@ classes:
         required: true
 
   CategoricalLegend:
+    description: |-
+      Type of legend for categorical data.
     is_a: Legend
     attributes:
       columns:
@@ -146,6 +148,8 @@ classes:
         range: float
 
   ColorBarLegend:
+    description: |-
+      Type of legend for continuous data.
     is_a: Legend
     attributes:
       gradientLength:

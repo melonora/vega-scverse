@@ -286,6 +286,8 @@ enums:
       bold: Font with a font weight of 700.
       normal: Font with a font weight of 400.
   AxisEnum:
+    description: |-
+      Possible values for the type of
     permissible_values:
       x: x-axis of the visualization. Typically referring to the horizontal axis.
       y: y-axis of the visualization. Typically referring to the vertical axis.

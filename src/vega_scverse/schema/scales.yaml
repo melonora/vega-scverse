@@ -180,10 +180,14 @@ classes:
 
 enums:
   ScaleEnum:
+    description: |-
+      Possible values for the type of Scale
     permissible_values:
       linear: Maps continuous numeric data to a continuous range.
       ordinal: Maps discrete values (categories) to distinct values in the output range.
   AxisRangeEnum:
+    description: |-
+      Possible values which to map the data domain to.
     permissible_values:
       height: Referring to the height of the plotting area.
       width: Referring to the width of the plotting area.

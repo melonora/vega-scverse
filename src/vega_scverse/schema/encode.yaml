@@ -141,7 +141,9 @@ classes:
       newly added to a scene.
     attributes:
       opacity:
-        slot_uri: opacity
+        description: |-
+          The opacity of the image mark.
+        slot_uri: opacityValueSlot
         required: true
       fill:
         description: |-
@@ -172,12 +174,18 @@ classes:
           - range: RandomRGBSignal
         required: true
       fillOpacity:
-        slot_uri: fillOpacity
+        description: |-
+          Opacity value for the label fill between 0 and 1.
+        slot_uri: opacityValueSlot
         required: true
       strokeOpacity:
-        slot_uri: strokeOpacity
+        description: |-
+          Opacity value for the label stroke between 0 and 1.
+        slot_uri: opacityValueSlot
         required: true
       strokeWidth:
+        description: |-
+          The width of the label outlines in pixels.
         slot_uri: strokeWidth
         required: true
 
@@ -198,31 +206,41 @@ classes:
         required: true
       stroke:
         description: |-
-          The color of the outline of each individual label.
+          The color of the outline of each individual point.
         any_of:
           - range: ColorItem
           - range: RGBHexItem
         required: true
       fill:
         description: |-
-          The color fill of each individual label.
+          The color fill of each individual point.
         any_of:
           - range: ColorItem
           - range: RGBHexItem
         required: true
       fillOpacity:
-        slot_uri: fillOpacity
+        description: |-
+          Opacity value for the point fill between 0 and 1.
+        slot_uri: opacityValueSlot
         required: true
       strokeOpacity:
-        slot_uri: strokeOpacity
+        description: |-
+          Opacity value for the point outlines between 0 and 1.
+        slot_uri: opacityValueSlot
         required: true
       strokeWidth:
+        description: |-
+          The width of the point outlines in pixels.
         slot_uri: strokeWidth
         required: true
       size:
+        description: |-
+          The points bounding box area size (typographic points are 1/72 in.).
         slot_uri: size
         required: true
       shape:
+        description: |-
+          The type of shape. In this case `circle`.
         range: CircleShape
         required: true
 
@@ -249,10 +267,14 @@ classes:
           - range: RGBHexItem
         required: true
       fillOpacity:
-        slot_uri: fillOpacity
+        description: |-
+        slot_uri: opacityValueSlot
         required: true
 
   TextEncodeEnter:
+    description: |-
+      Enter properties that are evaluated when data for a text mark is processed for the first time and the 
+      group mark is newly added to a scene.
     attributes:
       x:
         range: PositionItem

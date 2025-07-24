@@ -30,6 +30,8 @@ created_by: orcid:0000-0003-1666-5421
 
 classes:
   ViewConfiguration:
+    description: |-
+      Viewconfiguration based on vega for the scverse visualization ecosystem. Currently, only supports SpatialData.
     attributes:
       height:
         description: |-

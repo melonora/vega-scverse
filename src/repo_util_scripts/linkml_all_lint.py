@@ -18,12 +18,7 @@ for yaml_file in schema_dir.glob("*.yaml"):
         text=True,
     )
     if result.returncode == 0:
-        print(f"{yaml_file} passed linting.\n")
+        print(f"Done linting {yaml_file}.")
         if result.stdout.strip():  # Show even if returncode is 0 but there are warnings
             print(result.stdout)
-    else:
-        print(f"{yaml_file} has linting issues:\n")
-        if result.stdout.strip():
-            print(result.stdout)
-        if result.stderr.strip():
-            print(result.stderr)
+            # print("\n")
