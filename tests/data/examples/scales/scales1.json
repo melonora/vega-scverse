@@ -1,0 +1,34 @@
+{
+  "scales": [
+    {
+      "name": "X_scale",
+      "type": "linear",
+      "domain": [
+        0.0,
+        3072.0
+      ],
+      "range": "width"
+    },
+    {
+      "name": "Y_scale",
+      "type": "linear",
+      "domain": [
+        3072.0,
+        0.0
+      ],
+      "range": "height"
+    },
+    {
+      "name": "color_479b979e-0b64-4446-a073-f289ec0964e1",
+      "type": "linear",
+      "domain": {
+        "data": "blobs_giant_image_83d630c4-742c-4760-8689-cfc36982f767",
+        "field": "channel_1"
+      },
+      "range": {
+        "scheme": "viridis",
+        "count": 256
+      }
+    }
+  ]
+}

@@ -154,9 +154,9 @@ enums:
         There is no extension beyond the endpoint.
       round: |-
         The line ends with a semi-circular extension beyond its endpoint, creating a rounded cap with a radius equal to 
-        half the line’s thickness. This softens sharp edges and creates smooth joins.
+        half the line's thickness. This softens sharp edges and creates smooth joins.
       square: |-
         The line ends with a square extension beyond its endpoint. It is similar to butt but extends the line slightly 
-        past the endpoint, by half the line’s thickness, resulting in a squared-off cap that projects outward.
+        past the endpoint, by half the line's thickness, resulting in a squared-off cap that projects outward.
 
         

@@ -1,0 +1,12 @@
+{
+  "name": "color_479b979e-0b64-4446-a073-f289ec0964e1",
+  "type": "linear",
+  "domain": {
+    "data": "blobs_giant_image_83d630c4-742c-4760-8689-cfc36982f767",
+    "field": "value"
+  },
+  "range": {
+    "scheme": "viridis",
+    "count": "should be a number"
+  }
+}

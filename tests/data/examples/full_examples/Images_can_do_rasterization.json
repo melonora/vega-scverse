@@ -9,7 +9,7 @@
         "bottom": 48.0
     },
     "title": {
-        "text": "global",
+        "text": ["global"],
         "orient": "top",
         "anchor": "middle",
         "baseline": "baseline",

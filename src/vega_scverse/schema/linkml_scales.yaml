@@ -24,17 +24,20 @@ created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
 classes:
-#  Scales:
-#    description: |-
-#      Vega like definition for scales which specifies a collection of mappings from a data domain
-#      (e.g., numbers, categories, dates) to a visual range (e.g., position on the screen, color spectrum, size).
-#    attributes:
-#      scales:
-#        multivalued: true
-#        any_of:
-#          - range: AxisScale
-#          - range: CategoricalColorScale
-#          - range: ContinuousColorScale
+  BaseScales:
+    description: |-
+      Vega like definition for scales which specifies a collection of mappings from a data domain
+      (e.g., numbers, categories, dates) to a visual range (e.g., position on the screen, color spectrum, size).
+      Due to LinkML currently not supporting assigning classes as values for ranged in any_of, this class
+      should be used as an abstract base class.
+    abstract: true
+    attributes:
+      scales:
+        multivalued: true
+        any_of:
+          - range: BaseAxisScale
+          - range: BaseCategoricalColorScale
+          - range: LinearColorScale
 
   Scale:
     abstract: true
@@ -56,7 +59,7 @@ classes:
         required: true
         range: ScaleEnum
 
-  AxisScale:
+  BaseAxisScale:
     is_a: Scale
     description: A vega like scale specifically for mapping from a data domain to an axis range.
     slot_usage:
@@ -81,11 +84,11 @@ classes:
         exact_cardinality: 2
       range:
         description: |-
-          Defines the target visual dimension for the axis scale’s output range. Must be either 'width' for an X-axis 
+          Defines the target visual dimension for the axis scale's output range. Must be either 'width' for an X-axis 
           scale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the 
           full canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically 
           defined by the top-level 'width' and 'height' properties of a Vega specification. For example, setting 
-          "range": "height" in a Y-axis scale maps the scale’s domain to pixel positions from top to bottom within the 
+          "range": "height" in a Y-axis scale maps the scale's domain to pixel positions from top to bottom within the 
           plot area. This is commonly used to align data values with positional axes in coordinate-based visualizations.
         required: true
         range: AxisRangeEnum
@@ -101,12 +104,12 @@ classes:
           color followed by '_pseudoUUID' used to refer to this scale elsewhere in the view configuration.
         pattern: "^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
-  ContinuousColorScale:
+  LinearColorScale:
     is_a: ColorScale
-    description: A vega like scale specifically for mapping from a continuous data domain to a visual color range.
+    description: A vega like scale specifically for mapping from a linear continuous data domain to a visual color range.
     slot_usage:
       type:
-        description: Only linear is supported for an `ContinuousColorScale` for now.
+        description: Only linear is supported for an `LinearColorScale` for now.
         equals_string: linear
         ifabsent: string(linear)
     attributes:
@@ -121,7 +124,7 @@ classes:
         required: true
         range: ContinuousColorMapRange
 
-  CategoricalColorScale:
+  BaseCategoricalColorScale:
     is_a: ColorScale
     description: A scale to map a discrete data domain to discrete colors
     slot_usage:
@@ -131,25 +134,25 @@ classes:
     attributes:
       domain:
         description: |-
-          The data domain as a list of discrete string values.
+          The data domain as a list of discrete string values. Length must be equal to the length of range
         multivalued: true
         required: true
         range: string
       range:
         description: |-
-          List of RGB colors as hexadecimal strings
+          List of RGB colors as hexadecimal strings. Length must be equal to length of domain
         multivalued: true
         required: true
         pattern: "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
 
   ContinuousColorDomain:
     description: |-
-      A data domain or source for a ContinuousColorScale.
+      A data domain or source for a LinearColorScale.
     attributes:
       data:
         description: |-
           The identifier of the particular data object in the data array to which the color mapping in 
-          ContinuousColorScale must be applied. In Vega this is only defined when the type of Scale is
+          LinearColorScale must be applied. In Vega this is only defined when the type of Scale is
           ordinal, but we deviate from that.
         required: true
         pattern: "^.*_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
@@ -157,7 +160,7 @@ classes:
         description: |-
           If the data source is a table, then the field is the column within the table that is used as 
           a source for the color mapping. In case of raster data with a single channel, the field equals
-          "value" and if multichannel raster data it is the name or index of the image channel.
+          'value' and if multichannel raster data it is the name or index of the image channel.
         required: true
         range: string
 

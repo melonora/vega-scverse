@@ -1,0 +1,28 @@
+{
+  "scales": [
+    {
+      "name": "X_scale",
+      "type": "linear",
+      "domain": [
+        0.0,
+        3072.0
+      ],
+      "range": "width"
+    },
+    {
+      "name": "Y_scale",
+      "type": "linear",
+      "domain": [
+        3072.0,
+        0.0
+      ],
+      "range": "height"
+    },
+    {
+      "name": "color_e246018a-8b16-4177-ac54-a6f98d4deaab",
+      "type": "ordinal",
+      "domain": ["channel_0_sum"],
+      "range": ["#1f77b4"]
+    }
+  ]
+}

@@ -19,7 +19,7 @@ default_range: string
 imports:
   - linkml:types
   - encode
-  - scales
+  - linkml_scales
   - axes
   - legends
 
