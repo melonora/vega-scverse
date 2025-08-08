@@ -3,8 +3,11 @@ name: Build and test vega_spatialdata
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
+    - opened
+    - reopened
+    - synchronize
 
 jobs:
   test:
