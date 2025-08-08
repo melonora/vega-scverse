@@ -1,3 +1,6 @@
+# WIP
+This repository is currently still a work in progress.
+
 # vega-spatialdata
 
 Vega like specification for the scverse plotting ecosystem. Currently, only supports

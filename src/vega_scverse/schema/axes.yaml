@@ -47,15 +47,17 @@ classes:
         required: true
       domainOpacity:
         description: |-
-          Opacity of axis domain line.
-        slot_uri: opacityValueSlot
+          Opacity of axis domain line. Should not be present if domain is 'false'.
+        range: float
+        minimum_value: 0
+        maximum_value: 1
       domainColor:
         description: |-
-          Color of axis domain line.
+          Color of axis domain line. Should not be present if domain is 'false'.
         slot_uri: rgbHexSlot
       domainWidth:
         description: |-
-          Stroke width of axis domain line.
+          Stroke width of axis domain line. Should not be present if domain is 'false'.
         range: float
       grid:
         description: |-
@@ -64,19 +66,22 @@ classes:
         ifabsent: false
       gridOpacity:
         description: |-
-          Opacity of axis grid lines.
-        slot_uri: opacityValueSlot
+          Opacity of axis grid lines. Should not be present if grid is 'false'.
+        range: float
+        minimum_value: 0
+        maximum_value: 1
       gridCap:
         description: |-
           The stroke cap for axis grid lines. One of 'butt' (default), 'round' or 'square'.
+          Should not be present if grid is 'false'.
         range: CapEnum
       gridColor:
         description: |-
-          Color of axis grid lines.
+          Color of axis grid lines. Should not be present if grid is 'false'.
         slot_uri: rgbHexSlot
       gridWidth:
         description: |-
-          Stroke width of axis grid lines.
+          Stroke width of axis grid lines. Should not be present if grid is 'false'.
         range: float
       labelColor:
         description: |-
@@ -85,7 +90,9 @@ classes:
       labelOpacity:
         description: |-
           Opacity of axis tick labels.
-        slot_uri: opacityValueSlot
+        range: float
+        minimum_value: 0
+        maximum_value: 1
       labelFont:
         description: |-
           Font name for axis tick labels.
@@ -110,7 +117,9 @@ classes:
       tickOpacity:
         description: |-
           Opacity of axis ticks.
-        slot_uri: opacityValueSlot
+        range: float
+        minimum_value: 0
+        maximum_value: 1
       tickColor:
         description: |-
           Color of axis ticks.
@@ -122,11 +131,13 @@ classes:
       tickWidth:
         description: |-
           Width in pixels of axis ticks.
-        slot_uri: nonNegativeFloatSlot
+        range: float
+        minimum_value: 0
       tickSize:
         description: |-
           The length in pixels of axis ticks.
-        slot_uri: nonNegativeFloatSlot
+        range: float
+        minimum_value: 0
       values:
         description: |-
           Explicitly set the visible axis tick and label values. The array entries should be legal values in the 

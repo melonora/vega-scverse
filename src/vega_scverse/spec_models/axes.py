@@ -720,12 +720,12 @@ class Axis(ConfiguredBaseModel):
 included as part of the axis.""",
         json_schema_extra={"linkml_meta": {"alias": "domain", "domain_of": ["Axis"]}},
     )
-    domainOpacity: Optional[str] = Field(
+    domainOpacity: Optional[float] = Field(
         default=None,
         description="""Opacity of axis domain line.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "domainOpacity", "domain_of": ["Axis"], "slot_uri": "opacityValueSlot"}
-        },
+        ge=0,
+        le=1,
+        json_schema_extra={"linkml_meta": {"alias": "domainOpacity", "domain_of": ["Axis"]}},
     )
     domainColor: Optional[str] = Field(
         default=None,
@@ -742,12 +742,12 @@ included as part of the axis.""",
         description="""A boolean flag indicating if grid lines should be included as part of the axis.""",
         json_schema_extra={"linkml_meta": {"alias": "grid", "domain_of": ["Axis"], "ifabsent": "False"}},
     )
-    gridOpacity: Optional[str] = Field(
+    gridOpacity: Optional[float] = Field(
         default=None,
         description="""Opacity of axis grid lines.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "gridOpacity", "domain_of": ["Axis"], "slot_uri": "opacityValueSlot"}
-        },
+        ge=0,
+        le=1,
+        json_schema_extra={"linkml_meta": {"alias": "gridOpacity", "domain_of": ["Axis"]}},
     )
     gridCap: Optional[CapEnum] = Field(
         default=None,
@@ -769,12 +769,12 @@ included as part of the axis.""",
         description="""Text color of axis tick labels.""",
         json_schema_extra={"linkml_meta": {"alias": "labelColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
     )
-    labelOpacity: Optional[str] = Field(
+    labelOpacity: Optional[float] = Field(
         default=None,
         description="""Opacity of axis tick labels.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis"], "slot_uri": "opacityValueSlot"}
-        },
+        ge=0,
+        le=1,
+        json_schema_extra={"linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis"]}},
     )
     labelFont: Optional[str] = Field(
         default=None,
@@ -801,12 +801,12 @@ included as part of the axis.""",
         description="""A boolean flag indicating if ticks should be included as part of the axis.""",
         json_schema_extra={"linkml_meta": {"alias": "ticks", "domain_of": ["Axis"], "ifabsent": "True"}},
     )
-    tickOpacity: Optional[str] = Field(
+    tickOpacity: Optional[float] = Field(
         default=None,
         description="""Opacity of axis ticks.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "tickOpacity", "domain_of": ["Axis"], "slot_uri": "opacityValueSlot"}
-        },
+        ge=0,
+        le=1,
+        json_schema_extra={"linkml_meta": {"alias": "tickOpacity", "domain_of": ["Axis"]}},
     )
     tickColor: Optional[str] = Field(
         default=None,
@@ -818,19 +818,17 @@ included as part of the axis.""",
         description="""The stroke cap for axis tick marks. One of \"butt\" (default), \"round\" or \"square\".""",
         json_schema_extra={"linkml_meta": {"alias": "tickCap", "domain_of": ["Axis"]}},
     )
-    tickWidth: Optional[str] = Field(
+    tickWidth: Optional[float] = Field(
         default=None,
         description="""Width in pixels of axis ticks.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "tickWidth", "domain_of": ["Axis"], "slot_uri": "nonNegativeFloatSlot"}
-        },
+        ge=0,
+        json_schema_extra={"linkml_meta": {"alias": "tickWidth", "domain_of": ["Axis"]}},
     )
-    tickSize: Optional[str] = Field(
+    tickSize: Optional[float] = Field(
         default=None,
         description="""The length in pixels of axis ticks.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "tickSize", "domain_of": ["Axis"], "slot_uri": "nonNegativeFloatSlot"}
-        },
+        ge=0,
+        json_schema_extra={"linkml_meta": {"alias": "tickSize", "domain_of": ["Axis"]}},
     )
     values: list[Union[float, int]] = Field(
         default=...,
