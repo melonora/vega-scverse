@@ -3,7 +3,6 @@ name: Build and test vega_spatialdata
 
 on:
   push:
-    branches: [main]
   pull_request:
     types:
       - opened
