@@ -20,7 +20,7 @@ jobs:
           pixi-version: v0.49.0
           frozen: true
         cache: true
-        cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+        cache-write: ${{ github.event_name == 'push' && github.ref_name == 'refs/heads/main' }}
 
       - name: Run tests
         run: pixi run -e test test
