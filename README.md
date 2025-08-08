@@ -139,3 +139,4 @@ Deploying the documentation is not necessary. This is taken care of by a GitHub 
 
 This project was made with
 [linkml-project-cookiecutter](https://github.com/linkml/linkml-project-cookiecutter).
+test
