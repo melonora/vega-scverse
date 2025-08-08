@@ -1,0 +1,6 @@
+{
+  "name": "color_9dd2a41a-8a3f-4085-9340-096ca9ec56cb",
+  "type": "ordinal",
+  "domain": ["gene_b"],
+  "range": ["#90ee90"]
+}

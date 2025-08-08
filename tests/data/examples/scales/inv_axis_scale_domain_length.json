@@ -1,0 +1,6 @@
+{
+  "name": "X_scale",
+  "type": "linear",
+  "domain": [0, 512.0, 450],
+  "range": "width"
+}

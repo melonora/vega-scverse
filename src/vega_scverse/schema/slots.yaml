@@ -26,10 +26,12 @@ created_by: orcid:0000-0003-1666-5421
 slots:
   strokeWidth:
     description: The width of the outline of a labels, symbol or path mark
-    range: PositiveValue
+    range: float
+    minimum_value: 0
   size:
     description: The size of points in a PointsMark.
-    range: PositiveValue
+    range: float
+    minimum_value: 0
   rgbHexSlot:
     description: |-
       Hex string representing a RGB value.

@@ -1,0 +1,12 @@
+{
+  "name": "color_1d0e960e-5e61-49b3-bfde-f2d15dc7d9f8",
+  "type": "linear",
+  "domain": {
+      "data": "blobs_multiscale_labels_03be7290-3c7e-4e9d-b2ed-4a6deb5eab60",
+      "field": "channel_1_sum"
+  },
+  "range": {
+      "scheme": "viridis",
+      "count": 256
+  }
+}

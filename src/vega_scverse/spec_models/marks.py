@@ -52,7 +52,7 @@ linkml_meta = LinkMLMeta(
         "description": "Vega like specification for the marks used in view "
         "configurations for the scverse visualization ecosystem.",
         "id": "https://w3id.org/scverse/vega-scverse/marks",
-        "imports": ["linkml:types", "encode", "scales", "axes", "legends"],
+        "imports": ["linkml:types", "encode", "linkml_scales", "axes", "legends"],
         "license": "BSD-3",
         "name": "vega-scverse-marks",
         "prefixes": {
@@ -105,7 +105,7 @@ class FontStyleEnum(str, Enum):
     """
     small_caps = "small-caps"
     """
-    Uppercase letterforms designed at approximately the same height and weight as the font’s lowercase letters.
+    Uppercase letterforms designed at approximately the same height and weight as the font's lowercase letters.
     """
     ultra_condensed = "ultra-condensed"
     """
@@ -282,12 +282,12 @@ class CapEnum(str, Enum):
     round = "round"
     """
     The line ends with a semi-circular extension beyond its endpoint, creating a rounded cap with a radius equal to 
-    half the line’s thickness. This softens sharp edges and creates smooth joins.
+    half the line's thickness. This softens sharp edges and creates smooth joins.
     """
     square = "square"
     """
     The line ends with a square extension beyond its endpoint. It is similar to butt but extends the line slightly 
-    past the endpoint, by half the line’s thickness, resulting in a squared-off cap that projects outward.
+    past the endpoint, by half the line's thickness, resulting in a squared-off cap that projects outward.
     """
 
 
@@ -632,16 +632,11 @@ class Title(ConfiguredBaseModel):
         description="""Font name of the title text.""",
         json_schema_extra={"linkml_meta": {"alias": "font", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
-    fontSize: str = Field(
+    fontSize: float = Field(
         default=...,
         description="""Font size in pixels of the title text.""",
-        json_schema_extra={
-            "linkml_meta": {
-                "alias": "fontSize",
-                "domain_of": ["Title", "TextEncodeEnter"],
-                "slot_uri": "nonNegativeFloatSlot",
-            }
-        },
+        ge=0,
+        json_schema_extra={"linkml_meta": {"alias": "fontSize", "domain_of": ["Title", "TextEncodeEnter"]}},
     )
     fontStyle: FontStyleEnum = Field(
         default=...,
@@ -659,7 +654,7 @@ class Padding(ConfiguredBaseModel):
     """
     padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner
     view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes,
-    titles, and legends don’t touch or overflow the chart’s outer boundaries.
+    titles, and legends don't touch or overflow the chart's outer boundaries.
     When combined with \"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}, this padding is included within the chart's
     specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
     is defined with this class. This class should at least have one attribute defined.
@@ -1441,6 +1436,34 @@ https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'tr
         return v
 
 
+class BaseScales(ConfiguredBaseModel):
+    """
+    Vega like definition for scales which specifies a collection of mappings from a data domain
+    (e.g., numbers, categories, dates) to a visual range (e.g., position on the screen, color spectrum, size).
+    Due to LinkML currently not supporting assigning classes as values for ranged in any_of, this class
+    should be used as an abstract base class.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {"abstract": True, "from_schema": "https://w3id.org/scverse/vega-scverse/scales"}
+    )
+
+    scales: Optional[list[str]] = Field(
+        default=None,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "scales",
+                "any_of": [
+                    {"range": "BaseAxisScale"},
+                    {"range": "BaseCategoricalColorScale"},
+                    {"range": "LinearColorScale"},
+                ],
+                "domain_of": ["BaseScales", "GroupMark"],
+            }
+        },
+    )
+
+
 class Scale(ConfiguredBaseModel):
     """
     Base class for vega like scales which map from a data domain to a visual range, be it axis or color.
@@ -1467,7 +1490,7 @@ visual range, e.g. `linear`.""",
     )
 
 
-class AxisScale(Scale):
+class BaseAxisScale(Scale):
     """
     A vega like scale specifically for mapping from a data domain to an axis range.
     """
@@ -1504,22 +1527,22 @@ which is typical for Y-axis scales in image coordinate systems where the origin 
         json_schema_extra={
             "linkml_meta": {
                 "alias": "domain",
-                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale", "Axis"],
+                "domain_of": ["BaseAxisScale", "LinearColorScale", "BaseCategoricalColorScale", "Axis"],
             }
         },
     )
     range: AxisRangeEnum = Field(
         default=...,
-        description="""Defines the target visual dimension for the axis scale’s output range. Must be either 'width' for an X-axis 
+        description="""Defines the target visual dimension for the axis scale's output range. Must be either 'width' for an X-axis 
 scale or 'height' for a Y-axis scale. These keywords refer to the pixel extent of the plotting area, not the 
 full canvas. The plotting area is the region where data marks are rendered, and its dimensions are typically 
 defined by the top-level 'width' and 'height' properties of a Vega specification. For example, setting 
-\"range\": \"height\" in a Y-axis scale maps the scale’s domain to pixel positions from top to bottom within the 
+\"range\": \"height\" in a Y-axis scale maps the scale's domain to pixel positions from top to bottom within the 
 plot area. This is commonly used to align data values with positional axes in coordinate-based visualizations.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "range",
-                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale"],
+                "domain_of": ["BaseAxisScale", "LinearColorScale", "BaseCategoricalColorScale"],
             }
         },
     )
@@ -1604,9 +1627,9 @@ visual range, e.g. `linear`.""",
         return v
 
 
-class ContinuousColorScale(ColorScale):
+class LinearColorScale(ColorScale):
     """
-    A vega like scale specifically for mapping from a continuous data domain to a visual color range.
+    A vega like scale specifically for mapping from a linear continuous data domain to a visual color range.
     """
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
@@ -1614,7 +1637,7 @@ class ContinuousColorScale(ColorScale):
             "from_schema": "https://w3id.org/scverse/vega-scverse/scales",
             "slot_usage": {
                 "type": {
-                    "description": "Only linear is supported for an " "`ContinuousColorScale` for now.",
+                    "description": "Only linear is supported for an " "`LinearColorScale` for now.",
                     "equals_string": "linear",
                     "ifabsent": "string(linear)",
                     "name": "type",
@@ -1629,7 +1652,7 @@ class ContinuousColorScale(ColorScale):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "domain",
-                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale", "Axis"],
+                "domain_of": ["BaseAxisScale", "LinearColorScale", "BaseCategoricalColorScale", "Axis"],
             }
         },
     )
@@ -1639,7 +1662,7 @@ class ContinuousColorScale(ColorScale):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "range",
-                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale"],
+                "domain_of": ["BaseAxisScale", "LinearColorScale", "BaseCategoricalColorScale"],
             }
         },
     )
@@ -1650,7 +1673,7 @@ class ContinuousColorScale(ColorScale):
     )
     type: Literal["linear"] = Field(
         default="linear",
-        description="""Only linear is supported for an `ContinuousColorScale` for now.""",
+        description="""Only linear is supported for an `LinearColorScale` for now.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
@@ -1675,7 +1698,7 @@ class ContinuousColorScale(ColorScale):
         return v
 
 
-class CategoricalColorScale(ColorScale):
+class BaseCategoricalColorScale(ColorScale):
     """
     A scale to map a discrete data domain to discrete colors
     """
@@ -1689,21 +1712,21 @@ class CategoricalColorScale(ColorScale):
 
     domain: list[str] = Field(
         default=...,
-        description="""The data domain as a list of discrete string values.""",
+        description="""The data domain as a list of discrete string values. Length must be equal to the length of range""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "domain",
-                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale", "Axis"],
+                "domain_of": ["BaseAxisScale", "LinearColorScale", "BaseCategoricalColorScale", "Axis"],
             }
         },
     )
     range: list[str] = Field(
         default=...,
-        description="""List of RGB colors as hexadecimal strings""",
+        description="""List of RGB colors as hexadecimal strings. Length must be equal to length of domain""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "range",
-                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale"],
+                "domain_of": ["BaseAxisScale", "LinearColorScale", "BaseCategoricalColorScale"],
             }
         },
     )
@@ -1755,7 +1778,7 @@ visual range, e.g. `linear`.""",
 
 class ContinuousColorDomain(ConfiguredBaseModel):
     """
-    A data domain or source for a ContinuousColorScale.
+    A data domain or source for a LinearColorScale.
     """
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/scales"})
@@ -1763,7 +1786,7 @@ class ContinuousColorDomain(ConfiguredBaseModel):
     data: str = Field(
         default=...,
         description="""The identifier of the particular data object in the data array to which the color mapping in 
-ContinuousColorScale must be applied. In Vega this is only defined when the type of Scale is
+LinearColorScale must be applied. In Vega this is only defined when the type of Scale is
 ordinal, but we deviate from that.""",
         json_schema_extra={"linkml_meta": {"alias": "data", "domain_of": ["ContinuousColorDomain", "MarkDataSource"]}},
     )
@@ -1771,7 +1794,7 @@ ordinal, but we deviate from that.""",
         default=...,
         description="""If the data source is a table, then the field is the column within the table that is used as 
 a source for the color mapping. In case of raster data with a single channel, the field equals
-\"value\" and if multichannel raster data it is the name or index of the image channel.""",
+'value' and if multichannel raster data it is the name or index of the image channel.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "field",
@@ -1839,7 +1862,7 @@ included as part of the axis.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "domain",
-                "domain_of": ["AxisScale", "ContinuousColorScale", "CategoricalColorScale", "Axis"],
+                "domain_of": ["BaseAxisScale", "LinearColorScale", "BaseCategoricalColorScale", "Axis"],
             }
         },
     )
@@ -2014,7 +2037,7 @@ class Legend(ConfiguredBaseModel):
     )
     orient: Optional[Literal["none"]] = Field(
         default="none",
-        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
 Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
 pixel coordinates. If there is demand, this can be changed.""",
         json_schema_extra={
@@ -2183,7 +2206,7 @@ with one column per entry. The default is 0 for horizontal symbol legends and 1 
     )
     orient: Optional[Literal["none"]] = Field(
         default="none",
-        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
 Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
 pixel coordinates. If there is demand, this can be changed.""",
         json_schema_extra={
@@ -2361,7 +2384,7 @@ vertical gradient or the width of a horizontal gradient.""",
     )
     orient: Optional[Literal["none"]] = Field(
         default="none",
-        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
 Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
 pixel coordinates. If there is demand, this can be changed.""",
         json_schema_extra={
@@ -2850,7 +2873,7 @@ class GroupMark(ConfiguredBaseModel):
         description="""Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes). 
 Scales are a fundamental building block of data visualization, as they determine the nature of visual 
 encodings.""",
-        json_schema_extra={"linkml_meta": {"alias": "scales", "domain_of": ["GroupMark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "scales", "domain_of": ["BaseScales", "GroupMark"]}},
     )
     axes: list[Axis] = Field(
         default=...,
@@ -2902,11 +2925,12 @@ TextEncodeEnter.model_rebuild()
 GroupEncodeEnter.model_rebuild()
 MarkEncodeUpdate.model_rebuild()
 ConditionalFillUpdate.model_rebuild()
+BaseScales.model_rebuild()
 Scale.model_rebuild()
-AxisScale.model_rebuild()
+BaseAxisScale.model_rebuild()
 ColorScale.model_rebuild()
-ContinuousColorScale.model_rebuild()
-CategoricalColorScale.model_rebuild()
+LinearColorScale.model_rebuild()
+BaseCategoricalColorScale.model_rebuild()
 ContinuousColorDomain.model_rebuild()
 ContinuousColorMapRange.model_rebuild()
 Axis.model_rebuild()

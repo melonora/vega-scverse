@@ -19,7 +19,7 @@ default_range: string
 imports:
   - linkml:types
   - data
-  - scales
+  - linkml_scales
   - axes
   - legends
   - marks
@@ -51,7 +51,7 @@ classes:
         description: |-
           padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner 
           view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes, 
-          titles, and legends don’t touch or overflow the chart’s outer boundaries.
+          titles, and legends don't touch or overflow the chart's outer boundaries.
           When combined with "autosize": {"type": "fit", "contains": "padding"}, this padding is included within the chart's 
           specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
           is defined with this class. This class should at least have one attribute defined.
@@ -74,8 +74,7 @@ classes:
           Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes). 
           Scales are a fundamental building block of data visualization, as they determine the nature of visual 
           encodings.
-        range: Scale
-        multivalued: true
+        range: BaseScales
       axes:
         description: |-
           Axes visualize spatial scale mappings using ticks, grid lines and labels.

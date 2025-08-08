@@ -105,7 +105,7 @@ class FontStyleEnum(str, Enum):
     """
     small_caps = "small-caps"
     """
-    Uppercase letterforms designed at approximately the same height and weight as the font’s lowercase letters.
+    Uppercase letterforms designed at approximately the same height and weight as the font's lowercase letters.
     """
     ultra_condensed = "ultra-condensed"
     """
@@ -557,12 +557,11 @@ class Title(ConfiguredBaseModel):
         description="""Font name of the title text.""",
         json_schema_extra={"linkml_meta": {"alias": "font", "domain_of": ["Title"]}},
     )
-    fontSize: str = Field(
+    fontSize: float = Field(
         default=...,
         description="""Font size in pixels of the title text.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "fontSize", "domain_of": ["Title"], "slot_uri": "nonNegativeFloatSlot"}
-        },
+        ge=0,
+        json_schema_extra={"linkml_meta": {"alias": "fontSize", "domain_of": ["Title"]}},
     )
     fontStyle: FontStyleEnum = Field(
         default=...,
@@ -580,7 +579,7 @@ class Padding(ConfiguredBaseModel):
     """
     padding defines the amount of space (in pixels) to reserve between the edge of the chart container and the inner
     view area where data marks are rendered. It acts as an internal margin that ensures visual elements like axes,
-    titles, and legends don’t touch or overflow the chart’s outer boundaries.
+    titles, and legends don't touch or overflow the chart's outer boundaries.
     When combined with \"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}, this padding is included within the chart's
     specified width and height, and the inner view is resized accordingly to preserve layout integrity. If padding
     is defined with this class. This class should at least have one attribute defined.
@@ -727,7 +726,7 @@ class Legend(ConfiguredBaseModel):
     )
     orient: Optional[Literal["none"]] = Field(
         default="none",
-        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
 Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
 pixel coordinates. If there is demand, this can be changed.""",
         json_schema_extra={
@@ -875,7 +874,7 @@ with one column per entry. The default is 0 for horizontal symbol legends and 1 
     )
     orient: Optional[Literal["none"]] = Field(
         default="none",
-        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
 Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
 pixel coordinates. If there is demand, this can be changed.""",
         json_schema_extra={
@@ -1032,7 +1031,7 @@ vertical gradient or the width of a horizontal gradient.""",
     )
     orient: Optional[Literal["none"]] = Field(
         default="none",
-        description="""The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
 Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
 pixel coordinates. If there is demand, this can be changed.""",
         json_schema_extra={

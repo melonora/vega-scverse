@@ -42,7 +42,7 @@ classes:
         required: true
       orient:
         description: |-
-          The orientation of the legend, determining where the legend is placed relative to a chart’s data rectangle. 
+          The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
           Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
           pixel coordinates. If there is demand, this can be changed.
         equals_string: none

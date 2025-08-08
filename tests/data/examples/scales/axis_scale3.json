@@ -1,0 +1,6 @@
+{
+  "name": "Y_scale_0",
+  "type": "linear",
+  "domain": [512.0, 0.0],
+  "range": "height"
+}
