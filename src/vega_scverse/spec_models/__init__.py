@@ -1,7 +1,6 @@
 from pathlib import Path
 import inspect
-from . import specification
-from . import scales
+from . import specification, scales, data
 
 THIS_PATH = Path(__file__).parent
 
@@ -10,10 +9,18 @@ MAIN_SCHEMA_PATH = SCHEMA_DIRECTORY / "specification.yaml"
 
 # Create a list of all classes from specification.py
 __all__ = []
-for name, obj in inspect.getmembers(specification):
-    if inspect.isclass(obj) and obj.__module__ == 'vega_scverse.spec_models.specification':
-        __all__.append(name)
 
-for name, obj in inspect.getmembers(scales):
-    if inspect.isclass(obj) and obj.__module__ == 'vega_scverse.spec_models.scales':
+modules = [
+    'vega_scverse.spec_models.specification',
+    'vega_scverse.spec_models.scales',
+    'vega_scverse.spec_models.data',
+]
+objects = [
+    *inspect.getmembers(specification),
+    *inspect.getmembers(scales),
+    *inspect.getmembers(data),
+]
+
+for name, obj in objects:
+    if inspect.isclass(obj) and obj.__module__ in modules:
         __all__.append(name)

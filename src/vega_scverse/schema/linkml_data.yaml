@@ -38,8 +38,7 @@ classes:
         pattern: "^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
       format:
         description: |-
-          Format object containing the type of data as object and a string value representing the version.
-        range: Format
+          Format object containing the type of data as object and a string or float value representing the version.
         required: true
 
   SpatialDataObject:
@@ -52,12 +51,17 @@ classes:
           The absolute path to the SpatialData zarr.
         range: string
         required: true
+      format:
+        range: SpatialDataFormat
 
   TableObject:
     is_a: DataObject
     description: |-
       AnnData Table object stream.
     attributes:
+      format:
+        range: ElementFormat
+        required: true
       source:
         description: |-
           The source of the SpatialData element. Must be the name / identifier of a SpatialData Object in the 
@@ -79,6 +83,9 @@ classes:
     description: |-
       Data object pertaining to an element within the SpatialData object.
     attributes:
+      format:
+        range: ElementFormat
+        required: true
       source:
         description: |-
           The source of the SpatialData element. Must be the name / identifier of a SpatialData Object in the 
@@ -240,9 +247,10 @@ classes:
         required: true
 
 ############ Formats ############
-  Format:
+  BaseFormat:
     description: |- 
       Format object containing the type of data as object and a string value representing the version.
+    abstract: true
     attributes:
       type:
         description: |-
@@ -252,8 +260,20 @@ classes:
       version:
         description: |- 
           The version of the data type that is defined. Defined as semantic version + optional development release.
-        pattern: "^(\\d+\\.\\d+)(\\.\\d+)?([a-zA-Z0-9.+-]*)?$"
         required: true
+
+  SpatialDataFormat:
+    is_a: BaseFormat
+    attributes:
+      version:
+        pattern: "^(\\d+\\.\\d+)(\\.\\d+)?([a-zA-Z0-9.+-]*)?$"
+
+  ElementFormat:
+    is_a: BaseFormat
+    attributes:
+      version:
+        range: float
+
 
 enums:
   TransformTypeEnum:
