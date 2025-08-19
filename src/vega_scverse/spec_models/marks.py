@@ -1868,19 +1868,19 @@ included as part of the axis.""",
     )
     domainOpacity: Optional[float] = Field(
         default=None,
-        description="""Opacity of axis domain line.""",
+        description="""Opacity of axis domain line. Should not be present if domain is 'false'.""",
         ge=0,
         le=1,
         json_schema_extra={"linkml_meta": {"alias": "domainOpacity", "domain_of": ["Axis"]}},
     )
     domainColor: Optional[str] = Field(
         default=None,
-        description="""Color of axis domain line.""",
+        description="""Color of axis domain line. Should not be present if domain is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "domainColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
     )
     domainWidth: Optional[float] = Field(
         default=None,
-        description="""Stroke width of axis domain line.""",
+        description="""Stroke width of axis domain line. Should not be present if domain is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "domainWidth", "domain_of": ["Axis"]}},
     )
     grid: Optional[bool] = Field(
@@ -1890,24 +1890,25 @@ included as part of the axis.""",
     )
     gridOpacity: Optional[float] = Field(
         default=None,
-        description="""Opacity of axis grid lines.""",
+        description="""Opacity of axis grid lines. Should not be present if grid is 'false'.""",
         ge=0,
         le=1,
         json_schema_extra={"linkml_meta": {"alias": "gridOpacity", "domain_of": ["Axis"]}},
     )
     gridCap: Optional[CapEnum] = Field(
         default=None,
-        description="""The stroke cap for axis grid lines. One of 'butt' (default), 'round' or 'square'.""",
+        description="""The stroke cap for axis grid lines. One of 'butt' (default), 'round' or 'square'.
+Should not be present if grid is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "gridCap", "domain_of": ["Axis"]}},
     )
     gridColor: Optional[str] = Field(
         default=None,
-        description="""Color of axis grid lines.""",
+        description="""Color of axis grid lines. Should not be present if grid is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "gridColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
     )
     gridWidth: Optional[float] = Field(
         default=None,
-        description="""Stroke width of axis grid lines.""",
+        description="""Stroke width of axis grid lines. Should not be present if grid is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "gridWidth", "domain_of": ["Axis"]}},
     )
     labelColor: Optional[str] = Field(

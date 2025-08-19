@@ -52,7 +52,7 @@ linkml_meta = LinkMLMeta(
         "description": "The configuration entailing all the specification components "
         "for visualization of data in the scverse ecosystem.",
         "id": "https://w3id.org/scverse/vega-scverse/specification",
-        "imports": ["linkml:types", "data", "linkml_scales", "axes", "legends", "marks", "misc"],
+        "imports": ["linkml:types", "linkml_data", "linkml_scales", "axes", "legends", "marks", "misc"],
         "license": "BSD-3",
         "name": "vega-scverse-specification",
         "prefixes": {
@@ -437,10 +437,15 @@ class DataObject(ConfiguredBaseModel):
 followed by an underscore and pseudo UUID.""",
         json_schema_extra={"linkml_meta": {"alias": "name", "domain_of": ["DataObject", "Scale"]}},
     )
-    format: Format = Field(
+    format: str = Field(
         default=...,
-        description="""Format object containing the type of data as object and a string value representing the version.""",
-        json_schema_extra={"linkml_meta": {"alias": "format", "domain_of": ["DataObject"]}},
+        description="""Format object containing the type of data as object and a string or float value representing the version.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "format",
+                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "SpatialDataElementObject"],
+            }
+        },
     )
 
     @field_validator("name")
@@ -469,16 +474,20 @@ class SpatialDataObject(DataObject):
         description="""The absolute path to the SpatialData zarr.""",
         json_schema_extra={"linkml_meta": {"alias": "url", "domain_of": ["SpatialDataObject"]}},
     )
+    format: Optional[SpatialDataFormat] = Field(
+        default=None,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "format",
+                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "SpatialDataElementObject"],
+            }
+        },
+    )
     name: str = Field(
         default=...,
         description="""The name used throughout the view configuration to refer to the data object. It is an arbitrary string 
 followed by an underscore and pseudo UUID.""",
         json_schema_extra={"linkml_meta": {"alias": "name", "domain_of": ["DataObject", "Scale"]}},
-    )
-    format: Format = Field(
-        default=...,
-        description="""Format object containing the type of data as object and a string value representing the version.""",
-        json_schema_extra={"linkml_meta": {"alias": "format", "domain_of": ["DataObject"]}},
     )
 
     @field_validator("name")
@@ -495,31 +504,36 @@ followed by an underscore and pseudo UUID.""",
         return v
 
 
-class TableObject(DataObject):
+class BaseTableObject(DataObject):
     """
     AnnData Table object stream.
     """
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/data"})
 
+    format: ElementFormat = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "format",
+                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "SpatialDataElementObject"],
+            }
+        },
+    )
     source: str = Field(
         default=...,
         description="""The source of the SpatialData element. Must be the name / identifier of a SpatialData Object in the 
 view configuration.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "source", "domain_of": ["TableObject", "SpatialDataElementObject"]}
+            "linkml_meta": {"alias": "source", "domain_of": ["BaseTableObject", "SpatialDataElementObject"]}
         },
     )
-    transform: list[str] = Field(
+    transform: list[FilterTransform] = Field(
         default=...,
         description="""An array containing a single transform 'filter_element' with an expression stating which table to obtain
 from the source SpatialData object stream.""",
         json_schema_extra={
-            "linkml_meta": {
-                "alias": "transform",
-                "domain_of": ["TableObject", "SpatialDataElementObject"],
-                "exactly_one_of": [{"range": "FilterTransform"}],
-            }
+            "linkml_meta": {"alias": "transform", "domain_of": ["BaseTableObject", "SpatialDataElementObject"]}
         },
     )
     name: str = Field(
@@ -527,11 +541,6 @@ from the source SpatialData object stream.""",
         description="""The name used throughout the view configuration to refer to the data object. It is an arbitrary string 
 followed by an underscore and pseudo UUID.""",
         json_schema_extra={"linkml_meta": {"alias": "name", "domain_of": ["DataObject", "Scale"]}},
-    )
-    format: Format = Field(
-        default=...,
-        description="""Format object containing the type of data as object and a string value representing the version.""",
-        json_schema_extra={"linkml_meta": {"alias": "format", "domain_of": ["DataObject"]}},
     )
 
     @field_validator("source")
@@ -568,12 +577,21 @@ class SpatialDataElementObject(DataObject):
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/data"})
 
+    format: ElementFormat = Field(
+        default=...,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "format",
+                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "SpatialDataElementObject"],
+            }
+        },
+    )
     source: str = Field(
         default=...,
         description="""The source of the SpatialData element. Must be the name / identifier of a SpatialData Object in the 
 view configuration.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "source", "domain_of": ["TableObject", "SpatialDataElementObject"]}
+            "linkml_meta": {"alias": "source", "domain_of": ["BaseTableObject", "SpatialDataElementObject"]}
         },
     )
     transform: list[
@@ -596,7 +614,7 @@ transforms.""",
                     {"range": "SpreadTransform"},
                     {"range": "NormalizationFormulaTransform"},
                 ],
-                "domain_of": ["TableObject", "SpatialDataElementObject"],
+                "domain_of": ["BaseTableObject", "SpatialDataElementObject"],
             }
         },
     )
@@ -605,11 +623,6 @@ transforms.""",
         description="""The name used throughout the view configuration to refer to the data object. It is an arbitrary string 
 followed by an underscore and pseudo UUID.""",
         json_schema_extra={"linkml_meta": {"alias": "name", "domain_of": ["DataObject", "Scale"]}},
-    )
-    format: Format = Field(
-        default=...,
-        description="""Format object containing the type of data as object and a string value representing the version.""",
-        json_schema_extra={"linkml_meta": {"alias": "format", "domain_of": ["DataObject"]}},
     )
 
     @field_validator("source")
@@ -654,7 +667,7 @@ class Transform(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
             }
         },
     )
@@ -707,7 +720,7 @@ will select the scale of a multiscale raster data element.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string_in": ["filter_element", "filter_cs", "filter_scale"],
             }
         },
@@ -762,7 +775,7 @@ will select the scale of a multiscale raster data element.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "filter_channel",
             }
         },
@@ -823,7 +836,7 @@ the same as the values in 'field'.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "aggregate",
                 "ifabsent": "string(aggregate)",
             }
@@ -885,7 +898,7 @@ implementation this is the same as the values in 'field'.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "spread",
                 "ifabsent": "string(spread)",
             }
@@ -932,7 +945,7 @@ data that is normalized is indicated as 'datum.<name_of_column>'.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "formula",
                 "ifabsent": "string(formula)",
             }
@@ -955,12 +968,14 @@ data that is normalized is indicated as 'datum.<name_of_column>'.""",
         return v
 
 
-class Format(ConfiguredBaseModel):
+class BaseFormat(ConfiguredBaseModel):
     """
     Format object containing the type of data as object and a string value representing the version.
     """
 
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/data"})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {"abstract": True, "from_schema": "https://w3id.org/scverse/vega-scverse/data"}
+    )
 
     type: str = Field(
         default=...,
@@ -968,14 +983,37 @@ class Format(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
             }
         },
     )
     version: str = Field(
         default=...,
         description="""The version of the data type that is defined. Defined as semantic version + optional development release.""",
-        json_schema_extra={"linkml_meta": {"alias": "version", "domain_of": ["Format"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "version", "domain_of": ["BaseFormat", "SpatialDataFormat", "ElementFormat"]}
+        },
+    )
+
+
+class SpatialDataFormat(BaseFormat):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/data"})
+
+    version: Optional[str] = Field(
+        default=None,
+        json_schema_extra={
+            "linkml_meta": {"alias": "version", "domain_of": ["BaseFormat", "SpatialDataFormat", "ElementFormat"]}
+        },
+    )
+    type: str = Field(
+        default=...,
+        description="""The type of the data as string, e.g. RasterFormat""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+            }
+        },
     )
 
     @field_validator("version")
@@ -990,6 +1028,27 @@ class Format(ConfiguredBaseModel):
             err_msg = f"Invalid version format: {v}"
             raise ValueError(err_msg)
         return v
+
+
+class ElementFormat(BaseFormat):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/data"})
+
+    version: Optional[float] = Field(
+        default=None,
+        json_schema_extra={
+            "linkml_meta": {"alias": "version", "domain_of": ["BaseFormat", "SpatialDataFormat", "ElementFormat"]}
+        },
+    )
+    type: str = Field(
+        default=...,
+        description="""The type of the data as string, e.g. RasterFormat""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+            }
+        },
+    )
 
 
 class BaseScales(ConfiguredBaseModel):
@@ -1043,7 +1102,7 @@ visual range, e.g. `linear`.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
             }
         },
     )
@@ -1116,7 +1175,7 @@ plot area. This is commonly used to align data values with positional axes in co
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "linear",
                 "ifabsent": "string(linear)",
             }
@@ -1170,7 +1229,7 @@ visual range, e.g. `linear`.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
             }
         },
     )
@@ -1239,7 +1298,7 @@ class LinearColorScale(ColorScale):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "linear",
                 "ifabsent": "string(linear)",
             }
@@ -1304,7 +1363,7 @@ visual range, e.g. `linear`.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "ordinal",
                 "ifabsent": "string(ordinal)",
             }
@@ -1442,19 +1501,19 @@ included as part of the axis.""",
     )
     domainOpacity: Optional[float] = Field(
         default=None,
-        description="""Opacity of axis domain line.""",
+        description="""Opacity of axis domain line. Should not be present if domain is 'false'.""",
         ge=0,
         le=1,
         json_schema_extra={"linkml_meta": {"alias": "domainOpacity", "domain_of": ["Axis"]}},
     )
     domainColor: Optional[str] = Field(
         default=None,
-        description="""Color of axis domain line.""",
+        description="""Color of axis domain line. Should not be present if domain is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "domainColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
     )
     domainWidth: Optional[float] = Field(
         default=None,
-        description="""Stroke width of axis domain line.""",
+        description="""Stroke width of axis domain line. Should not be present if domain is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "domainWidth", "domain_of": ["Axis"]}},
     )
     grid: Optional[bool] = Field(
@@ -1464,24 +1523,25 @@ included as part of the axis.""",
     )
     gridOpacity: Optional[float] = Field(
         default=None,
-        description="""Opacity of axis grid lines.""",
+        description="""Opacity of axis grid lines. Should not be present if grid is 'false'.""",
         ge=0,
         le=1,
         json_schema_extra={"linkml_meta": {"alias": "gridOpacity", "domain_of": ["Axis"]}},
     )
     gridCap: Optional[CapEnum] = Field(
         default=None,
-        description="""The stroke cap for axis grid lines. One of 'butt' (default), 'round' or 'square'.""",
+        description="""The stroke cap for axis grid lines. One of 'butt' (default), 'round' or 'square'.
+Should not be present if grid is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "gridCap", "domain_of": ["Axis"]}},
     )
     gridColor: Optional[str] = Field(
         default=None,
-        description="""Color of axis grid lines.""",
+        description="""Color of axis grid lines. Should not be present if grid is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "gridColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
     )
     gridWidth: Optional[float] = Field(
         default=None,
-        description="""Stroke width of axis grid lines.""",
+        description="""Stroke width of axis grid lines. Should not be present if grid is 'false'.""",
         json_schema_extra={"linkml_meta": {"alias": "gridWidth", "domain_of": ["Axis"]}},
     )
     labelColor: Optional[str] = Field(
@@ -1601,7 +1661,7 @@ class Legend(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
             }
         },
     )
@@ -1773,7 +1833,7 @@ with one column per entry. The default is 0 for horizontal symbol legends and 1 
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
             }
         },
     )
@@ -1954,7 +2014,7 @@ vertical gradient or the width of a horizontal gradient.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
             }
         },
     )
@@ -3228,7 +3288,7 @@ class Mark(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
             }
         },
     )
@@ -3320,7 +3380,7 @@ class RasterImageMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "raster_image",
                 "ifabsent": "string(raster_image)",
             }
@@ -3377,7 +3437,7 @@ class RasterLabelMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "raster_label",
                 "ifabsent": "string(raster_label)",
             }
@@ -3433,7 +3493,7 @@ class PointsMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "symbol",
                 "ifabsent": "string(symbol)",
             }
@@ -3489,7 +3549,7 @@ class ShapesMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "path",
                 "ifabsent": "string(path)",
             }
@@ -3526,7 +3586,7 @@ class TextMark(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "text",
                 "ifabsent": "string(text)",
             }
@@ -3559,7 +3619,7 @@ class GroupMark(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Transform", "Format", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "GroupMark"],
                 "equals_string": "group",
                 "ifabsent": "string(group)",
             }
@@ -3692,7 +3752,7 @@ fields, or scales can be used to map data values to visual values.""",
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
 DataObject.model_rebuild()
 SpatialDataObject.model_rebuild()
-TableObject.model_rebuild()
+BaseTableObject.model_rebuild()
 SpatialDataElementObject.model_rebuild()
 Transform.model_rebuild()
 FilterTransform.model_rebuild()
@@ -3700,7 +3760,9 @@ FilterChannelTransform.model_rebuild()
 AggregateTransform.model_rebuild()
 SpreadTransform.model_rebuild()
 NormalizationFormulaTransform.model_rebuild()
-Format.model_rebuild()
+BaseFormat.model_rebuild()
+SpatialDataFormat.model_rebuild()
+ElementFormat.model_rebuild()
 BaseScales.model_rebuild()
 Scale.model_rebuild()
 BaseAxisScale.model_rebuild()

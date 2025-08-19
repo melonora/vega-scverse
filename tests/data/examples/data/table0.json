@@ -1,0 +1,14 @@
+{
+  "name": "67be0932-7dda-4dad-9459-ee60b513ce33",
+  "format": {
+    "type": "spatialdata_table",
+    "version": 0.1
+  },
+  "source": "f964c795-b1af-4649-93d6-32b69389d1d7",
+  "transform": [
+    {
+      "type": "filter_element",
+      "expr": "table"
+    }
+  ]
+}

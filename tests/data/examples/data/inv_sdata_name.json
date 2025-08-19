@@ -1,0 +1,8 @@
+{
+  "name": "f964c795-b1af-4649-93d6-32b69389d1d7test",
+  "url": "sdata.zarr",
+  "format": {
+    "type": "SpatialData",
+    "version": "0.3.1.dev31+g4021946.d20250416"
+  }
+}

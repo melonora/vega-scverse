@@ -54,7 +54,7 @@ classes:
       format:
         range: SpatialDataFormat
 
-  TableObject:
+  BaseTableObject:
     is_a: DataObject
     description: |-
       AnnData Table object stream.
@@ -74,8 +74,8 @@ classes:
           from the source SpatialData object stream.
         multivalued: true
         # TODO: Exactly_one_of is currently not expressed in pydantic other than as a meta string.
-        exactly_one_of:
-          - range: FilterTransform
+        # subclassing instead
+        range: FilterTransform
         required: true
 
   SpatialDataElementObject:
@@ -260,6 +260,7 @@ classes:
       version:
         description: |- 
           The version of the data type that is defined. Defined as semantic version + optional development release.
+          It is represented either as string value or float value.
         required: true
 
   SpatialDataFormat:
@@ -273,7 +274,6 @@ classes:
     attributes:
       version:
         range: float
-
 
 enums:
   TransformTypeEnum:
