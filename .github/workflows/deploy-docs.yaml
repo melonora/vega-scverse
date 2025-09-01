@@ -15,9 +15,9 @@ jobs:
       id-token: write  # to verify the deployment originates from an appropriate source
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: prefix-dev/setup-pixi@v0.8.10
+      - uses: prefix-dev/setup-pixi@v0.9.0
         with:
           pixi-version: v0.49.0
           frozen: true
