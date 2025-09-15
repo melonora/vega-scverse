@@ -1,0 +1,25 @@
+{
+  "transform": [
+    {
+        "type": "filter_element",
+        "expr": "blobs_labels"
+    },
+    {
+        "type": "filter_cs",
+        "expr": "global"
+    },
+    {
+        "type": "filter_scale",
+        "expr": "full"
+    },
+    {
+        "type": "lookup",
+        "from": "67be0932-7dda-4dad-9459-ee60b513ce33",
+        "key": "instance_id",
+        "fields": ["instance_ids"],
+        "values": ["channel_0_sum"],
+        "as": ["channel_0_sum"],
+        "default": null
+    }
+  ]
+}

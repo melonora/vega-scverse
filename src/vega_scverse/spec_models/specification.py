@@ -754,8 +754,8 @@ class FilterChannelTransform(Transform):
         }
     )
 
-    expr: list[Union[int, str]] = Field(
-        default=...,
+    expr: Optional[list[Union[int, str]]] = Field(
+        default=None,
         description="""The channel(s) to filter the input data stream on. Either a list of integers that correspond to the channel
 indices or list of strings that refer to the name of the channels. Preferably, it SHOULD be the latter to
 prevent a different context when ordering of the channels changes.""",
@@ -989,7 +989,8 @@ class BaseFormat(ConfiguredBaseModel):
     )
     version: str = Field(
         default=...,
-        description="""The version of the data type that is defined. Defined as semantic version + optional development release.""",
+        description="""The version of the data type that is defined. Defined as semantic version + optional development release.
+It is represented either as string value or float value.""",
         json_schema_extra={
             "linkml_meta": {"alias": "version", "domain_of": ["BaseFormat", "SpatialDataFormat", "ElementFormat"]}
         },

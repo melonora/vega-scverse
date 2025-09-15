@@ -1,0 +1,6 @@
+{
+  "type": "aggregate",
+  "field": ["genes"],
+  "ops": ["not_valid"],
+  "as_": ["genes"]
+}

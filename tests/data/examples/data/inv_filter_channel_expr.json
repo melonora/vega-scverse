@@ -1,0 +1,4 @@
+{
+  "type": "filter_channel",
+  "expr": "not_valid"
+}

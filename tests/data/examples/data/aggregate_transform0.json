@@ -1,0 +1,6 @@
+{
+  "type": "aggregate",
+  "field": ["genes"],
+  "ops": ["count"],
+  "as_": ["genes"]
+}
