@@ -242,7 +242,7 @@ classes:
       as_:
         description: |-
           The output field names to use for each field to which a normalization is applied.
-        range: string
+        pattern: "^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
         required: true
 
 ############ Formats ############

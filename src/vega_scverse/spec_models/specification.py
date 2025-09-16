@@ -967,6 +967,19 @@ data that is normalized is indicated as 'datum.<name_of_column>'.""",
             raise ValueError(err_msg)
         return v
 
+    @field_validator("as_")
+    def pattern_as_(cls, v):
+        pattern = re.compile(r"^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid as_ format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid as_ format: {v}"
+            raise ValueError(err_msg)
+        return v
+
 
 class BaseFormat(ConfiguredBaseModel):
     """
