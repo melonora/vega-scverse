@@ -100,6 +100,7 @@ classes:
           transforms.
         multivalued: true
         any_of:
+          - range: LookupTransform
           - range: FilterTransform
           - range: FilterChannelTransform
           - range: AggregateTransform
@@ -160,6 +161,49 @@ classes:
         any_of:
           - range: string
           - range: integer
+
+  LookupTransform:
+    is_a: Transform
+    description: |-
+      Transform extending a primary data stream by looking up values on a secondary data stream.
+    slot_usage:
+      type:
+        equals_string: lookup
+        ifabsent: string(lookup)
+    attributes:
+      from_:
+        description: |-
+          The name of the secondary data stream upon which to perform the lookup.
+        pattern: "^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        required: true
+      key:
+        description: |-
+          The key field on the secondary stream, e.g. in table lookup it would be for example instance_id.
+        range: string
+        required: true
+      fields:
+        description: |-
+          The data fields to copy from the secondary stream to the primary stream.
+        range: string
+        multivalued: true
+        required: true
+      values:
+        description: |-
+          To be added
+        range: string
+        multivalued: true
+        required: true
+      as_:
+        description: |-
+          To be added
+        range: string
+        multivalued: true
+        required: true
+      default:
+        description: |-
+          The default value to assign if lookup fails
+        required: false
+        ifabsent: null
 
   AggregateTransform:
     is_a: Transform

@@ -322,7 +322,12 @@ view configuration.""",
     )
     transform: list[
         Union[
-            AggregateTransform, FilterChannelTransform, FilterTransform, NormalizationFormulaTransform, SpreadTransform
+            AggregateTransform,
+            FilterChannelTransform,
+            FilterTransform,
+            LookupTransform,
+            NormalizationFormulaTransform,
+            SpreadTransform,
         ]
     ] = Field(
         default=...,
@@ -334,6 +339,7 @@ transforms.""",
             "linkml_meta": {
                 "alias": "transform",
                 "any_of": [
+                    {"range": "LookupTransform"},
                     {"range": "FilterTransform"},
                     {"range": "FilterChannelTransform"},
                     {"range": "AggregateTransform"},
@@ -503,6 +509,85 @@ will select the scale of a multiscale raster data element.""",
     )
 
 
+class LookupTransform(Transform):
+    """
+    Transform extending a primary data stream by looking up values on a secondary data stream.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {
+            "from_schema": "https://w3id.org/scverse/vega-scverse/data",
+            "slot_usage": {"type": {"equals_string": "lookup", "ifabsent": "string(lookup)", "name": "type"}},
+        }
+    )
+
+    from_: str = Field(
+        default=...,
+        description="""The name of the secondary data stream upon which to perform the lookup.""",
+        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["LookupTransform"]}},
+    )
+    key: str = Field(
+        default=...,
+        description="""The key field on the secondary stream, e.g. in table lookup it would be for example instance_id.""",
+        json_schema_extra={"linkml_meta": {"alias": "key", "domain_of": ["LookupTransform"]}},
+    )
+    fields: list[str] = Field(
+        default=...,
+        description="""The data fields to copy from the secondary stream to the primary stream.""",
+        json_schema_extra={"linkml_meta": {"alias": "fields", "domain_of": ["LookupTransform"]}},
+    )
+    values: list[str] = Field(
+        default=...,
+        description="""To be added""",
+        json_schema_extra={"linkml_meta": {"alias": "values", "domain_of": ["LookupTransform"]}},
+    )
+    as_: list[str] = Field(
+        default=...,
+        description="""To be added""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "as_",
+                "domain_of": [
+                    "LookupTransform",
+                    "AggregateTransform",
+                    "SpreadTransform",
+                    "NormalizationFormulaTransform",
+                ],
+            }
+        },
+    )
+    default: Optional[str] = Field(
+        default=None,
+        description="""The default value to assign if lookup fails""",
+        json_schema_extra={"linkml_meta": {"alias": "default", "domain_of": ["LookupTransform"]}},
+    )
+    type: Literal["lookup"] = Field(
+        default="lookup",
+        description="""The type of transform.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "type",
+                "domain_of": ["Transform", "BaseFormat"],
+                "equals_string": "lookup",
+                "ifabsent": "string(lookup)",
+            }
+        },
+    )
+
+    @field_validator("from_")
+    def pattern_from_(cls, v):
+        pattern = re.compile(r"^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid from_ format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid from_ format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
 class AggregateTransform(Transform):
     """
     Group and summarize an input data stream to produce a derived output stream using particular summary statistics
@@ -535,7 +620,12 @@ the same as the values in 'field'.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "as_",
-                "domain_of": ["AggregateTransform", "SpreadTransform", "NormalizationFormulaTransform"],
+                "domain_of": [
+                    "LookupTransform",
+                    "AggregateTransform",
+                    "SpreadTransform",
+                    "NormalizationFormulaTransform",
+                ],
             }
         },
     )
@@ -585,7 +675,12 @@ implementation this is the same as the values in 'field'.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "as_",
-                "domain_of": ["AggregateTransform", "SpreadTransform", "NormalizationFormulaTransform"],
+                "domain_of": [
+                    "LookupTransform",
+                    "AggregateTransform",
+                    "SpreadTransform",
+                    "NormalizationFormulaTransform",
+                ],
             }
         },
     )
@@ -632,7 +727,12 @@ data that is normalized is indicated as 'datum.<name_of_column>'.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "as_",
-                "domain_of": ["AggregateTransform", "SpreadTransform", "NormalizationFormulaTransform"],
+                "domain_of": [
+                    "LookupTransform",
+                    "AggregateTransform",
+                    "SpreadTransform",
+                    "NormalizationFormulaTransform",
+                ],
             }
         },
     )
@@ -756,6 +856,7 @@ SpatialDataElementObject.model_rebuild()
 Transform.model_rebuild()
 FilterTransform.model_rebuild()
 FilterChannelTransform.model_rebuild()
+LookupTransform.model_rebuild()
 AggregateTransform.model_rebuild()
 SpreadTransform.model_rebuild()
 NormalizationFormulaTransform.model_rebuild()

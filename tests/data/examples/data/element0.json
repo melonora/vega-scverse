@@ -1,0 +1,36 @@
+{
+  "name": "blobs_labels_698e66d6-9acd-472f-ab12-f4c77d90f58e",
+  "format": {
+      "type": "RasterFormatV02",
+      "version": "0.2"
+  },
+  "source": "d25724cd-5a33-4c05-a342-57cf77fdb2b5",
+  "transform": [
+    {
+      "type": "filter_element",
+      "expr": "blobs_labels"
+    },
+    {
+      "type": "filter_cs",
+      "expr": "global"
+    },
+    {
+      "type": "filter_scale",
+      "expr": "full"
+    },
+    {
+      "type": "lookup",
+      "from_": "b217e9fe-3ed9-43fa-b261-4ad1723dfcf8",
+      "key": "instance_id",
+      "fields": ["instance_ids"],
+      "values": ["channel_0_sum"],
+      "as_": ["channel_0_sum"],
+      "default": null
+    },
+    {
+      "type": "formula",
+      "expr": "clamp((datum.value - 400.0) / (1000.0 - 400.0), 0, 1)",
+      "as_": "ae0c077f-cdea-4247-a5bf-26e045ab199e"
+    }
+  ]
+}
