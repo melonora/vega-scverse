@@ -1,0 +1,24 @@
+{
+  "name": "blobs_polygons_b56eaf39-66fa-4dd9-995c-946fdad280ce",
+  "format": {
+    "type": "ShapesFormatV02",
+    "version": "0.2"
+  },
+  "source": "2bba079c-e1e6-4aad-be0e-238a74d44064",
+  "transform": [
+    {
+      "type": "filter_element",
+      "expr": "blobs_polygons"
+    },
+    {
+      "type": "filter_cs",
+      "expr": "global"
+    },
+    {
+      "type": "aggregate",
+      "field": ["*"],
+      "ops": ["count"],
+      "as_": ["count"]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "blobs_points_46d740f2-95d8-481c-b0d9-1109b1514765",
+  "format": {
+    "type": "PointsFormatV01",
+    "version": "0.1"
+  },
+  "source": "3d941238-ef1f-418a-ac2d-326512b5a3f1",
+  "transform": [
+    {
+      "type": "filter_element",
+      "expr": "blobs_points"
+    },
+    {
+      "type": "filter_cs",
+      "expr": "global"
+    },
+    {
+      "type": "lookup",
+      "from_": "1ff46703-be53-4b80-95df-f6995a1e9ba5",
+      "key": "instance_id",
+      "fields": ["instance_ids"],
+      "values": ["extra_feature"],
+      "as_": ["extra_feature"],
+      "default": null
+    }
+  ]
+}

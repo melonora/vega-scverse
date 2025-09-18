@@ -1,0 +1,35 @@
+{
+  "name": "blobs_points_caa80dcf-c5a8-48b1-9b62-df5d2a8fd045",
+  "format": {
+    "type": "PointsFormatV01",
+    "version": "0.1"
+  },
+  "source": "86ad4487-2a5a-4417-b94c-de63ce8b9ba2",
+  "transform": [
+    {
+      "type": "filter_element",
+      "expr": "blobs_points"
+    },
+    {
+      "type": "filter_cs",
+      "expr": "global"
+    },
+    {
+      "type": "aggregate",
+      "field": ["instance_id"],
+      "ops": ["max"],
+      "as_": ["instance_id"]
+    },
+    {
+      "type": "formula",
+      "expr": "clamp((datum.instance_id - 3.0) / (7.0 - 3.0), 0, 1)",
+      "as_": "3b09bc1d-04c7-49e7-948e-9c4fd80a7e9c"
+    },
+    {
+      "type": "spread",
+      "field": ["instance_id"],
+      "px": 5,
+      "as_": ["instance_id"]
+    }
+  ]
+}
