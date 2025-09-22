@@ -1,0 +1,45 @@
+{
+  "enter": {
+    "x": {
+      "scale": "X_scale",
+      "field": "x"
+    },
+    "y": {
+      "scale": "Y_scale",
+      "field": "y"
+    },
+    "stroke": {
+      "scale": "color_fc3ba8f9-bee3-4164-b1fa-b82144ecb7ec",
+      "field": "72384dc8-4c10-4402-88a9-0761e73a8555"
+    },
+    "fill": {
+      "scale": "color_fc3ba8f9-bee3-4164-b1fa-b82144ecb7ec",
+      "field": "72384dc8-4c10-4402-88a9-0761e73a8555"
+    },
+    "fillOpacity": {
+      "value": 1.0
+    },
+    "size": {
+      "value": 40
+    },
+    "shape": {
+      "value": "circle"
+    }
+  },
+  "update": {
+    "fill": [
+      {
+        "test": "!isValid(datum.instance_id)",
+        "value": "#d3d3d3"
+      },
+      {
+        "test": "datum.instance_id < 3.0",
+        "value": "#000000"
+      },
+      {
+        "test": "datum.instance_id > 7.0",
+        "value": "#808080"
+      }
+    ]
+  }
+}

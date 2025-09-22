@@ -1,0 +1,21 @@
+{
+  "enter": {
+    "opacity": {
+      "value": 1.0
+    },
+    "fill": [
+      {
+        "scale": "color_2a75c363-1747-49a9-9687-8cca885df3ae",
+        "field": "channel_0"
+      },
+      {
+        "scale": "color_fd4dddce-e36e-4f74-818a-2e75410b35c9",
+        "field": "channel_1"
+      },
+      {
+        "scale": "color_3431d881-65e8-4f30-afe2-a376ed765ec3",
+        "field": "channel_2"
+      }
+    ]
+  }
+}

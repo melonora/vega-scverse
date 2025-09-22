@@ -2293,7 +2293,11 @@ class PositionItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
                 ],
             }
         },
@@ -2322,7 +2326,11 @@ class TextItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
                 ],
             }
         },
@@ -2351,7 +2359,11 @@ class BaselineItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
                 ],
             }
         },
@@ -2380,7 +2392,11 @@ class FontItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
                 ],
             }
         },
@@ -2409,7 +2425,11 @@ class FontSizeItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
                 ],
                 "slot_uri": "nonNegativeFloatSlot",
             }
@@ -2439,7 +2459,11 @@ class FontWeightItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
                 ],
             }
         },
@@ -2468,7 +2492,11 @@ class FontStyleItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
                 ],
             }
         },
@@ -2497,7 +2525,11 @@ class RGBHexItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
                 ],
                 "slot_uri": "rgbHexSlot",
             }
@@ -2658,7 +2690,42 @@ class ColorItem(ConfiguredBaseModel):
         return v
 
 
-class CircleShape(ConfiguredBaseModel):
+class PositiveFloatObject(ConfiguredBaseModel):
+    """
+    An object with an attribute value with a positive float as range. Useful for example to note the width of an
+    outline.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: float = Field(
+        default=...,
+        description="""The actual width value in  pixels""",
+        ge=0,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
+                ],
+            }
+        },
+    )
+
+
+class CircleShapeObject(ConfiguredBaseModel):
     """
     Circle shape definition used in symbol mark.
     """
@@ -2680,7 +2747,11 @@ class CircleShape(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
                 ],
                 "equals_string": "circle",
                 "ifabsent": "string(circle)",
@@ -2733,6 +2804,41 @@ class AxisItem(ConfiguredBaseModel):
             err_msg = f"Invalid scale format: {v}"
             raise ValueError(err_msg)
         return v
+
+
+class OpacityObject(ConfiguredBaseModel):
+    """
+    The opacity for a given mark or label or other item to be rendered.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: float = Field(
+        default=...,
+        description="""The actual opacity value""",
+        ge=0,
+        le=1,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
+                ],
+            }
+        },
+    )
 
 
 class ImageEncode(ConfiguredBaseModel):
@@ -2911,12 +3017,10 @@ class ImageEncodeEnter(ConfiguredBaseModel):
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
 
-    opacity: str = Field(
-        default=...,
+    opacity: Optional[OpacityObject] = Field(
+        default=None,
         description="""The opacity of the image mark.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "opacity", "domain_of": ["ImageEncodeEnter"], "slot_uri": "opacityValueSlot"}
-        },
+        json_schema_extra={"linkml_meta": {"alias": "opacity", "domain_of": ["ImageEncodeEnter"]}},
     )
     fill: list[ColorItem] = Field(
         default=...,
@@ -2974,37 +3078,28 @@ class LabelEncodeEnter(ConfiguredBaseModel):
             }
         },
     )
-    fillOpacity: str = Field(
+    fillOpacity: OpacityObject = Field(
         default=...,
         description="""Opacity value for the label fill between 0 and 1.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
-                "slot_uri": "opacityValueSlot",
             }
         },
     )
-    strokeOpacity: str = Field(
+    strokeOpacity: OpacityObject = Field(
         default=...,
         description="""Opacity value for the label stroke between 0 and 1.""",
         json_schema_extra={
-            "linkml_meta": {
-                "alias": "strokeOpacity",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
-                "slot_uri": "opacityValueSlot",
-            }
+            "linkml_meta": {"alias": "strokeOpacity", "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"]}
         },
     )
-    strokeWidth: str = Field(
+    strokeWidth: PositiveFloatObject = Field(
         default=...,
         description="""The width of the label outlines in pixels.""",
         json_schema_extra={
-            "linkml_meta": {
-                "alias": "strokeWidth",
-                "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter"],
-                "slot_uri": "strokeWidth",
-            }
+            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter"]}
         },
     )
 
@@ -3067,45 +3162,36 @@ class PointsEncodeEnter(ConfiguredBaseModel):
             }
         },
     )
-    fillOpacity: str = Field(
+    fillOpacity: OpacityObject = Field(
         default=...,
         description="""Opacity value for the point fill between 0 and 1.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
-                "slot_uri": "opacityValueSlot",
             }
         },
     )
-    strokeOpacity: str = Field(
-        default=...,
+    strokeOpacity: Optional[OpacityObject] = Field(
+        default=None,
         description="""Opacity value for the point outlines between 0 and 1.""",
         json_schema_extra={
-            "linkml_meta": {
-                "alias": "strokeOpacity",
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
-                "slot_uri": "opacityValueSlot",
-            }
+            "linkml_meta": {"alias": "strokeOpacity", "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"]}
         },
     )
-    strokeWidth: str = Field(
-        default=...,
+    strokeWidth: Optional[PositiveFloatObject] = Field(
+        default=None,
         description="""The width of the point outlines in pixels.""",
         json_schema_extra={
-            "linkml_meta": {
-                "alias": "strokeWidth",
-                "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter"],
-                "slot_uri": "strokeWidth",
-            }
+            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter"]}
         },
     )
-    size: str = Field(
+    size: PositiveFloatObject = Field(
         default=...,
         description="""The points bounding box area size (typographic points are 1/72 in.).""",
-        json_schema_extra={"linkml_meta": {"alias": "size", "domain_of": ["PointsEncodeEnter"], "slot_uri": "size"}},
+        json_schema_extra={"linkml_meta": {"alias": "size", "domain_of": ["PointsEncodeEnter"]}},
     )
-    shape: CircleShape = Field(
+    shape: CircleShapeObject = Field(
         default=...,
         description="""The type of shape. In this case `circle`.""",
         json_schema_extra={"linkml_meta": {"alias": "shape", "domain_of": ["PointsEncodeEnter"]}},
@@ -3310,13 +3396,18 @@ class MarkEncodeUpdate(ConfiguredBaseModel):
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
 
-    fill: Optional[list[Union[ConditionalFillUpdate, RGBHexItem]]] = Field(
+    fill: Optional[list[Union[ConditionalColorUpdate, ConditionalFillUpdate, NAColorUpdate, RGBHexItem]]] = Field(
         default=None,
         description="""Update of fill color based on a test condition and optional a backup static fill value""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fill",
-                "any_of": [{"range": "ConditionalFillUpdate"}, {"range": "RGBHexItem"}],
+                "any_of": [
+                    {"range": "ConditionalFillUpdate"},
+                    {"range": "RGBHexItem"},
+                    {"range": "NAColorUpdate"},
+                    {"range": "ConditionalColorUpdate"},
+                ],
                 "domain_of": [
                     "Legend",
                     "ImageEncodeEnter",
@@ -3343,7 +3434,12 @@ class ConditionalFillUpdate(ConfiguredBaseModel):
         default=...,
         description="""The condition to test on, e.g. 'isValid(datum.value). MUST be a valid expression in Vega. See also:
 https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'true' or 'false'.""",
-        json_schema_extra={"linkml_meta": {"alias": "test", "domain_of": ["ConditionalFillUpdate"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "test",
+                "domain_of": ["ConditionalFillUpdate", "NAColorUpdate", "ConditionalColorUpdate"],
+            }
+        },
     )
     scale: str = Field(
         default=...,
@@ -3380,6 +3476,146 @@ https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'tr
                     raise ValueError(err_msg)
         elif isinstance(v, str) and not pattern.match(v):
             err_msg = f"Invalid scale format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class NAColorUpdate(ConfiguredBaseModel):
+    """
+    Update the color of a mark glyph if its value is not valid.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    test: str = Field(
+        default=...,
+        description="""The condition to test on, e.g. '!isValid(datum.value). MUST be a negating is valid expression in Vega. 
+See also: https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'true' or 'false'.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "test",
+                "domain_of": ["ConditionalFillUpdate", "NAColorUpdate", "ConditionalColorUpdate"],
+            }
+        },
+    )
+    value: str = Field(
+        default=...,
+        description="""The color as RGB hex string.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
+                ],
+            }
+        },
+    )
+
+    @field_validator("test")
+    def pattern_test(cls, v):
+        pattern = re.compile(r"!isValid\([^)]*\)")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid test format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid test format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+    @field_validator("value")
+    def pattern_value(cls, v):
+        pattern = re.compile(r"^#([A-Fa-f0-9]{6})$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid value format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid value format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class ConditionalColorUpdate(ConfiguredBaseModel):
+    """
+    Update the color if a value is above or below a given threshold.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
+
+    test: str = Field(
+        default=...,
+        description="""The condition to test on, e.g. 'datum.instance_id) < 3.0'. MUST be an expression starting with 
+datum.<column_name> then a space followed by <=,>=,< or> a space again and then any float or integer value.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "test",
+                "domain_of": ["ConditionalFillUpdate", "NAColorUpdate", "ConditionalColorUpdate"],
+            }
+        },
+    )
+    value: str = Field(
+        default=...,
+        description="""The color as RGB hex string.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
+                ],
+            }
+        },
+    )
+
+    @field_validator("test")
+    def pattern_test(cls, v):
+        pattern = re.compile(r"^datum\.[A-Za-z_][A-Za-z0-9_]*\s*(?:<=|>=|<|>)\s*-?\d+(?:\.\d+)?$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid test format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid test format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+    @field_validator("value")
+    def pattern_value(cls, v):
+        pattern = re.compile(r"^#([A-Fa-f0-9]{6})$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid value format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid value format: {v}"
             raise ValueError(err_msg)
         return v
 
@@ -3902,8 +4138,10 @@ RandomRGBSignal.model_rebuild()
 Title.model_rebuild()
 Padding.model_rebuild()
 ColorItem.model_rebuild()
-CircleShape.model_rebuild()
+PositiveFloatObject.model_rebuild()
+CircleShapeObject.model_rebuild()
 AxisItem.model_rebuild()
+OpacityObject.model_rebuild()
 ImageEncode.model_rebuild()
 LabelEncode.model_rebuild()
 SymbolEncode.model_rebuild()
@@ -3918,6 +4156,8 @@ TextEncodeEnter.model_rebuild()
 GroupEncodeEnter.model_rebuild()
 MarkEncodeUpdate.model_rebuild()
 ConditionalFillUpdate.model_rebuild()
+NAColorUpdate.model_rebuild()
+ConditionalColorUpdate.model_rebuild()
 Mark.model_rebuild()
 MarkDataSource.model_rebuild()
 RasterImageMark.model_rebuild()

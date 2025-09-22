@@ -291,7 +291,9 @@ class PositionItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
                 ],
             }
         },
@@ -320,7 +322,9 @@ class TextItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
                 ],
             }
         },
@@ -349,7 +353,9 @@ class BaselineItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
                 ],
             }
         },
@@ -378,7 +384,9 @@ class FontItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
                 ],
             }
         },
@@ -407,7 +415,9 @@ class FontSizeItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
                 ],
                 "slot_uri": "nonNegativeFloatSlot",
             }
@@ -437,7 +447,9 @@ class FontWeightItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
                 ],
             }
         },
@@ -466,7 +478,9 @@ class FontStyleItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
                 ],
             }
         },
@@ -495,7 +509,9 @@ class RGBHexItem(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
                 ],
                 "slot_uri": "rgbHexSlot",
             }
@@ -642,7 +658,40 @@ class ColorItem(ConfiguredBaseModel):
         return v
 
 
-class CircleShape(ConfiguredBaseModel):
+class PositiveFloatObject(ConfiguredBaseModel):
+    """
+    An object with an attribute value with a positive float as range. Useful for example to note the width of an
+    outline.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: float = Field(
+        default=...,
+        description="""The actual width value in  pixels""",
+        ge=0,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                ],
+            }
+        },
+    )
+
+
+class CircleShapeObject(ConfiguredBaseModel):
     """
     Circle shape definition used in symbol mark.
     """
@@ -664,7 +713,9 @@ class CircleShape(ConfiguredBaseModel):
                     "FontWeightItem",
                     "FontStyleItem",
                     "RGBHexItem",
-                    "CircleShape",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
                 ],
                 "equals_string": "circle",
                 "ifabsent": "string(circle)",
@@ -703,6 +754,39 @@ class AxisItem(ConfiguredBaseModel):
             err_msg = f"Invalid scale format: {v}"
             raise ValueError(err_msg)
         return v
+
+
+class OpacityObject(ConfiguredBaseModel):
+    """
+    The opacity for a given mark or label or other item to be rendered.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: float = Field(
+        default=...,
+        description="""The actual opacity value""",
+        ge=0,
+        le=1,
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                ],
+            }
+        },
+    )
 
 
 class Legend(ConfiguredBaseModel):
@@ -1158,8 +1242,10 @@ RandomRGBSignal.model_rebuild()
 Title.model_rebuild()
 Padding.model_rebuild()
 ColorItem.model_rebuild()
-CircleShape.model_rebuild()
+PositiveFloatObject.model_rebuild()
+CircleShapeObject.model_rebuild()
 AxisItem.model_rebuild()
+OpacityObject.model_rebuild()
 Legend.model_rebuild()
 CategoricalLegend.model_rebuild()
 ColorBarLegend.model_rebuild()

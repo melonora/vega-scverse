@@ -210,7 +210,19 @@ classes:
         range: string
         required: true
 
-  CircleShape:
+  PositiveFloatObject:
+    description: |-
+      An object with an attribute value with a positive float as range. Useful for example to note the width of an 
+      outline.
+    attributes:
+      value:
+        # TODO do conversion in spatialdata plot from points to pixels. 1 point 1/72 inch
+        description: The actual width value in  pixels
+        range: float
+        minimum_value: 0
+        required: true
+
+  CircleShapeObject:
     description: |-
       Circle shape definition used in symbol mark.
     attributes:
@@ -233,6 +245,18 @@ classes:
         description: |-
           The mark's field value transformed by the scale. Either x or y.
         range: AxisEnum
+        required: true
+
+  OpacityObject:
+    description: |-
+      The opacity for a given mark or label or other item to be rendered.
+    attributes:
+      value:
+        description: |-
+          The actual opacity value
+        range: float
+        minimum_value: 0
+        maximum_value: 1
         required: true
 
 enums:
@@ -320,4 +344,3 @@ enums:
       left: The anchor point of the text is left of the text.
       center: The anchor point of the text is at the center of the text.
       right: The anchor point of the text is right of the text.
-

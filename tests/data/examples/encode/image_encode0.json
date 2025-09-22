@@ -1,0 +1,13 @@
+{
+  "enter": {
+    "opacity": {
+      "value": 1.0
+    },
+    "fill": [
+      {
+        "scale": "color_479b979e-0b64-4446-a073-f289ec0964e1",
+        "field": "value"
+      }
+    ]
+  }
+}

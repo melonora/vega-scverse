@@ -143,8 +143,7 @@ classes:
       opacity:
         description: |-
           The opacity of the image mark.
-        slot_uri: opacityValueSlot
-        required: true
+        range: OpacityObject
       fill:
         description: |-
           The colormap by which to show the intensity value of the image or channel.
@@ -176,17 +175,17 @@ classes:
       fillOpacity:
         description: |-
           Opacity value for the label fill between 0 and 1.
-        slot_uri: opacityValueSlot
+        range: OpacityObject
         required: true
       strokeOpacity:
         description: |-
           Opacity value for the label stroke between 0 and 1.
-        slot_uri: opacityValueSlot
+        range: OpacityObject
         required: true
       strokeWidth:
         description: |-
           The width of the label outlines in pixels.
-        slot_uri: strokeWidth
+        range: PositiveFloatObject
         required: true
 
   PointsEncodeEnter:
@@ -221,27 +220,25 @@ classes:
       fillOpacity:
         description: |-
           Opacity value for the point fill between 0 and 1.
-        slot_uri: opacityValueSlot
+        range: OpacityObject
         required: true
       strokeOpacity:
         description: |-
           Opacity value for the point outlines between 0 and 1.
-        slot_uri: opacityValueSlot
-        required: true
+        range: OpacityObject
       strokeWidth:
         description: |-
           The width of the point outlines in pixels.
-        slot_uri: strokeWidth
-        required: true
+        range: PositiveFloatObject
       size:
         description: |-
           The points bounding box area size (typographic points are 1/72 in.).
-        slot_uri: size
+        range: PositiveFloatObject
         required: true
       shape:
         description: |-
           The type of shape. In this case `circle`.
-        range: CircleShape
+        range: CircleShapeObject
         required: true
 
   PathEncodeEnter:
@@ -362,6 +359,8 @@ classes:
         any_of:
           - range: ConditionalFillUpdate
           - range: RGBHexItem
+          - range: NAColorUpdate
+          - range: ConditionalColorUpdate
         multivalued: true
 
   ConditionalFillUpdate:
@@ -384,4 +383,36 @@ classes:
         description: |-
           The column that serves as data input, in the test condition this corresponds to 'datum'.
         range: string
+        required: true
+
+  NAColorUpdate:
+    description: |-
+      Update the color of a mark glyph if its value is not valid.
+    attributes:
+      test:
+        description: |-
+          The condition to test on, e.g. '!isValid(datum.value). MUST be a negating is valid expression in Vega. 
+          See also: https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'true' or 'false'.
+        pattern: "!isValid\\([^)]*\\)"
+        required: true
+      value:
+        description: |-
+          The color as RGB hex string.
+        pattern: "^#([A-Fa-f0-9]{6})$"
+        required: true
+
+  ConditionalColorUpdate:
+    description: |-
+      Update the color if a value is above or below a given threshold.
+    attributes:
+      test:
+        description: |-
+          The condition to test on, e.g. 'datum.instance_id) < 3.0'. MUST be an expression starting with 
+          datum.<column_name> then a space followed by <=,>=,< or> a space again and then any float or integer value.
+        pattern: "^datum\\.[A-Za-z_][A-Za-z0-9_]*\\s*(?:<=|>=|<|>)\\s*-?\\d+(?:\\.\\d+)?$"
+        required: true
+      value:
+        description: |-
+          The color as RGB hex string.
+        pattern: "^#([A-Fa-f0-9]{6})$"
         required: true
