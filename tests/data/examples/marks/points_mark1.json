@@ -1,0 +1,52 @@
+{
+  "type": "symbol",
+  "from_": {
+    "data": "blobs_points_0e72a2ad-b47b-49b9-924b-33912c46dd26"
+  },
+  "zindex": 0,
+  "encode": {
+    "enter": {
+      "x": {
+        "scale": "X_scale",
+        "field": "x"
+      },
+      "y": {
+        "scale": "Y_scale",
+        "field": "y"
+      },
+      "stroke": {
+        "scale": "color_9b5890e1-98c2-49e7-acbe-5f71c7194e50",
+        "field": "instance_id"
+      },
+      "fill": {
+        "scale": "color_9b5890e1-98c2-49e7-acbe-5f71c7194e50",
+        "field": "instance_id"
+      },
+      "fillOpacity": {
+        "value": 1.0
+      },
+      "size": {
+        "value": 40
+      },
+      "shape": {
+        "value": "circle"
+      }
+    },
+    "update": {
+      "fill": [
+        {
+          "test": "!isValid(datum.instance_id)",
+          "value": "#d3d3d3"
+        },
+        {
+          "test": "datum.instance_id < 0",
+          "value": "#440154"
+        },
+        {
+          "test": "datum.instance_id > 4",
+          "value": "#fde725"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "type": "symbol",
+  "from_": {
+    "data": "blobs_points_068027f8-b0ff-47de-834a-6dc306f1674f"
+  },
+  "zindex": 0,
+  "encode": {
+    "enter": {
+      "x": {
+        "scale": "X_scale",
+        "field": "x"
+      },
+      "y": {
+        "scale": "Y_scale",
+        "field": "y"
+      },
+      "stroke": {
+        "value": "#d3d3d3"
+      },
+      "fill": {
+        "value": "#d3d3d3"
+      },
+      "fillOpacity": {
+        "value": 1.0
+      },
+      "size": {
+        "value": 1.0
+      },
+      "shape": {
+        "value": "circle"
+      }
+    }
+  }
+}

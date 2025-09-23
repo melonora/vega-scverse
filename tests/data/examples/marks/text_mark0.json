@@ -1,0 +1,38 @@
+{
+  "type": "text",
+  "encode": {
+    "enter": {
+      "text": {
+        "value": ["global"]
+      },
+      "baseline": {
+        "value": "alphabetic"
+      },
+      "fill": {
+        "value": "#000000"
+      },
+      "font": {
+        "value": "Arial"
+      },
+      "fontSize": {
+        "value": 15.555555555555555
+      },
+      "fontStyle": {
+        "value": "normal"
+      },
+      "fontWeight": {
+        "value": "normal"
+      },
+      "align": {
+        "value": "center"
+      },
+      "x": {
+        "value": 93.57727272727273
+      },
+      "y": {
+        "value": 79.5071101902318
+      }
+    }
+  },
+  "zindex": 3
+}

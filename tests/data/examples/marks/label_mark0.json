@@ -1,0 +1,44 @@
+{
+  "type": "raster_label",
+  "from_": {
+    "data": "blobs_labels_e2efe281-9f48-4f2d-aa63-ae4f7b872b9c"
+  },
+  "zindex": 0,
+  "encode": {
+    "enter": {
+      "stroke": [
+        {
+          "scale": "color_813c1063-5d20-4cb5-a4e7-a2624c981c3c",
+          "field": "channel_0_sum"
+        }
+      ],
+      "fill": [
+        {
+          "scale": "color_813c1063-5d20-4cb5-a4e7-a2624c981c3c",
+          "field": "channel_0_sum"
+        }
+      ],
+      "fillOpacity": {
+        "value": 0.4
+      },
+      "strokeOpacity": {
+        "value": 0.0
+      },
+      "strokeWidth": {
+        "value": 3
+      }
+    },
+    "update": {
+      "fill": [
+        {
+          "test": "isValid(datum.value)",
+          "scale": "color_813c1063-5d20-4cb5-a4e7-a2624c981c3c",
+          "field": "channel_0_sum"
+        },
+        {
+          "value": "#d3d3d3ff"
+        }
+      ]
+    }
+  }
+}

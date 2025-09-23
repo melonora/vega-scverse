@@ -1,6 +1,6 @@
 from pathlib import Path
 import inspect
-from . import linkml_specification, scales, data
+from . import linkml_specification, scales, data, marks
 
 THIS_PATH = Path(__file__).parent
 
@@ -14,11 +14,13 @@ modules = [
     'vega_scverse.spec_models.specification',
     'vega_scverse.spec_models.scales',
     'vega_scverse.spec_models.data',
+    'vega_scverse.spec_models.marks',
 ]
 objects = [
     *inspect.getmembers(linkml_specification),
     *inspect.getmembers(scales),
     *inspect.getmembers(data),
+    *inspect.getmembers(marks)
 ]
 
 for name, obj in objects:

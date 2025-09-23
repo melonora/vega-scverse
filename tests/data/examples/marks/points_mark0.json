@@ -1,0 +1,44 @@
+{
+  "type": "symbol",
+  "from_": {
+    "data": "blobs_points_09dbc7cc-ab53-4315-a9c8-c634b88413b9"
+  },
+  "zindex": 0,
+  "encode": {
+    "enter": {
+      "x": {
+        "scale": "X_scale",
+        "field": "x"
+      },
+      "y": {
+        "scale": "Y_scale",
+        "field": "y"
+      },
+      "stroke": {
+        "scale": "color_8e6292bc-8dbd-4805-b45a-fe3b9ad2d41f",
+        "field": "extra_feature_cat"
+      },
+      "fill": {
+        "scale": "color_8e6292bc-8dbd-4805-b45a-fe3b9ad2d41f",
+        "field": "extra_feature_cat"
+      },
+      "fillOpacity": {
+        "value": 1.0
+      },
+      "size": {
+        "value": 10
+      },
+      "shape": {
+        "value": "circle"
+      }
+    },
+    "update": {
+      "fill": [
+        {
+          "test": "!isValid(datum.extra_feature_cat)",
+          "value": "#d3d3d3"
+        }
+      ]
+    }
+  }
+}

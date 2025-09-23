@@ -93,7 +93,7 @@ classes:
           fields, or scales can be used to map data values to visual values.
         any_of:
           - range: Mark
-          - range: GroupMark
+          - range: BaseGroupMark
         multivalued: true
         required: true
 

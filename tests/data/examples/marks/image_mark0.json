@@ -1,0 +1,20 @@
+{
+  "type": "raster_image",
+  "from_": {
+    "data": "blobs_giant_image_83d630c4-742c-4760-8689-cfc36982f767"
+  },
+  "zindex": 0,
+  "encode": {
+    "enter": {
+      "opacity": {
+        "value": 1.0
+      },
+      "fill": [
+        {
+          "scale": "color_479b979e-0b64-4446-a073-f289ec0964e1",
+          "field": "value"
+        }
+      ]
+    }
+  }
+}

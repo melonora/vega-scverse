@@ -1836,7 +1836,7 @@ class BaseScales(ConfiguredBaseModel):
                     {"range": "BaseCategoricalColorScale"},
                     {"range": "LinearColorScale"},
                 ],
-                "domain_of": ["BaseScales", "GroupMark"],
+                "domain_of": ["BaseScales", "BaseGroupMark"],
             }
         },
     )
@@ -1863,7 +1863,7 @@ In case of a color mapping it is `color_` followed by a pseudo UUID.""",
         description="""The type of scale which is a description of what kind of mapping is performed between data domain and 
 visual range, e.g. `linear`.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"]}
         },
     )
 
@@ -1935,7 +1935,7 @@ plot area. This is commonly used to align data values with positional axes in co
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
                 "equals_string": "linear",
                 "ifabsent": "string(linear)",
             }
@@ -1987,7 +1987,7 @@ class ColorScale(Scale):
         description="""The type of scale which is a description of what kind of mapping is performed between data domain and 
 visual range, e.g. `linear`.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"]}
         },
     )
 
@@ -2055,7 +2055,7 @@ class LinearColorScale(ColorScale):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
                 "equals_string": "linear",
                 "ifabsent": "string(linear)",
             }
@@ -2120,7 +2120,7 @@ visual range, e.g. `linear`.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
                 "equals_string": "ordinal",
                 "ifabsent": "string(ordinal)",
             }
@@ -2404,7 +2404,7 @@ class Legend(ConfiguredBaseModel):
         default=...,
         description="""The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).""",
         json_schema_extra={
-            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"]}
         },
     )
     direction: LegendDirections = Field(
@@ -2578,7 +2578,7 @@ with one column per entry. The default is 0 for horizontal symbol legends and 1 
         default=...,
         description="""The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).""",
         json_schema_extra={
-            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"]}
         },
     )
     direction: LegendDirections = Field(
@@ -2774,7 +2774,7 @@ domain.""",
         default=...,
         description="""The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).""",
         json_schema_extra={
-            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"]}
         },
     )
     direction: LegendDirections = Field(
@@ -2937,7 +2937,7 @@ class Mark(ConfiguredBaseModel):
         default=...,
         description="""The type of mark.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"]}
+            "linkml_meta": {"alias": "type", "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"]}
         },
     )
     from_: MarkDataSource = Field(
@@ -2953,7 +2953,7 @@ processed for the first time and a mark instance is newly added to a scene. The 
 evaluated for all existing (non-exiting) mark instances. The exit properties are evaluated when the data 
 backing a mark is removed, and so the mark is leaving the visual scene. However, in this specification we 
 currently only support enter and update property sets.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "BaseGroupMark"]}},
     )
     zindex: int = Field(
         default=...,
@@ -3023,7 +3023,7 @@ class RasterImageMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
                 "equals_string": "raster_image",
                 "ifabsent": "string(raster_image)",
             }
@@ -3037,7 +3037,7 @@ class RasterImageMark(Mark):
     encode: ImageEncode = Field(
         default=...,
         description="""A set of visual encoding properties that determine the position and appearance of the raster_image mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "BaseGroupMark"]}},
     )
     zindex: int = Field(
         default=...,
@@ -3080,7 +3080,7 @@ class RasterLabelMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
                 "equals_string": "raster_label",
                 "ifabsent": "string(raster_label)",
             }
@@ -3094,7 +3094,7 @@ class RasterLabelMark(Mark):
     encode: LabelEncode = Field(
         default=...,
         description="""A set of visual encoding properties that determine the position and appearance of the raster_image mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "BaseGroupMark"]}},
     )
     zindex: int = Field(
         default=...,
@@ -3136,7 +3136,7 @@ class PointsMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
                 "equals_string": "symbol",
                 "ifabsent": "string(symbol)",
             }
@@ -3150,7 +3150,7 @@ class PointsMark(Mark):
     encode: SymbolEncode = Field(
         default=...,
         description="""A set of visual encoding properties that determine the position and appearance of the symbol mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "BaseGroupMark"]}},
     )
     zindex: int = Field(
         default=...,
@@ -3192,7 +3192,7 @@ class ShapesMark(Mark):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
                 "equals_string": "path",
                 "ifabsent": "string(path)",
             }
@@ -3206,7 +3206,7 @@ class ShapesMark(Mark):
     encode: PathEncode = Field(
         default=...,
         description="""A set of visual encoding properties that determine the position and appearance of the symbol mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "BaseGroupMark"]}},
     )
     zindex: int = Field(
         default=...,
@@ -3229,7 +3229,7 @@ class TextMark(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
                 "equals_string": "text",
                 "ifabsent": "string(text)",
             }
@@ -3237,7 +3237,7 @@ class TextMark(ConfiguredBaseModel):
     )
     encode: Optional[TextEncode] = Field(
         default=None,
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "BaseGroupMark"]}},
     )
     zindex: int = Field(
         default=...,
@@ -3247,7 +3247,7 @@ class TextMark(ConfiguredBaseModel):
     )
 
 
-class GroupMark(ConfiguredBaseModel):
+class BaseGroupMark(ConfiguredBaseModel):
     """
     Group marks are containers for other marks, and used to create visualizations with multiple views or layers. Each
     group instance recursively defines its own nested visualization specification. Group marks provide their own
@@ -3262,7 +3262,7 @@ class GroupMark(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "type",
-                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "GroupMark"],
+                "domain_of": ["Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
                 "equals_string": "group",
                 "ifabsent": "string(group)",
             }
@@ -3271,32 +3271,60 @@ class GroupMark(ConfiguredBaseModel):
     encode: GroupEncode = Field(
         default=...,
         description="""A set of visual encoding properties that determine the position of the group mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "GroupMark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "encode", "domain_of": ["Mark", "TextMark", "BaseGroupMark"]}},
     )
     scales: list[str] = Field(
         default=...,
-        description="""Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes). 
-Scales are a fundamental building block of data visualization, as they determine the nature of visual 
+        description="""Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes).
+Scales are a fundamental building block of data visualization, as they determine the nature of visual
 encodings.""",
-        json_schema_extra={"linkml_meta": {"alias": "scales", "domain_of": ["BaseScales", "GroupMark"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "scales",
+                "any_of": [
+                    {"range": "BaseAxisScale"},
+                    {"range": "BaseCategoricalColorScale"},
+                    {"range": "LinearColorScale"},
+                ],
+                "domain_of": ["BaseScales", "BaseGroupMark"],
+            }
+        },
     )
     axes: list[Axis] = Field(
         default=...,
         description="""Axes visualize spatial scale mappings using ticks, grid lines and labels.""",
-        json_schema_extra={"linkml_meta": {"alias": "axes", "domain_of": ["GroupMark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "axes", "domain_of": ["BaseGroupMark"]}},
     )
-    legends: Optional[list[Legend]] = Field(
+    legend: Optional[list[Union[CategoricalLegend, ColorBarLegend]]] = Field(
         default=None,
         description="""Legends visualize scale mappings for visual values such as color, shape and size.""",
-        json_schema_extra={"linkml_meta": {"alias": "legends", "domain_of": ["GroupMark"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "legend",
+                "any_of": [{"range": "CategoricalLegend"}, {"range": "ColorBarLegend"}],
+                "domain_of": ["BaseGroupMark"],
+            }
+        },
     )
-    marks: list[Mark] = Field(
+    marks: list[Union[PointsMark, RasterImageMark, RasterLabelMark, ShapesMark, TextMark]] = Field(
         default=...,
-        description="""Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting 
-symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose 
-properties can be set according to backing data. Mark property definitions may be simple constants or data 
+        description="""Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting
+symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose
+properties can be set according to backing data. Mark property definitions may be simple constants or data
 fields, or scales can be used to map data values to visual values.""",
-        json_schema_extra={"linkml_meta": {"alias": "marks", "domain_of": ["GroupMark"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "marks",
+                "any_of": [
+                    {"range": "RasterImageMark"},
+                    {"range": "RasterLabelMark"},
+                    {"range": "PointsMark"},
+                    {"range": "ShapesMark"},
+                    {"range": "TextMark"},
+                ],
+                "domain_of": ["BaseGroupMark"],
+            }
+        },
     )
 
 
@@ -3355,5 +3383,5 @@ RasterLabelMark.model_rebuild()
 PointsMark.model_rebuild()
 ShapesMark.model_rebuild()
 TextMark.model_rebuild()
-GroupMark.model_rebuild()
+BaseGroupMark.model_rebuild()
 

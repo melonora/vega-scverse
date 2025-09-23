@@ -151,7 +151,7 @@ classes:
         required: true
 
 
-  GroupMark:
+  BaseGroupMark:
     description: |- 
       Group marks are containers for other marks, and used to create visualizations with multiple views or layers. Each 
       group instance recursively defines its own nested visualization specification. Group marks provide their own 
@@ -169,10 +169,13 @@ classes:
         required: true
       scales:
         description: |-
-          Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes). 
-          Scales are a fundamental building block of data visualization, as they determine the nature of visual 
+          Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes).
+          Scales are a fundamental building block of data visualization, as they determine the nature of visual
           encodings.
-        range: Scale
+        any_of:
+          - range: BaseAxisScale
+          - range: BaseCategoricalColorScale
+          - range: LinearColorScale
         multivalued: true
         required: true
       axes:
@@ -181,18 +184,25 @@ classes:
         range: Axis
         multivalued: true
         required: true
-      legends:
+      legend:
         description: |-
           Legends visualize scale mappings for visual values such as color, shape and size.
-        range: Legend
+        any_of:
+         - range: CategoricalLegend
+         - range: ColorBarLegend
         multivalued: true
       marks:
         description: |-
-          Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting 
-          symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose 
-          properties can be set according to backing data. Mark property definitions may be simple constants or data 
+          Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting
+          symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose
+          properties can be set according to backing data. Mark property definitions may be simple constants or data
           fields, or scales can be used to map data values to visual values.
-        range: Mark
+        any_of:
+         - range: RasterImageMark
+         - range: RasterLabelMark
+         - range: PointsMark
+         - range: ShapesMark
+         - range: TextMark
         multivalued: true
         required: true
 

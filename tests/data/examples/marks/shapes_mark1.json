@@ -1,0 +1,34 @@
+{
+  "type": "path",
+  "from_": {
+    "data": "blobs_circles_453d6097-05e4-434d-9e4d-29814ac41c99"
+  },
+  "zindex": 0,
+  "encode": {
+    "enter": {
+      "x": {
+        "scale": "X_scale",
+        "field": "x"
+      },
+      "y": {
+        "scale": "Y_scale",
+        "field": "y"
+      },
+      "fill": {
+        "value": "#d3d3d3"
+      },
+      "fillOpacity": {
+        "value": 1.0
+      },
+      "stroke": {
+        "value": "#ff0000"
+      },
+      "strokeWidth": {
+        "value": 1.5
+      },
+      "strokeOpacity": {
+        "value": 1
+      }
+    }
+  }
+}

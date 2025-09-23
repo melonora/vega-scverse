@@ -1,0 +1,42 @@
+{
+  "type": "path",
+  "from_": {
+    "data": "blobs_circles_44f938a0-54c5-48c1-9f1d-4d6ca2c92aab"
+  },
+  "zindex": 0,
+  "encode": {
+    "enter": {
+      "x": {
+        "scale": "X_scale",
+        "field": "x"
+      },
+      "y": {
+        "scale": "Y_scale",
+        "field": "y"
+      },
+      "fill": {
+        "scale": "color_d0d34d52-9c94-4490-8a5f-fa58de4a1ba8",
+        "field": "98aca771-4e43-46cd-b8c0-2d9ff6e7d2a0"
+      },
+      "fillOpacity": {
+        "value": 1.0
+      }
+    },
+    "update": {
+      "fill": [
+        {
+          "test": "!isValid(datum.dummy_gene_expression)",
+          "value": "#d3d3d3"
+        },
+        {
+          "test": "datum.dummy_gene_expression < 20.0",
+          "value": "#440154"
+        },
+        {
+          "test": "datum.dummy_gene_expression > 40.0",
+          "value": "#fde725"
+        }
+      ]
+    }
+  }
+}
