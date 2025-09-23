@@ -1,0 +1,23 @@
+{
+  "type": "discrete",
+  "direction": "vertical",
+  "fill": "color_001be20c-b06b-4329-8a8c-4391e86cae67",
+  "orient": "none",
+  "columns": 1,
+  "columnPadding": 2.2222222222222223,
+  "rowPadding": 0.5555555555555556,
+  "padding": 0.4444444444444444,
+  "fillColor": "#ffffffcc",
+  "strokeColor": "#cccccccc",
+  "strokeWidth": 1.1111111111111112,
+  "labelOffset": 0.4444444444444444,
+  "labelAlign": "left",
+  "labelColor": "#000000",
+  "labelOpacity": 1,
+  "labelFont": "Arial",
+  "labelFontSize": 14.311111111111112,
+  "labelFontStyle": "normal",
+  "labelFontWeight": "normal",
+  "legendX": 267.8405555555555,
+  "legendY": 35.95555555555558
+}

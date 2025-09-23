@@ -2365,7 +2365,7 @@ backing scale domain.""",
             "linkml_meta": {
                 "alias": "values",
                 "any_of": [{"range": "float"}, {"range": "integer"}],
-                "domain_of": ["Axis"],
+                "domain_of": ["Axis", "ColorBarLegend"],
             }
         },
     )
@@ -2489,12 +2489,12 @@ anchor point of the labels (this could be defined as the coordinates where the l
             "linkml_meta": {"alias": "labelColor", "domain_of": ["Axis", "Legend"], "slot_uri": "rgbHexSlot"}
         },
     )
-    labelOpacity: str = Field(
+    labelOpacity: float = Field(
         default=...,
         description="""The opacity of legend labels.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"], "slot_uri": "opacityValueSlot"}
-        },
+        ge=0,
+        le=1,
+        json_schema_extra={"linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"]}},
     )
     labelFont: Optional[str] = Field(
         default="Arial",
@@ -2528,11 +2528,13 @@ anchor point of the labels (this could be defined as the coordinates where the l
         description="""The pixel y-coordinate of the legend group.""",
         json_schema_extra={"linkml_meta": {"alias": "legendY", "domain_of": ["Legend"]}},
     )
-    zindex: float = Field(
-        default=...,
+    zindex: Optional[float] = Field(
+        default=0,
         description="""The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
 legend groups.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"], "ifabsent": "0"}
+        },
     )
 
     @field_validator("fill")
@@ -2661,12 +2663,12 @@ anchor point of the labels (this could be defined as the coordinates where the l
             "linkml_meta": {"alias": "labelColor", "domain_of": ["Axis", "Legend"], "slot_uri": "rgbHexSlot"}
         },
     )
-    labelOpacity: str = Field(
+    labelOpacity: float = Field(
         default=...,
         description="""The opacity of legend labels.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"], "slot_uri": "opacityValueSlot"}
-        },
+        ge=0,
+        le=1,
+        json_schema_extra={"linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"]}},
     )
     labelFont: Optional[str] = Field(
         default="Arial",
@@ -2700,11 +2702,13 @@ anchor point of the labels (this could be defined as the coordinates where the l
         description="""The pixel y-coordinate of the legend group.""",
         json_schema_extra={"linkml_meta": {"alias": "legendY", "domain_of": ["Legend"]}},
     )
-    zindex: float = Field(
-        default=...,
+    zindex: Optional[float] = Field(
+        default=0,
         description="""The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
 legend groups.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"], "ifabsent": "0"}
+        },
     )
 
     @field_validator("fill")
@@ -2734,12 +2738,19 @@ class ColorBarLegend(Legend):
 vertical gradient or the width of a horizontal gradient.""",
         json_schema_extra={"linkml_meta": {"alias": "gradientLength", "domain_of": ["ColorBarLegend"]}},
     )
-    gradientOpacity: str = Field(
+    gradientThickness: float = Field(
+        default=...,
+        description="""The thickness in pixels of the color gradient. This value corresponds to the width of a vertical gradient or 
+the height of a horizontal gradient.""",
+        ge=0,
+        json_schema_extra={"linkml_meta": {"alias": "gradientThickness", "domain_of": ["ColorBarLegend"]}},
+    )
+    gradientOpacity: float = Field(
         default=...,
         description="""Opacity of the color gradient.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "gradientOpacity", "domain_of": ["ColorBarLegend"], "slot_uri": "opacityValueSlot"}
-        },
+        ge=0,
+        le=1,
+        json_schema_extra={"linkml_meta": {"alias": "gradientOpacity", "domain_of": ["ColorBarLegend"]}},
     )
     gradientStrokeColor: str = Field(
         default=...,
@@ -2752,6 +2763,12 @@ vertical gradient or the width of a horizontal gradient.""",
         default=...,
         description="""Stroke width of the color gradient border.""",
         json_schema_extra={"linkml_meta": {"alias": "gradientStrokeWidth", "domain_of": ["ColorBarLegend"]}},
+    )
+    values: list[float] = Field(
+        default=...,
+        description="""Explicitly set the visible legend values. The array entries should be legal values in the backing scale 
+domain.""",
+        json_schema_extra={"linkml_meta": {"alias": "values", "domain_of": ["Axis", "ColorBarLegend"]}},
     )
     type: LegendType = Field(
         default=...,
@@ -2842,12 +2859,12 @@ anchor point of the labels (this could be defined as the coordinates where the l
             "linkml_meta": {"alias": "labelColor", "domain_of": ["Axis", "Legend"], "slot_uri": "rgbHexSlot"}
         },
     )
-    labelOpacity: str = Field(
+    labelOpacity: float = Field(
         default=...,
         description="""The opacity of legend labels.""",
-        json_schema_extra={
-            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"], "slot_uri": "opacityValueSlot"}
-        },
+        ge=0,
+        le=1,
+        json_schema_extra={"linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis", "Legend"]}},
     )
     labelFont: Optional[str] = Field(
         default="Arial",
@@ -2881,11 +2898,13 @@ anchor point of the labels (this could be defined as the coordinates where the l
         description="""The pixel y-coordinate of the legend group.""",
         json_schema_extra={"linkml_meta": {"alias": "legendY", "domain_of": ["Legend"]}},
     )
-    zindex: float = Field(
-        default=...,
+    zindex: Optional[float] = Field(
+        default=0,
         description="""The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
 legend groups.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "zindex", "domain_of": ["Axis", "Legend", "Mark", "TextMark"], "ifabsent": "0"}
+        },
     )
 
     @field_validator("fill")

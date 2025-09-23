@@ -89,7 +89,9 @@ classes:
       labelOpacity:
         description: |-
           The opacity of legend labels.
-        slot_uri: opacityValueSlot
+        range: float
+        minimum_value: 0
+        maximum_value: 1
         required: true
       labelFont:
         description: |-
@@ -126,7 +128,7 @@ classes:
           The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
           legend groups.
         range: float
-        required: true
+        ifabsent: 0
 
   CategoricalLegend:
     description: |-
@@ -158,10 +160,19 @@ classes:
           vertical gradient or the width of a horizontal gradient.
         range: float
         required: true
+      gradientThickness:
+        description: |-
+          The thickness in pixels of the color gradient. This value corresponds to the width of a vertical gradient or 
+          the height of a horizontal gradient.
+        range: float
+        minimum_value: 0
+        required: true
       gradientOpacity:
         description: |-
           Opacity of the color gradient.
-        slot_uri: opacityValueSlot
+        range: float
+        minimum_value: 0
+        maximum_value: 1
         required: true
       gradientStrokeColor:
         description: |-
@@ -172,6 +183,13 @@ classes:
         description: |-
           Stroke width of the color gradient border.
         range: float
+        required: true
+      values:
+        description: |-
+          Explicitly set the visible legend values. The array entries should be legal values in the backing scale 
+          domain.
+        range: float
+        multivalued: true
         required: true
 
 enums:
