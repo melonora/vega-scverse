@@ -1,0 +1,27 @@
+{
+  "enter": {
+    "x": {
+      "scale": "X_scale",
+      "field": "x"
+    },
+    "y": {
+      "scale": "Y_scale",
+      "field": "y"
+    },
+    "fill": {
+      "value": "#d3d3d3"
+    },
+    "fillOpacity": {
+      "value": 1.0
+    },
+    "stroke": {
+      "value": "#0000ff"
+    },
+    "strokeWidth": {
+      "value": 1.5
+    },
+    "strokeOpacity": {
+      "value": 1
+    }
+  }
+}

@@ -1837,7 +1837,10 @@ or continuous data in the legend.""",
         description="""The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
 vega equivalent expects a 'Scale'.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter"]}
+            "linkml_meta": {
+                "alias": "strokeWidth",
+                "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
         },
     )
     labelOffset: float = Field(
@@ -2009,7 +2012,10 @@ or continuous data in the legend.""",
         description="""The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
 vega equivalent expects a 'Scale'.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter"]}
+            "linkml_meta": {
+                "alias": "strokeWidth",
+                "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
         },
     )
     labelOffset: float = Field(
@@ -2190,7 +2196,10 @@ or continuous data in the legend.""",
         description="""The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
 vega equivalent expects a 'Scale'.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter"]}
+            "linkml_meta": {
+                "alias": "strokeWidth",
+                "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
         },
     )
     labelOffset: float = Field(
@@ -2296,6 +2305,8 @@ class PositionItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -2329,6 +2340,8 @@ class TextItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -2362,6 +2375,8 @@ class BaselineItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -2395,6 +2410,8 @@ class FontItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -2405,14 +2422,15 @@ class FontItem(ConfiguredBaseModel):
 
 class FontSizeItem(ConfiguredBaseModel):
     """
-    Fontsize in pixels of text.
+    Fontsize of text in pixels.
     """
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
-    value: str = Field(
+    value: float = Field(
         default=...,
         description="""Font size value.""",
+        ge=0,
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -2428,10 +2446,11 @@ class FontSizeItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
-                "slot_uri": "nonNegativeFloatSlot",
             }
         },
     )
@@ -2462,6 +2481,8 @@ class FontWeightItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -2495,6 +2516,8 @@ class FontStyleItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -2528,6 +2551,8 @@ class RGBHexItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -2717,6 +2742,8 @@ class PositiveFloatObject(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -2750,6 +2777,8 @@ class CircleShapeObject(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -2833,6 +2862,78 @@ class OpacityObject(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
+                ],
+            }
+        },
+    )
+
+
+class HorizontalAlignObject(ConfiguredBaseModel):
+    """
+    Object indicating the horizontal alignment.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: HorizontalAlignEnum = Field(
+        default=...,
+        description="""The actual value for alignment.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
+                    "NAColorUpdate",
+                    "ConditionalColorUpdate",
+                ],
+            }
+        },
+    )
+
+
+class BaseLineObject(ConfiguredBaseModel):
+    """
+    The vertical alignment of the text relative to its y-coordinate.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: BaseLineEnum = Field(
+        default=...,
+        description="""The actual value for vertical alignment.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -3055,7 +3156,12 @@ class LabelEncodeEnter(ConfiguredBaseModel):
         description="""The color of the outline of each individual label.""",
         min_length=1,
         max_length=1,
-        json_schema_extra={"linkml_meta": {"alias": "stroke", "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "stroke",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
+        },
     )
     fill: list[Union[ColorItem, RandomRGBSignal]] = Field(
         default=...,
@@ -3092,14 +3198,20 @@ class LabelEncodeEnter(ConfiguredBaseModel):
         default=...,
         description="""Opacity value for the label stroke between 0 and 1.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "strokeOpacity", "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"]}
+            "linkml_meta": {
+                "alias": "strokeOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
         },
     )
     strokeWidth: PositiveFloatObject = Field(
         default=...,
         description="""The width of the label outlines in pixels.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter"]}
+            "linkml_meta": {
+                "alias": "strokeWidth",
+                "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
         },
     )
 
@@ -3139,7 +3251,7 @@ class PointsEncodeEnter(ConfiguredBaseModel):
             "linkml_meta": {
                 "alias": "stroke",
                 "any_of": [{"range": "ColorItem"}, {"range": "RGBHexItem"}],
-                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"],
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
             }
         },
     )
@@ -3176,14 +3288,20 @@ class PointsEncodeEnter(ConfiguredBaseModel):
         default=None,
         description="""Opacity value for the point outlines between 0 and 1.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "strokeOpacity", "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter"]}
+            "linkml_meta": {
+                "alias": "strokeOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
         },
     )
     strokeWidth: Optional[PositiveFloatObject] = Field(
         default=None,
         description="""The width of the point outlines in pixels.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter"]}
+            "linkml_meta": {
+                "alias": "strokeWidth",
+                "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
         },
     )
     size: PositiveFloatObject = Field(
@@ -3245,13 +3363,43 @@ class PathEncodeEnter(ConfiguredBaseModel):
             }
         },
     )
-    fillOpacity: str = Field(
+    fillOpacity: OpacityObject = Field(
         default=...,
+        description="""The fill opacity of the individual shape geometries.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
-                "slot_uri": "opacityValueSlot",
+            }
+        },
+    )
+    stroke: Optional[RGBHexItem] = Field(
+        default=None,
+        description="""The color of the shapes outlines as RGB hexstring""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "stroke",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
+        },
+    )
+    strokeWidth: Optional[PositiveFloatObject] = Field(
+        default=None,
+        description="""The width of the outline in pixels""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "strokeWidth",
+                "domain_of": ["Legend", "LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
+            }
+        },
+    )
+    strokeOpacity: Optional[OpacityObject] = Field(
+        default=None,
+        description="""The opacity of the outline of the individual shape geometries.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "strokeOpacity",
+                "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter"],
             }
         },
     )
@@ -3286,7 +3434,7 @@ class TextEncodeEnter(ConfiguredBaseModel):
     text: TextItem = Field(
         default=..., json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title", "TextEncodeEnter"]}}
     )
-    align: HorizontalAlignEnum = Field(
+    align: HorizontalAlignObject = Field(
         default=...,
         description="""The horizontal text alignment relative to the text anchor point.""",
         json_schema_extra={"linkml_meta": {"alias": "align", "domain_of": ["TextEncodeEnter"]}},
@@ -3298,7 +3446,7 @@ class TextEncodeEnter(ConfiguredBaseModel):
         le=359,
         json_schema_extra={"linkml_meta": {"alias": "angle", "domain_of": ["TextEncodeEnter"]}},
     )
-    baseline: BaseLineEnum = Field(
+    baseline: BaseLineObject = Field(
         default=...,
         description="""The baseline attribute specifies the vertical alignment (baseline) of the text relative to its y-coordinate.""",
         json_schema_extra={"linkml_meta": {"alias": "baseline", "domain_of": ["Title", "TextEncodeEnter"]}},
@@ -3335,14 +3483,13 @@ class TextEncodeEnter(ConfiguredBaseModel):
             }
         },
     )
-    fillOpacity: Optional[str] = Field(
+    fillOpacity: Optional[OpacityObject] = Field(
         default=None,
         description="""Opacity of the text.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "fillOpacity",
                 "domain_of": ["LabelEncodeEnter", "PointsEncodeEnter", "PathEncodeEnter", "TextEncodeEnter"],
-                "slot_uri": "opacityValueSlot",
             }
         },
     )
@@ -3355,7 +3502,7 @@ class GroupEncodeEnter(ConfiguredBaseModel):
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/encode"})
 
-    x: float = Field(
+    x: PositiveFloatObject = Field(
         default=...,
         description="""Placing of the group mark along the x axis (width of the complete charter). The origin
 is on the left side.""",
@@ -3366,7 +3513,7 @@ is on the left side.""",
             }
         },
     )
-    y: float = Field(
+    y: PositiveFloatObject = Field(
         default=...,
         description="""Placing of the group mark along the y axis (height of the complete charter). The origin
 is on the top side.""",
@@ -3377,12 +3524,12 @@ is on the top side.""",
             }
         },
     )
-    width: float = Field(
+    width: PositiveFloatObject = Field(
         default=...,
         description="""The width of the mark in pixels.""",
         json_schema_extra={"linkml_meta": {"alias": "width", "domain_of": ["GroupEncodeEnter", "ViewConfiguration"]}},
     )
-    height: float = Field(
+    height: PositiveFloatObject = Field(
         default=...,
         description="""The height of the mark in pixels.""",
         json_schema_extra={"linkml_meta": {"alias": "height", "domain_of": ["GroupEncodeEnter", "ViewConfiguration"]}},
@@ -3516,6 +3663,8 @@ See also: https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to 
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -3586,6 +3735,8 @@ datum.<column_name> then a space followed by <=,>=,< or> a space again and then 
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                     "NAColorUpdate",
                     "ConditionalColorUpdate",
                 ],
@@ -4142,6 +4293,8 @@ PositiveFloatObject.model_rebuild()
 CircleShapeObject.model_rebuild()
 AxisItem.model_rebuild()
 OpacityObject.model_rebuild()
+HorizontalAlignObject.model_rebuild()
+BaseLineObject.model_rebuild()
 ImageEncode.model_rebuild()
 LabelEncode.model_rebuild()
 SymbolEncode.model_rebuild()

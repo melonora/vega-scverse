@@ -67,12 +67,13 @@ classes:
 
   FontSizeItem:
     description: |-
-      Fontsize in pixels of text.
+      Fontsize of text in pixels.
     attributes:
       value:
         description: |-
           Font size value.
-        slot_uri: nonNegativeFloatSlot
+        minimum_value: 0
+        range: float
         required: true
 
   FontWeightItem:
@@ -257,6 +258,26 @@ classes:
         range: float
         minimum_value: 0
         maximum_value: 1
+        required: true
+
+  HorizontalAlignObject:
+    description: |-
+      Object indicating the horizontal alignment.
+    attributes:
+      value:
+        description: |-
+          The actual value for alignment.
+        range: HorizontalAlignEnum
+        required: true
+
+  BaseLineObject:
+    description: |-
+      The vertical alignment of the text relative to its y-coordinate.
+    attributes:
+      value:
+        description: |-
+          The actual value for vertical alignment.
+        range: BaseLineEnum
         required: true
 
 enums:

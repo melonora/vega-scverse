@@ -1,0 +1,27 @@
+{
+  "enter": {
+    "x": {
+      "scale": "X_scale",
+      "field": "x"
+    },
+    "y": {
+      "scale": "Y_scale",
+      "field": "y"
+    },
+    "fill": {
+      "scale": "color_cd9b06e5-cab1-400e-9c14-6b4ff91b60b8",
+      "field": "feature0"
+    },
+    "fillOpacity": {
+      "value": 1.0
+    }
+  },
+  "update": {
+    "fill": [
+      {
+        "test": "!isValid(datum.feature0)",
+        "value": "#d3d3d3"
+      }
+    ]
+  }
+}

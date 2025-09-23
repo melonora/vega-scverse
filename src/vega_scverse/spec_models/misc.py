@@ -264,6 +264,8 @@ class PositionItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
             }
         },
@@ -295,6 +297,8 @@ class TextItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
             }
         },
@@ -326,6 +330,8 @@ class BaselineItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
             }
         },
@@ -357,6 +363,8 @@ class FontItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
             }
         },
@@ -365,14 +373,15 @@ class FontItem(ConfiguredBaseModel):
 
 class FontSizeItem(ConfiguredBaseModel):
     """
-    Fontsize in pixels of text.
+    Fontsize of text in pixels.
     """
 
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
 
-    value: str = Field(
+    value: float = Field(
         default=...,
         description="""Font size value.""",
+        ge=0,
         json_schema_extra={
             "linkml_meta": {
                 "alias": "value",
@@ -388,8 +397,9 @@ class FontSizeItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
-                "slot_uri": "nonNegativeFloatSlot",
             }
         },
     )
@@ -420,6 +430,8 @@ class FontWeightItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
             }
         },
@@ -451,6 +463,8 @@ class FontStyleItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
             }
         },
@@ -482,6 +496,8 @@ class RGBHexItem(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
                 "slot_uri": "rgbHexSlot",
             }
@@ -655,6 +671,8 @@ class PositiveFloatObject(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
             }
         },
@@ -686,6 +704,8 @@ class CircleShapeObject(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
                 "equals_string": "circle",
                 "ifabsent": "string(circle)",
@@ -753,6 +773,74 @@ class OpacityObject(ConfiguredBaseModel):
                     "PositiveFloatObject",
                     "CircleShapeObject",
                     "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
+                ],
+            }
+        },
+    )
+
+
+class HorizontalAlignObject(ConfiguredBaseModel):
+    """
+    Object indicating the horizontal alignment.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: HorizontalAlignEnum = Field(
+        default=...,
+        description="""The actual value for alignment.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
+                ],
+            }
+        },
+    )
+
+
+class BaseLineObject(ConfiguredBaseModel):
+    """
+    The vertical alignment of the text relative to its y-coordinate.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/marks"})
+
+    value: BaseLineEnum = Field(
+        default=...,
+        description="""The actual value for vertical alignment.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "value",
+                "domain_of": [
+                    "PositionItem",
+                    "TextItem",
+                    "baselineItem",
+                    "FontItem",
+                    "FontSizeItem",
+                    "FontWeightItem",
+                    "FontStyleItem",
+                    "RGBHexItem",
+                    "PositiveFloatObject",
+                    "CircleShapeObject",
+                    "OpacityObject",
+                    "HorizontalAlignObject",
+                    "BaseLineObject",
                 ],
             }
         },
@@ -777,4 +865,6 @@ PositiveFloatObject.model_rebuild()
 CircleShapeObject.model_rebuild()
 AxisItem.model_rebuild()
 OpacityObject.model_rebuild()
+HorizontalAlignObject.model_rebuild()
+BaseLineObject.model_rebuild()
 

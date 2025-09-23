@@ -265,8 +265,21 @@ classes:
         required: true
       fillOpacity:
         description: |-
-        slot_uri: opacityValueSlot
+          The fill opacity of the individual shape geometries.
+        range: OpacityObject
         required: true
+      stroke:
+        description: |-
+          The color of the shapes outlines as RGB hexstring
+        range: RGBHexItem
+      strokeWidth:
+        description: |-
+          The width of the outline in pixels
+        range: PositiveFloatObject
+      strokeOpacity:
+        description: |-
+          The opacity of the outline of the individual shape geometries.
+        range: OpacityObject
 
   TextEncodeEnter:
     description: |-
@@ -285,7 +298,7 @@ classes:
       align:
         description: |-
           The horizontal text alignment relative to the text anchor point.
-        range: HorizontalAlignEnum
+        range: HorizontalAlignObject
         required: true
       angle:
         description: |-
@@ -296,7 +309,7 @@ classes:
       baseline:
         description: |-
           The baseline attribute specifies the vertical alignment (baseline) of the text relative to its y-coordinate.
-        range: BaseLineEnum
+        range: BaseLineObject
         required: true
       font:
         range: FontItem
@@ -318,7 +331,7 @@ classes:
       fillOpacity:
         description: |-
           Opacity of the text.
-        slot_uri: opacityValueSlot
+        range: OpacityObject
 
   GroupEncodeEnter:
     description: |-
@@ -328,23 +341,23 @@ classes:
         description: |-
           Placing of the group mark along the x axis (width of the complete charter). The origin
           is on the left side.
-        range: float
+        range: PositiveFloatObject
         required: true
       y:
         description: |-
           Placing of the group mark along the y axis (height of the complete charter). The origin
           is on the top side.
-        range: float
+        range: PositiveFloatObject
         required: true
       width:
         description: |-
           The width of the mark in pixels.
-        range: float
+        range: PositiveFloatObject
         required: true
       height:
         description: |-
           The height of the mark in pixels.
-        range: float
+        range: PositiveFloatObject
         required: true
         
 

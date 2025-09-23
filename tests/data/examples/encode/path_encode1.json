@@ -1,0 +1,35 @@
+{
+  "enter": {
+    "x": {
+      "scale": "X_scale",
+      "field": "x"
+    },
+    "y": {
+      "scale": "Y_scale",
+      "field": "y"
+    },
+    "fill": {
+      "scale": "color_ea1449a7-9d4b-4a28-b3f3-972db58afc69",
+      "field": "e39f14f1-78f5-4c84-9bf0-4d7796f84ecd"
+    },
+    "fillOpacity": {
+      "value": 1.0
+    }
+  },
+  "update": {
+    "fill": [
+      {
+        "test": "!isValid(datum.value)",
+        "value": "#d3d3d3"
+      },
+      {
+        "test": "datum.value < 2.0",
+        "value": "#000000"
+      },
+      {
+        "test": "datum.value > 4.0",
+        "value": "#808080"
+      }
+    ]
+  }
+}
