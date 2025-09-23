@@ -52,7 +52,15 @@ linkml_meta = LinkMLMeta(
         "description": "The configuration entailing all the specification components "
         "for visualization of data in the scverse ecosystem.",
         "id": "https://w3id.org/scverse/vega-scverse/specification",
-        "imports": ["linkml:types", "linkml_data", "linkml_scales", "axes", "legends", "marks", "misc"],
+        "imports": [
+            "linkml:types",
+            "linkml_data",
+            "linkml_scales",
+            "linkml_axes",
+            "linkml_legends",
+            "linkml_marks",
+            "linkml_misc",
+        ],
         "license": "BSD-3",
         "name": "vega-scverse-specification",
         "prefixes": {
@@ -64,7 +72,7 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": "src\\vega_scverse\\schema\\specification.yaml",
+        "source_file": "src\\vega_scverse\\schema\\linkml_specification.yaml",
         "title": "vega-scverse-specification",
     }
 )

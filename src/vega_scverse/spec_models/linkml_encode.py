@@ -52,7 +52,7 @@ linkml_meta = LinkMLMeta(
         "description": "Vega like specification for the encodings used to specify the "
         "visuals representation of marks.",
         "id": "https://w3id.org/scverse/vega-scverse/encode",
-        "imports": ["linkml:types", "misc", "slots"],
+        "imports": ["linkml:types", "linkml_misc", "linkml_slots"],
         "license": "BSD-3",
         "name": "vega-scverse-encode",
         "prefixes": {
@@ -64,7 +64,7 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": "src\\vega_scverse\\schema\\encode.yaml",
+        "source_file": "src\\vega_scverse\\schema\\linkml_encode.yaml",
         "title": "vega-scverse-encode",
     }
 )

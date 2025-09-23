@@ -49,12 +49,12 @@ linkml_meta = LinkMLMeta(
         "created_on": "2025-06-01T00:00:00",
         "default_prefix": "vega_scverse",
         "default_range": "string",
-        "description": "Vega like specification for the axes used in view "
-        "configurations for the scverse visualization ecosystem.",
-        "id": "https://w3id.org/scverse/vega-scverse/axes",
-        "imports": ["linkml:types", "misc", "slots"],
+        "description": "Vega like specification for miscellaneous classes used in "
+        "view configurations for the scverse visualization ecosystem.",
+        "id": "https://w3id.org/scverse/vega-scverse/marks",
+        "imports": ["linkml:types", "linkml_slots"],
         "license": "BSD-3",
-        "name": "vega-scverse-axes",
+        "name": "vega-scverse-misc",
         "prefixes": {
             "linkml": {"prefix_prefix": "linkml", "prefix_reference": "https://w3id.org/linkml/"},
             "orcid": {"prefix_prefix": "orcid", "prefix_reference": "https://orcid.org/"},
@@ -64,8 +64,8 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": "src\\vega_scverse\\schema\\axes.yaml",
-        "title": "vega-scverse-axes",
+        "source_file": "src\\vega_scverse\\schema\\linkml_misc.yaml",
+        "title": "vega-scverse-misc",
     }
 )
 
@@ -236,28 +236,6 @@ class HorizontalAlignEnum(str, Enum):
     right = "right"
     """
     The anchor point of the text is right of the text.
-    """
-
-
-class CapEnum(str, Enum):
-    """
-    The style of the stroke end for axis tick marks.
-    """
-
-    butt = "butt"
-    """
-    The line ends exactly at its endpoint, producing a flat, squared-off edge perpendicular to the path. 
-    There is no extension beyond the endpoint.
-    """
-    round = "round"
-    """
-    The line ends with a semi-circular extension beyond its endpoint, creating a rounded cap with a radius equal to 
-    half the line's thickness. This softens sharp edges and creates smooth joins.
-    """
-    square = "square"
-    """
-    The line ends with a square extension beyond its endpoint. It is similar to butt but extends the line slightly 
-    past the endpoint, by half the line's thickness, resulting in a squared-off cap that projects outward.
     """
 
 
@@ -564,7 +542,7 @@ class Title(ConfiguredBaseModel):
     orient: OrientEnum = Field(
         default=...,
         description="""The orientation of the title relative to the chart.""",
-        json_schema_extra={"linkml_meta": {"alias": "orient", "domain_of": ["Title", "Axis"]}},
+        json_schema_extra={"linkml_meta": {"alias": "orient", "domain_of": ["Title"]}},
     )
     baseline: BaseLineEnum = Field(
         default=...,
@@ -644,7 +622,7 @@ class ColorItem(ConfiguredBaseModel):
     scale: str = Field(
         default=...,
         description="""The color scale.""",
-        json_schema_extra={"linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "Axis"]}},
+        json_schema_extra={"linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem"]}},
     )
     field: str = Field(
         default=...,
@@ -746,7 +724,7 @@ class AxisItem(ConfiguredBaseModel):
     scale: str = Field(
         default=...,
         description="""The scale on which the axis is based.""",
-        json_schema_extra={"linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "Axis"]}},
+        json_schema_extra={"linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem"]}},
     )
     field: AxisEnum = Field(
         default=...,
@@ -869,174 +847,6 @@ class BaseLineObject(ConfiguredBaseModel):
     )
 
 
-class Axis(ConfiguredBaseModel):
-    """
-    An axis visualizes a spatial scale mapping for cartesian coordinates using ticks, grid lines and labels.
-    """
-
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/axes"})
-
-    scale: str = Field(
-        default=...,
-        description="""Name of the 'AxisScale' to visualize as axis object.""",
-        json_schema_extra={"linkml_meta": {"alias": "scale", "domain_of": ["ColorItem", "AxisItem", "Axis"]}},
-    )
-    orient: OrientEnum = Field(
-        default=...,
-        description="""The orientation of the axis, either 'left', 'right', 'top' or 'bottom'.""",
-        json_schema_extra={"linkml_meta": {"alias": "orient", "domain_of": ["Title", "Axis"]}},
-    )
-    domain: bool = Field(
-        default=...,
-        description="""A boolean flag indicating if the domain (the axis baseline, the line that the ticks connect to) should be 
-included as part of the axis.""",
-        json_schema_extra={"linkml_meta": {"alias": "domain", "domain_of": ["Axis"]}},
-    )
-    domainOpacity: Optional[float] = Field(
-        default=None,
-        description="""Opacity of axis domain line. Should not be present if domain is 'false'.""",
-        ge=0,
-        le=1,
-        json_schema_extra={"linkml_meta": {"alias": "domainOpacity", "domain_of": ["Axis"]}},
-    )
-    domainColor: Optional[str] = Field(
-        default=None,
-        description="""Color of axis domain line. Should not be present if domain is 'false'.""",
-        json_schema_extra={"linkml_meta": {"alias": "domainColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
-    )
-    domainWidth: Optional[float] = Field(
-        default=None,
-        description="""Stroke width of axis domain line. Should not be present if domain is 'false'.""",
-        json_schema_extra={"linkml_meta": {"alias": "domainWidth", "domain_of": ["Axis"]}},
-    )
-    grid: Optional[bool] = Field(
-        default=False,
-        description="""A boolean flag indicating if grid lines should be included as part of the axis.""",
-        json_schema_extra={"linkml_meta": {"alias": "grid", "domain_of": ["Axis"], "ifabsent": "False"}},
-    )
-    gridOpacity: Optional[float] = Field(
-        default=None,
-        description="""Opacity of axis grid lines. Should not be present if grid is 'false'.""",
-        ge=0,
-        le=1,
-        json_schema_extra={"linkml_meta": {"alias": "gridOpacity", "domain_of": ["Axis"]}},
-    )
-    gridCap: Optional[CapEnum] = Field(
-        default=None,
-        description="""The stroke cap for axis grid lines. One of 'butt' (default), 'round' or 'square'.
-Should not be present if grid is 'false'.""",
-        json_schema_extra={"linkml_meta": {"alias": "gridCap", "domain_of": ["Axis"]}},
-    )
-    gridColor: Optional[str] = Field(
-        default=None,
-        description="""Color of axis grid lines. Should not be present if grid is 'false'.""",
-        json_schema_extra={"linkml_meta": {"alias": "gridColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
-    )
-    gridWidth: Optional[float] = Field(
-        default=None,
-        description="""Stroke width of axis grid lines. Should not be present if grid is 'false'.""",
-        json_schema_extra={"linkml_meta": {"alias": "gridWidth", "domain_of": ["Axis"]}},
-    )
-    labelColor: Optional[str] = Field(
-        default=None,
-        description="""Text color of axis tick labels.""",
-        json_schema_extra={"linkml_meta": {"alias": "labelColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
-    )
-    labelOpacity: Optional[float] = Field(
-        default=None,
-        description="""Opacity of axis tick labels.""",
-        ge=0,
-        le=1,
-        json_schema_extra={"linkml_meta": {"alias": "labelOpacity", "domain_of": ["Axis"]}},
-    )
-    labelFont: Optional[str] = Field(
-        default=None,
-        description="""Font name for axis tick labels.""",
-        json_schema_extra={"linkml_meta": {"alias": "labelFont", "domain_of": ["Axis"]}},
-    )
-    labelFontSize: Optional[float] = Field(
-        default=None,
-        description="""Font size of axis tick labels.""",
-        json_schema_extra={"linkml_meta": {"alias": "labelFontSize", "domain_of": ["Axis"]}},
-    )
-    labelFontStyle: Optional[FontStyleEnum] = Field(
-        default=None,
-        description="""Font style of axis tick labels""",
-        json_schema_extra={"linkml_meta": {"alias": "labelFontStyle", "domain_of": ["Axis"]}},
-    )
-    labelFontWeight: Optional[FontWeightEnum] = Field(
-        default=None,
-        description="""Font weight of axis tick labels.""",
-        json_schema_extra={"linkml_meta": {"alias": "labelFontWeight", "domain_of": ["Axis"]}},
-    )
-    ticks: Optional[bool] = Field(
-        default=True,
-        description="""A boolean flag indicating if ticks should be included as part of the axis.""",
-        json_schema_extra={"linkml_meta": {"alias": "ticks", "domain_of": ["Axis"], "ifabsent": "True"}},
-    )
-    tickOpacity: Optional[float] = Field(
-        default=None,
-        description="""Opacity of axis ticks.""",
-        ge=0,
-        le=1,
-        json_schema_extra={"linkml_meta": {"alias": "tickOpacity", "domain_of": ["Axis"]}},
-    )
-    tickColor: Optional[str] = Field(
-        default=None,
-        description="""Color of axis ticks.""",
-        json_schema_extra={"linkml_meta": {"alias": "tickColor", "domain_of": ["Axis"], "slot_uri": "rgbHexSlot"}},
-    )
-    tickCap: Optional[CapEnum] = Field(
-        default=None,
-        description="""The stroke cap for axis tick marks. One of \"butt\" (default), \"round\" or \"square\".""",
-        json_schema_extra={"linkml_meta": {"alias": "tickCap", "domain_of": ["Axis"]}},
-    )
-    tickWidth: Optional[float] = Field(
-        default=None,
-        description="""Width in pixels of axis ticks.""",
-        ge=0,
-        json_schema_extra={"linkml_meta": {"alias": "tickWidth", "domain_of": ["Axis"]}},
-    )
-    tickSize: Optional[float] = Field(
-        default=None,
-        description="""The length in pixels of axis ticks.""",
-        ge=0,
-        json_schema_extra={"linkml_meta": {"alias": "tickSize", "domain_of": ["Axis"]}},
-    )
-    values: list[Union[float, int]] = Field(
-        default=...,
-        description="""Explicitly set the visible axis tick and label values. The array entries should be legal values in the 
-backing scale domain.""",
-        json_schema_extra={
-            "linkml_meta": {
-                "alias": "values",
-                "any_of": [{"range": "float"}, {"range": "integer"}],
-                "domain_of": ["Axis"],
-            }
-        },
-    )
-    zindex: float = Field(
-        default=...,
-        description="""The integer z-index indicating the layering of the axis group relative to other axis, mark, and legend groups. 
-The default value is 0 and axes and grid lines are drawn behind any marks defined in the same specification 
-level. Higher values (1) will cause axes and grid lines to be drawn on top of marks.""",
-        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Axis"]}},
-    )
-
-    @field_validator("scale")
-    def pattern_scale(cls, v):
-        pattern = re.compile(r"^[XY]_scale(_\d+)?$")
-        if isinstance(v, list):
-            for element in v:
-                if isinstance(element, str) and not pattern.match(element):
-                    err_msg = f"Invalid scale format: {element}"
-                    raise ValueError(err_msg)
-        elif isinstance(v, str) and not pattern.match(v):
-            err_msg = f"Invalid scale format: {v}"
-            raise ValueError(err_msg)
-        return v
-
-
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
 PositionItem.model_rebuild()
@@ -1057,5 +867,4 @@ AxisItem.model_rebuild()
 OpacityObject.model_rebuild()
 HorizontalAlignObject.model_rebuild()
 BaseLineObject.model_rebuild()
-Axis.model_rebuild()
 

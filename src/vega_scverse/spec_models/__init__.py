@@ -1,6 +1,6 @@
 from pathlib import Path
 import inspect
-from . import specification, scales, data
+from . import linkml_specification, scales, data
 
 THIS_PATH = Path(__file__).parent
 
@@ -16,7 +16,7 @@ modules = [
     'vega_scverse.spec_models.data',
 ]
 objects = [
-    *inspect.getmembers(specification),
+    *inspect.getmembers(linkml_specification),
     *inspect.getmembers(scales),
     *inspect.getmembers(data),
 ]

@@ -49,12 +49,12 @@ linkml_meta = LinkMLMeta(
         "created_on": "2025-06-01T00:00:00",
         "default_prefix": "vega_scverse",
         "default_range": "string",
-        "description": "Vega like specification for the marks used in view "
+        "description": "Vega like specification for the legends used in view "
         "configurations for the scverse visualization ecosystem.",
-        "id": "https://w3id.org/scverse/vega-scverse/slots",
-        "imports": ["linkml:types", "misc"],
+        "id": "https://w3id.org/scverse/vega-scverse/legends",
+        "imports": ["linkml:types", "linkml_slots", "linkml_misc"],
         "license": "BSD-3",
-        "name": "vega-scverse-marks",
+        "name": "vega-scverse-legends",
         "prefixes": {
             "linkml": {"prefix_prefix": "linkml", "prefix_reference": "https://w3id.org/linkml/"},
             "orcid": {"prefix_prefix": "orcid", "prefix_reference": "https://orcid.org/"},
@@ -64,8 +64,8 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": "src\\vega_scverse\\schema\\slots.yaml",
-        "title": "vega-scverse-marks",
+        "source_file": "src\\vega_scverse\\schema\\linkml_legends.yaml",
+        "title": "vega-scverse-legends",
     }
 )
 
@@ -236,6 +236,36 @@ class HorizontalAlignEnum(str, Enum):
     right = "right"
     """
     The anchor point of the text is right of the text.
+    """
+
+
+class LegendType(str, Enum):
+    """
+    The valid mark types within the scverse plotting / visualization ecosystem.
+    """
+
+    discrete = "discrete"
+    """
+    legend type for categorical data
+    """
+    gradient = "gradient"
+    """
+    legend type for continuous data
+    """
+
+
+class LegendDirections(str, Enum):
+    """
+    The possible directions of the legend.
+    """
+
+    horizontal = "horizontal"
+    """
+    legend direction with the longest axis oriented along the horizontal axis.
+    """
+    vertical = "vertical"
+    """
+    legend direction with the longest axis oriented along the vertical axis.
     """
 
 
@@ -542,7 +572,7 @@ class Title(ConfiguredBaseModel):
     orient: OrientEnum = Field(
         default=...,
         description="""The orientation of the title relative to the chart.""",
-        json_schema_extra={"linkml_meta": {"alias": "orient", "domain_of": ["Title"]}},
+        json_schema_extra={"linkml_meta": {"alias": "orient", "domain_of": ["Title", "Legend"]}},
     )
     baseline: BaseLineEnum = Field(
         default=...,
@@ -847,6 +877,445 @@ class BaseLineObject(ConfiguredBaseModel):
     )
 
 
+class Legend(ConfiguredBaseModel):
+    """
+    Vega like configuration for specifying legends in the SpatialData visualization ecosystem.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta(
+        {"abstract": True, "from_schema": "https://w3id.org/scverse/vega-scverse/legends"}
+    )
+
+    type: LegendType = Field(
+        default=...,
+        description="""The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).""",
+        json_schema_extra={"linkml_meta": {"alias": "type", "domain_of": ["Legend"]}},
+    )
+    direction: LegendDirections = Field(
+        default=...,
+        description="""The direction of the legend, one of 'vertical' or 'horizontal'.""",
+        json_schema_extra={"linkml_meta": {"alias": "direction", "domain_of": ["Legend"]}},
+    )
+    orient: Optional[Literal["none"]] = Field(
+        default="none",
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
+Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
+pixel coordinates. If there is demand, this can be changed.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "orient",
+                "domain_of": ["Title", "Legend"],
+                "equals_string": "none",
+                "ifabsent": "string(none)",
+            }
+        },
+    )
+    padding: Optional[float] = Field(
+        default=None,
+        description="""The padding between the border and content of the legend group in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend"]}},
+    )
+    fill: str = Field(
+        default=...,
+        description="""The name of a scale that maps to a fill color. This represents the color used to visualize discrete classes
+or continuous data in the legend.""",
+        json_schema_extra={"linkml_meta": {"alias": "fill", "domain_of": ["Legend"]}},
+    )
+    fillColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the background color of the legend.""",
+        json_schema_extra={"linkml_meta": {"alias": "fillColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the color of the legend border.""",
+        json_schema_extra={"linkml_meta": {"alias": "strokeColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeWidth: Optional[float] = Field(
+        default=None,
+        description="""The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
+vega equivalent expects a 'Scale'.""",
+        json_schema_extra={"linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend"]}},
+    )
+    labelOffset: float = Field(
+        default=...,
+        description="""Offset in pixels between legend labels their corresponding symbol or gradient.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelOffset", "domain_of": ["Legend"]}},
+    )
+    labelAlign: HorizontalAlignEnum = Field(
+        default=...,
+        description="""Horizontal text alignment for legend labels. In short this means where the label text is relative to the
+anchor point of the labels (this could be defined as the coordinates where the labels are specified to be).""",
+        json_schema_extra={"linkml_meta": {"alias": "labelAlign", "domain_of": ["Legend"]}},
+    )
+    labelColor: str = Field(
+        default=...,
+        description="""Text color for legend labels represented by a RGB hex string.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelColor", "domain_of": ["Legend"], "slot_uri": "rgbHexSlot"}},
+    )
+    labelOpacity: str = Field(
+        default=...,
+        description="""The opacity of legend labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Legend"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    labelFont: Optional[str] = Field(
+        default="Arial",
+        description="""Font name for legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFont", "domain_of": ["Legend"], "ifabsent": "string(Arial)"}},
+    )
+    labelFontSize: float = Field(
+        default=...,
+        description="""Font size in pixels for legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontSize", "domain_of": ["Legend"]}},
+    )
+    labelFontStyle: FontStyleEnum = Field(
+        default=...,
+        description="""Font style of legend labels""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontStyle", "domain_of": ["Legend"]}},
+    )
+    labelFontWeight: FontWeightEnum = Field(
+        default=...,
+        description="""Font weight of legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontWeight", "domain_of": ["Legend"]}},
+    )
+    legendX: float = Field(
+        default=...,
+        description="""The pixel x-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendX", "domain_of": ["Legend"]}},
+    )
+    legendY: float = Field(
+        default=...,
+        description="""The pixel y-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendY", "domain_of": ["Legend"]}},
+    )
+    zindex: float = Field(
+        default=...,
+        description="""The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
+legend groups.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Legend"]}},
+    )
+
+    @field_validator("fill")
+    def pattern_fill(cls, v):
+        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid fill format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid fill format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class CategoricalLegend(Legend):
+    """
+    Type of legend for categorical data.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/legends"})
+
+    columns: Optional[int] = Field(
+        default=None,
+        description="""The number of columns in which to arrange symbol legend entries. A value of 0 or lower indicates a single row 
+with one column per entry. The default is 0 for horizontal symbol legends and 1 for vertical symbol legends.""",
+        json_schema_extra={"linkml_meta": {"alias": "columns", "domain_of": ["CategoricalLegend"]}},
+    )
+    columnPadding: Optional[float] = Field(
+        default=None,
+        description="""The horizontal padding in pixels between symbol legend entries.""",
+        json_schema_extra={"linkml_meta": {"alias": "columnPadding", "domain_of": ["CategoricalLegend"]}},
+    )
+    rowPadding: Optional[float] = Field(
+        default=None,
+        description="""The vertical padding in pixels between symbol legend entries.""",
+        json_schema_extra={"linkml_meta": {"alias": "rowPadding", "domain_of": ["CategoricalLegend"]}},
+    )
+    type: LegendType = Field(
+        default=...,
+        description="""The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).""",
+        json_schema_extra={"linkml_meta": {"alias": "type", "domain_of": ["Legend"]}},
+    )
+    direction: LegendDirections = Field(
+        default=...,
+        description="""The direction of the legend, one of 'vertical' or 'horizontal'.""",
+        json_schema_extra={"linkml_meta": {"alias": "direction", "domain_of": ["Legend"]}},
+    )
+    orient: Optional[Literal["none"]] = Field(
+        default="none",
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
+Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
+pixel coordinates. If there is demand, this can be changed.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "orient",
+                "domain_of": ["Title", "Legend"],
+                "equals_string": "none",
+                "ifabsent": "string(none)",
+            }
+        },
+    )
+    padding: Optional[float] = Field(
+        default=None,
+        description="""The padding between the border and content of the legend group in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend"]}},
+    )
+    fill: str = Field(
+        default=...,
+        description="""The name of a scale that maps to a fill color. This represents the color used to visualize discrete classes
+or continuous data in the legend.""",
+        json_schema_extra={"linkml_meta": {"alias": "fill", "domain_of": ["Legend"]}},
+    )
+    fillColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the background color of the legend.""",
+        json_schema_extra={"linkml_meta": {"alias": "fillColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the color of the legend border.""",
+        json_schema_extra={"linkml_meta": {"alias": "strokeColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeWidth: Optional[float] = Field(
+        default=None,
+        description="""The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
+vega equivalent expects a 'Scale'.""",
+        json_schema_extra={"linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend"]}},
+    )
+    labelOffset: float = Field(
+        default=...,
+        description="""Offset in pixels between legend labels their corresponding symbol or gradient.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelOffset", "domain_of": ["Legend"]}},
+    )
+    labelAlign: HorizontalAlignEnum = Field(
+        default=...,
+        description="""Horizontal text alignment for legend labels. In short this means where the label text is relative to the
+anchor point of the labels (this could be defined as the coordinates where the labels are specified to be).""",
+        json_schema_extra={"linkml_meta": {"alias": "labelAlign", "domain_of": ["Legend"]}},
+    )
+    labelColor: str = Field(
+        default=...,
+        description="""Text color for legend labels represented by a RGB hex string.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelColor", "domain_of": ["Legend"], "slot_uri": "rgbHexSlot"}},
+    )
+    labelOpacity: str = Field(
+        default=...,
+        description="""The opacity of legend labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Legend"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    labelFont: Optional[str] = Field(
+        default="Arial",
+        description="""Font name for legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFont", "domain_of": ["Legend"], "ifabsent": "string(Arial)"}},
+    )
+    labelFontSize: float = Field(
+        default=...,
+        description="""Font size in pixels for legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontSize", "domain_of": ["Legend"]}},
+    )
+    labelFontStyle: FontStyleEnum = Field(
+        default=...,
+        description="""Font style of legend labels""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontStyle", "domain_of": ["Legend"]}},
+    )
+    labelFontWeight: FontWeightEnum = Field(
+        default=...,
+        description="""Font weight of legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontWeight", "domain_of": ["Legend"]}},
+    )
+    legendX: float = Field(
+        default=...,
+        description="""The pixel x-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendX", "domain_of": ["Legend"]}},
+    )
+    legendY: float = Field(
+        default=...,
+        description="""The pixel y-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendY", "domain_of": ["Legend"]}},
+    )
+    zindex: float = Field(
+        default=...,
+        description="""The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
+legend groups.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Legend"]}},
+    )
+
+    @field_validator("fill")
+    def pattern_fill(cls, v):
+        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid fill format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid fill format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
+class ColorBarLegend(Legend):
+    """
+    Type of legend for continuous data.
+    """
+
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({"from_schema": "https://w3id.org/scverse/vega-scverse/legends"})
+
+    gradientLength: float = Field(
+        default=...,
+        description="""The length in pixels of the primary axis of a color gradient. This value corresponds to the height of a 
+vertical gradient or the width of a horizontal gradient.""",
+        json_schema_extra={"linkml_meta": {"alias": "gradientLength", "domain_of": ["ColorBarLegend"]}},
+    )
+    gradientOpacity: str = Field(
+        default=...,
+        description="""Opacity of the color gradient.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "gradientOpacity", "domain_of": ["ColorBarLegend"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    gradientStrokeColor: str = Field(
+        default=...,
+        description="""Stroke color of the color gradient border.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "gradientStrokeColor", "domain_of": ["ColorBarLegend"], "slot_uri": "rgbHexSlot"}
+        },
+    )
+    gradientStrokeWidth: float = Field(
+        default=...,
+        description="""Stroke width of the color gradient border.""",
+        json_schema_extra={"linkml_meta": {"alias": "gradientStrokeWidth", "domain_of": ["ColorBarLegend"]}},
+    )
+    type: LegendType = Field(
+        default=...,
+        description="""The type of legend, either 'gradient' (continuous data) or 'discrete' (categorical data).""",
+        json_schema_extra={"linkml_meta": {"alias": "type", "domain_of": ["Legend"]}},
+    )
+    direction: LegendDirections = Field(
+        default=...,
+        description="""The direction of the legend, one of 'vertical' or 'horizontal'.""",
+        json_schema_extra={"linkml_meta": {"alias": "direction", "domain_of": ["Legend"]}},
+    )
+    orient: Optional[Literal["none"]] = Field(
+        default="none",
+        description="""The orientation of the legend, determining where the legend is placed relative to a chart's data rectangle. 
+Currently, only 'none' is allowed here as in Vega this allows to directly specify the positioning in 
+pixel coordinates. If there is demand, this can be changed.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "orient",
+                "domain_of": ["Title", "Legend"],
+                "equals_string": "none",
+                "ifabsent": "string(none)",
+            }
+        },
+    )
+    padding: Optional[float] = Field(
+        default=None,
+        description="""The padding between the border and content of the legend group in pixels.""",
+        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend"]}},
+    )
+    fill: str = Field(
+        default=...,
+        description="""The name of a scale that maps to a fill color. This represents the color used to visualize discrete classes
+or continuous data in the legend.""",
+        json_schema_extra={"linkml_meta": {"alias": "fill", "domain_of": ["Legend"]}},
+    )
+    fillColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the background color of the legend.""",
+        json_schema_extra={"linkml_meta": {"alias": "fillColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeColor: Optional[str] = Field(
+        default=None,
+        description="""Hex string representing a RGBA color, which is the color of the legend border.""",
+        json_schema_extra={"linkml_meta": {"alias": "strokeColor", "domain_of": ["Legend"], "slot_uri": "rgbaHexSlot"}},
+    )
+    strokeWidth: Optional[float] = Field(
+        default=None,
+        description="""The width of the legend border in pixels. This property deviates from its Vega equivalent, in that the 
+vega equivalent expects a 'Scale'.""",
+        json_schema_extra={"linkml_meta": {"alias": "strokeWidth", "domain_of": ["Legend"]}},
+    )
+    labelOffset: float = Field(
+        default=...,
+        description="""Offset in pixels between legend labels their corresponding symbol or gradient.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelOffset", "domain_of": ["Legend"]}},
+    )
+    labelAlign: HorizontalAlignEnum = Field(
+        default=...,
+        description="""Horizontal text alignment for legend labels. In short this means where the label text is relative to the
+anchor point of the labels (this could be defined as the coordinates where the labels are specified to be).""",
+        json_schema_extra={"linkml_meta": {"alias": "labelAlign", "domain_of": ["Legend"]}},
+    )
+    labelColor: str = Field(
+        default=...,
+        description="""Text color for legend labels represented by a RGB hex string.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelColor", "domain_of": ["Legend"], "slot_uri": "rgbHexSlot"}},
+    )
+    labelOpacity: str = Field(
+        default=...,
+        description="""The opacity of legend labels.""",
+        json_schema_extra={
+            "linkml_meta": {"alias": "labelOpacity", "domain_of": ["Legend"], "slot_uri": "opacityValueSlot"}
+        },
+    )
+    labelFont: Optional[str] = Field(
+        default="Arial",
+        description="""Font name for legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFont", "domain_of": ["Legend"], "ifabsent": "string(Arial)"}},
+    )
+    labelFontSize: float = Field(
+        default=...,
+        description="""Font size in pixels for legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontSize", "domain_of": ["Legend"]}},
+    )
+    labelFontStyle: FontStyleEnum = Field(
+        default=...,
+        description="""Font style of legend labels""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontStyle", "domain_of": ["Legend"]}},
+    )
+    labelFontWeight: FontWeightEnum = Field(
+        default=...,
+        description="""Font weight of legend labels.""",
+        json_schema_extra={"linkml_meta": {"alias": "labelFontWeight", "domain_of": ["Legend"]}},
+    )
+    legendX: float = Field(
+        default=...,
+        description="""The pixel x-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendX", "domain_of": ["Legend"]}},
+    )
+    legendY: float = Field(
+        default=...,
+        description="""The pixel y-coordinate of the legend group.""",
+        json_schema_extra={"linkml_meta": {"alias": "legendY", "domain_of": ["Legend"]}},
+    )
+    zindex: float = Field(
+        default=...,
+        description="""The integer z-index indicating the layering of the legend group relative to other axis, mark, and 
+legend groups.""",
+        json_schema_extra={"linkml_meta": {"alias": "zindex", "domain_of": ["Legend"]}},
+    )
+
+    @field_validator("fill")
+    def pattern_fill(cls, v):
+        pattern = re.compile(r"^color_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid fill format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid fill format: {v}"
+            raise ValueError(err_msg)
+        return v
+
+
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
 PositionItem.model_rebuild()
@@ -867,4 +1336,7 @@ AxisItem.model_rebuild()
 OpacityObject.model_rebuild()
 HorizontalAlignObject.model_rebuild()
 BaseLineObject.model_rebuild()
+Legend.model_rebuild()
+CategoricalLegend.model_rebuild()
+ColorBarLegend.model_rebuild()
 

@@ -18,10 +18,10 @@ default_range: string
 
 imports:
   - linkml:types
-  - encode
+  - linkml_encode
   - linkml_scales
-  - axes
-  - legends
+  - linkml_axes
+  - linkml_legends
 
 created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421

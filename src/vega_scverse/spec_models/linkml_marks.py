@@ -52,7 +52,7 @@ linkml_meta = LinkMLMeta(
         "description": "Vega like specification for the marks used in view "
         "configurations for the scverse visualization ecosystem.",
         "id": "https://w3id.org/scverse/vega-scverse/marks",
-        "imports": ["linkml:types", "encode", "linkml_scales", "axes", "legends"],
+        "imports": ["linkml:types", "linkml_encode", "linkml_scales", "linkml_axes", "linkml_legends"],
         "license": "BSD-3",
         "name": "vega-scverse-marks",
         "prefixes": {
@@ -64,7 +64,7 @@ linkml_meta = LinkMLMeta(
             },
         },
         "see_also": ["https://scverse.github.io/vega-scverse"],
-        "source_file": "src\\vega_scverse\\schema\\marks.yaml",
+        "source_file": "src\\vega_scverse\\schema\\linkml_marks.yaml",
         "title": "vega-scverse-marks",
     }
 )

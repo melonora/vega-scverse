@@ -1,5 +1,5 @@
 from .__about__ import __version__
-from .spec_models.specification import *
+from .spec_models.linkml_specification import *
 from .spec_models.scales import *
 from .spec_models.data import *
 
