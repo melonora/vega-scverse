@@ -2,5 +2,5 @@
   "type": "aggregate",
   "field": ["instance_id"],
   "ops": ["any"],
-  "as_": ["instance_id"]
+  "as": ["instance_id"]
 }

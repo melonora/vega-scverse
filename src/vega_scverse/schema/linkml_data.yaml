@@ -78,7 +78,7 @@ classes:
         range: FilterTransform
         required: true
 
-  SpatialDataElementObject:
+  BaseSpatialDataElementObject:
     is_a: DataObject
     description: |-
       Data object pertaining to an element within the SpatialData object.
@@ -100,12 +100,12 @@ classes:
           transforms.
         multivalued: true
         any_of:
-          - range: LookupTransform
+          - range: BaseLookupTransform
           - range: FilterTransform
           - range: FilterChannelTransform
-          - range: AggregateTransform
-          - range: SpreadTransform
-          - range: NormalizationFormulaTransform
+          - range: BaseAggregateTransform
+          - range: BaseSpreadTransform
+          - range: BaseNormalizationFormulaTransform
         required: true
 
 ############ Transforms ############
@@ -162,7 +162,7 @@ classes:
           - range: string
           - range: integer
 
-  LookupTransform:
+  BaseLookupTransform:
     is_a: Transform
     description: |-
       Transform extending a primary data stream by looking up values on a secondary data stream.
@@ -205,7 +205,7 @@ classes:
         required: false
         ifabsent: null
 
-  AggregateTransform:
+  BaseAggregateTransform:
     is_a: Transform
     description: |-
       Group and summarize an input data stream to produce a derived output stream using particular summary statistics
@@ -237,7 +237,7 @@ classes:
         range: string
         required: true
 
-  SpreadTransform:
+  BaseSpreadTransform:
     is_a: Transform
     description: |-
       Datashade transform expanding each pixel in a rasterized image by a specified number of pixels to make sparse 
@@ -268,7 +268,7 @@ classes:
         range: string
         required: true
 
-  NormalizationFormulaTransform:
+  BaseNormalizationFormulaTransform:
     is_a: Transform
     description: |-
       A formula to transform data.

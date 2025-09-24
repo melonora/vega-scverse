@@ -1,5 +1,5 @@
 {
   "type": "formula",
   "expr": "clamp((datum.instance_id - 3.0) / (7.0 - 3.0), 0, 1)",
-  "as_": "3b09bc1d-04c7-49e7-948e-9c4fd80a7e9c"
+  "as": "3b09bc1d-04c7-49e7-948e-9c4fd80a7e9c"
 }

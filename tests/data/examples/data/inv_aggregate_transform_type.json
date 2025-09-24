@@ -2,5 +2,5 @@
   "type": "not_aggregate",
   "field": ["genes"],
   "ops": ["count"],
-  "as_": ["genes"]
+  "as": ["genes"]
 }

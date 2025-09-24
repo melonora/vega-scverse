@@ -24,13 +24,13 @@
       "key": "instance_id",
       "fields": ["instance_ids"],
       "values": ["channel_0_sum"],
-      "as_": ["channel_0_sum"],
+      "as": ["channel_0_sum"],
       "default": null
     },
     {
       "type": "formula",
       "expr": "clamp((datum.value - 400.0) / (1000.0 - 400.0), 0, 1)",
-      "as_": "ae0c077f-cdea-4247-a5bf-26e045ab199e"
+      "as": "ae0c077f-cdea-4247-a5bf-26e045ab199e"
     }
   ]
 }

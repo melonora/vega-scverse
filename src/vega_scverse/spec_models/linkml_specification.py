@@ -470,7 +470,7 @@ followed by an underscore and pseudo UUID.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "format",
-                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "SpatialDataElementObject"],
+                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "BaseSpatialDataElementObject"],
             }
         },
     )
@@ -506,7 +506,7 @@ class SpatialDataObject(DataObject):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "format",
-                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "SpatialDataElementObject"],
+                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "BaseSpatialDataElementObject"],
             }
         },
     )
@@ -543,7 +543,7 @@ class BaseTableObject(DataObject):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "format",
-                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "SpatialDataElementObject"],
+                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "BaseSpatialDataElementObject"],
             }
         },
     )
@@ -552,7 +552,7 @@ class BaseTableObject(DataObject):
         description="""The source of the SpatialData element. Must be the name / identifier of a SpatialData Object in the 
 view configuration.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "source", "domain_of": ["BaseTableObject", "SpatialDataElementObject"]}
+            "linkml_meta": {"alias": "source", "domain_of": ["BaseTableObject", "BaseSpatialDataElementObject"]}
         },
     )
     transform: list[FilterTransform] = Field(
@@ -560,7 +560,7 @@ view configuration.""",
         description="""An array containing a single transform 'filter_element' with an expression stating which table to obtain
 from the source SpatialData object stream.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "transform", "domain_of": ["BaseTableObject", "SpatialDataElementObject"]}
+            "linkml_meta": {"alias": "transform", "domain_of": ["BaseTableObject", "BaseSpatialDataElementObject"]}
         },
     )
     name: str = Field(
@@ -597,7 +597,7 @@ followed by an underscore and pseudo UUID.""",
         return v
 
 
-class SpatialDataElementObject(DataObject):
+class BaseSpatialDataElementObject(DataObject):
     """
     Data object pertaining to an element within the SpatialData object.
     """
@@ -609,7 +609,7 @@ class SpatialDataElementObject(DataObject):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "format",
-                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "SpatialDataElementObject"],
+                "domain_of": ["DataObject", "SpatialDataObject", "BaseTableObject", "BaseSpatialDataElementObject"],
             }
         },
     )
@@ -618,17 +618,17 @@ class SpatialDataElementObject(DataObject):
         description="""The source of the SpatialData element. Must be the name / identifier of a SpatialData Object in the 
 view configuration.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "source", "domain_of": ["BaseTableObject", "SpatialDataElementObject"]}
+            "linkml_meta": {"alias": "source", "domain_of": ["BaseTableObject", "BaseSpatialDataElementObject"]}
         },
     )
     transform: list[
         Union[
-            AggregateTransform,
+            BaseAggregateTransform,
+            BaseLookupTransform,
+            BaseNormalizationFormulaTransform,
+            BaseSpreadTransform,
             FilterChannelTransform,
             FilterTransform,
-            LookupTransform,
-            NormalizationFormulaTransform,
-            SpreadTransform,
         ]
     ] = Field(
         default=...,
@@ -640,14 +640,14 @@ transforms.""",
             "linkml_meta": {
                 "alias": "transform",
                 "any_of": [
-                    {"range": "LookupTransform"},
+                    {"range": "BaseLookupTransform"},
                     {"range": "FilterTransform"},
                     {"range": "FilterChannelTransform"},
-                    {"range": "AggregateTransform"},
-                    {"range": "SpreadTransform"},
-                    {"range": "NormalizationFormulaTransform"},
+                    {"range": "BaseAggregateTransform"},
+                    {"range": "BaseSpreadTransform"},
+                    {"range": "BaseNormalizationFormulaTransform"},
                 ],
-                "domain_of": ["BaseTableObject", "SpatialDataElementObject"],
+                "domain_of": ["BaseTableObject", "BaseSpatialDataElementObject"],
             }
         },
     )
@@ -741,7 +741,7 @@ class FilterTransform(Transform):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "expr",
-                "domain_of": ["FilterTransform", "FilterChannelTransform", "NormalizationFormulaTransform"],
+                "domain_of": ["FilterTransform", "FilterChannelTransform", "BaseNormalizationFormulaTransform"],
             }
         },
     )
@@ -796,7 +796,7 @@ prevent a different context when ordering of the channels changes.""",
             "linkml_meta": {
                 "alias": "expr",
                 "any_of": [{"range": "string"}, {"range": "integer"}],
-                "domain_of": ["FilterTransform", "FilterChannelTransform", "NormalizationFormulaTransform"],
+                "domain_of": ["FilterTransform", "FilterChannelTransform", "BaseNormalizationFormulaTransform"],
             }
         },
     )
@@ -815,7 +815,7 @@ will select the scale of a multiscale raster data element.""",
     )
 
 
-class LookupTransform(Transform):
+class BaseLookupTransform(Transform):
     """
     Transform extending a primary data stream by looking up values on a secondary data stream.
     """
@@ -830,23 +830,23 @@ class LookupTransform(Transform):
     from_: str = Field(
         default=...,
         description="""The name of the secondary data stream upon which to perform the lookup.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["LookupTransform", "Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["BaseLookupTransform", "Mark"]}},
     )
     key: str = Field(
         default=...,
         description="""The key field on the secondary stream, e.g. in table lookup it would be for example instance_id.""",
-        json_schema_extra={"linkml_meta": {"alias": "key", "domain_of": ["LookupTransform"]}},
+        json_schema_extra={"linkml_meta": {"alias": "key", "domain_of": ["BaseLookupTransform"]}},
     )
     fields: list[str] = Field(
         default=...,
         description="""The data fields to copy from the secondary stream to the primary stream.""",
-        json_schema_extra={"linkml_meta": {"alias": "fields", "domain_of": ["LookupTransform"]}},
+        json_schema_extra={"linkml_meta": {"alias": "fields", "domain_of": ["BaseLookupTransform"]}},
     )
     values: list[str] = Field(
         default=...,
         description="""To be added""",
         json_schema_extra={
-            "linkml_meta": {"alias": "values", "domain_of": ["LookupTransform", "Axis", "ColorBarLegend"]}
+            "linkml_meta": {"alias": "values", "domain_of": ["BaseLookupTransform", "Axis", "ColorBarLegend"]}
         },
     )
     as_: list[str] = Field(
@@ -856,10 +856,10 @@ class LookupTransform(Transform):
             "linkml_meta": {
                 "alias": "as_",
                 "domain_of": [
-                    "LookupTransform",
-                    "AggregateTransform",
-                    "SpreadTransform",
-                    "NormalizationFormulaTransform",
+                    "BaseLookupTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
+                    "BaseNormalizationFormulaTransform",
                 ],
             }
         },
@@ -867,7 +867,7 @@ class LookupTransform(Transform):
     default: Optional[str] = Field(
         default=None,
         description="""The default value to assign if lookup fails""",
-        json_schema_extra={"linkml_meta": {"alias": "default", "domain_of": ["LookupTransform"]}},
+        json_schema_extra={"linkml_meta": {"alias": "default", "domain_of": ["BaseLookupTransform"]}},
     )
     type: Literal["lookup"] = Field(
         default="lookup",
@@ -896,7 +896,7 @@ class LookupTransform(Transform):
         return v
 
 
-class AggregateTransform(Transform):
+class BaseAggregateTransform(Transform):
     """
     Group and summarize an input data stream to produce a derived output stream using particular summary statistics
     operations, e.g. sum, average etc..
@@ -917,8 +917,8 @@ arrays.""",
             "linkml_meta": {
                 "alias": "field",
                 "domain_of": [
-                    "AggregateTransform",
-                    "SpreadTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
                     "ContinuousColorDomain",
                     "ColorItem",
                     "AxisItem",
@@ -931,7 +931,7 @@ arrays.""",
         default=...,
         description="""The summary statistic to apply per field. This deviates from vega where ops has a single string value
 while here it is an array with a length equal to 'field' and 'as'.""",
-        json_schema_extra={"linkml_meta": {"alias": "ops", "domain_of": ["AggregateTransform"]}},
+        json_schema_extra={"linkml_meta": {"alias": "ops", "domain_of": ["BaseAggregateTransform"]}},
     )
     as_: list[str] = Field(
         default=...,
@@ -941,10 +941,10 @@ the same as the values in 'field'.""",
             "linkml_meta": {
                 "alias": "as_",
                 "domain_of": [
-                    "LookupTransform",
-                    "AggregateTransform",
-                    "SpreadTransform",
-                    "NormalizationFormulaTransform",
+                    "BaseLookupTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
+                    "BaseNormalizationFormulaTransform",
                 ],
             }
         },
@@ -963,7 +963,7 @@ the same as the values in 'field'.""",
     )
 
 
-class SpreadTransform(Transform):
+class BaseSpreadTransform(Transform):
     """
     Datashade transform expanding each pixel in a rasterized image by a specified number of pixels to make sparse
     data more visible. This transform MUST be preceded by an aggregate transform and is optionally preceded by
@@ -985,8 +985,8 @@ arrays.""",
             "linkml_meta": {
                 "alias": "field",
                 "domain_of": [
-                    "AggregateTransform",
-                    "SpreadTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
                     "ContinuousColorDomain",
                     "ColorItem",
                     "AxisItem",
@@ -998,7 +998,7 @@ arrays.""",
     px: int = Field(
         default=...,
         description="""The amount of pixels by which to expand each pixel to make data more visible.""",
-        json_schema_extra={"linkml_meta": {"alias": "px", "domain_of": ["SpreadTransform"]}},
+        json_schema_extra={"linkml_meta": {"alias": "px", "domain_of": ["BaseSpreadTransform"]}},
     )
     as_: list[str] = Field(
         default=...,
@@ -1008,10 +1008,10 @@ implementation this is the same as the values in 'field'.""",
             "linkml_meta": {
                 "alias": "as_",
                 "domain_of": [
-                    "LookupTransform",
-                    "AggregateTransform",
-                    "SpreadTransform",
-                    "NormalizationFormulaTransform",
+                    "BaseLookupTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
+                    "BaseNormalizationFormulaTransform",
                 ],
             }
         },
@@ -1030,7 +1030,7 @@ implementation this is the same as the values in 'field'.""",
     )
 
 
-class NormalizationFormulaTransform(Transform):
+class BaseNormalizationFormulaTransform(Transform):
     """
     A formula to transform data.
     """
@@ -1049,7 +1049,7 @@ data that is normalized is indicated as 'datum.<name_of_column>'.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "expr",
-                "domain_of": ["FilterTransform", "FilterChannelTransform", "NormalizationFormulaTransform"],
+                "domain_of": ["FilterTransform", "FilterChannelTransform", "BaseNormalizationFormulaTransform"],
             }
         },
     )
@@ -1060,10 +1060,10 @@ data that is normalized is indicated as 'datum.<name_of_column>'.""",
             "linkml_meta": {
                 "alias": "as_",
                 "domain_of": [
-                    "LookupTransform",
-                    "AggregateTransform",
-                    "SpreadTransform",
-                    "NormalizationFormulaTransform",
+                    "BaseLookupTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
+                    "BaseNormalizationFormulaTransform",
                 ],
             }
         },
@@ -1568,8 +1568,8 @@ a source for the color mapping. In case of raster data with a single channel, th
             "linkml_meta": {
                 "alias": "field",
                 "domain_of": [
-                    "AggregateTransform",
-                    "SpreadTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
                     "ContinuousColorDomain",
                     "ColorItem",
                     "AxisItem",
@@ -1763,7 +1763,7 @@ backing scale domain.""",
             "linkml_meta": {
                 "alias": "values",
                 "any_of": [{"range": "float"}, {"range": "integer"}],
-                "domain_of": ["LookupTransform", "Axis", "ColorBarLegend"],
+                "domain_of": ["BaseLookupTransform", "Axis", "ColorBarLegend"],
             }
         },
     )
@@ -2173,7 +2173,7 @@ the height of a horizontal gradient.""",
         description="""Explicitly set the visible legend values. The array entries should be legal values in the backing scale 
 domain.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "values", "domain_of": ["LookupTransform", "Axis", "ColorBarLegend"]}
+            "linkml_meta": {"alias": "values", "domain_of": ["BaseLookupTransform", "Axis", "ColorBarLegend"]}
         },
     )
     type: LegendType = Field(
@@ -2745,8 +2745,8 @@ class ColorItem(ConfiguredBaseModel):
             "linkml_meta": {
                 "alias": "field",
                 "domain_of": [
-                    "AggregateTransform",
-                    "SpreadTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
                     "ContinuousColorDomain",
                     "ColorItem",
                     "AxisItem",
@@ -2865,8 +2865,8 @@ class AxisItem(ConfiguredBaseModel):
             "linkml_meta": {
                 "alias": "field",
                 "domain_of": [
-                    "AggregateTransform",
-                    "SpreadTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
                     "ContinuousColorDomain",
                     "ColorItem",
                     "AxisItem",
@@ -3661,8 +3661,8 @@ https://vega.github.io/vega/docs/expressions/ and it MUST evaluate to either 'tr
             "linkml_meta": {
                 "alias": "field",
                 "domain_of": [
-                    "AggregateTransform",
-                    "SpreadTransform",
+                    "BaseAggregateTransform",
+                    "BaseSpreadTransform",
                     "ContinuousColorDomain",
                     "ColorItem",
                     "AxisItem",
@@ -3855,7 +3855,7 @@ class Mark(ConfiguredBaseModel):
     from_: MarkDataSource = Field(
         default=...,
         description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["LookupTransform", "Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["BaseLookupTransform", "Mark"]}},
     )
     encode: str = Field(
         default=...,
@@ -3949,7 +3949,7 @@ class BaseRasterImageMark(Mark):
     from_: MarkDataSource = Field(
         default=...,
         description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["LookupTransform", "Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["BaseLookupTransform", "Mark"]}},
     )
     encode: ImageEncode = Field(
         default=...,
@@ -4006,7 +4006,7 @@ class BaseRasterLabelMark(Mark):
     from_: MarkDataSource = Field(
         default=...,
         description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["LookupTransform", "Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["BaseLookupTransform", "Mark"]}},
     )
     encode: LabelEncode = Field(
         default=...,
@@ -4062,7 +4062,7 @@ class BasePointsMark(Mark):
     from_: MarkDataSource = Field(
         default=...,
         description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["LookupTransform", "Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["BaseLookupTransform", "Mark"]}},
     )
     encode: SymbolEncode = Field(
         default=...,
@@ -4118,7 +4118,7 @@ class BaseShapesMark(Mark):
     from_: MarkDataSource = Field(
         default=...,
         description="""The data stream used as the source for the graphical mark.""",
-        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["LookupTransform", "Mark"]}},
+        json_schema_extra={"linkml_meta": {"alias": "from_", "domain_of": ["BaseLookupTransform", "Mark"]}},
     )
     encode: PathEncode = Field(
         default=...,
@@ -4304,7 +4304,7 @@ is defined with this class. This class should at least have one attribute define
         description="""The title directive adds a descriptive title to a chart.""",
         json_schema_extra={"linkml_meta": {"alias": "title", "domain_of": ["BaseViewConfiguration"]}},
     )
-    data: list[Union[BaseTableObject, SpatialDataElementObject, SpatialDataObject]] = Field(
+    data: list[Union[BaseSpatialDataElementObject, BaseTableObject, SpatialDataObject]] = Field(
         default=...,
         description="""Scverse data set definitions and transforms define the data to load and how to process it.""",
         json_schema_extra={
@@ -4313,7 +4313,7 @@ is defined with this class. This class should at least have one attribute define
                 "any_of": [
                     {"range": "SpatialDataObject"},
                     {"range": "BaseTableObject"},
-                    {"range": "SpatialDataElementObject"},
+                    {"range": "BaseSpatialDataElementObject"},
                 ],
                 "domain_of": ["ContinuousColorDomain", "MarkDataSource", "BaseViewConfiguration"],
             }
@@ -4382,14 +4382,14 @@ fields, or scales can be used to map data values to visual values.""",
 DataObject.model_rebuild()
 SpatialDataObject.model_rebuild()
 BaseTableObject.model_rebuild()
-SpatialDataElementObject.model_rebuild()
+BaseSpatialDataElementObject.model_rebuild()
 Transform.model_rebuild()
 FilterTransform.model_rebuild()
 FilterChannelTransform.model_rebuild()
-LookupTransform.model_rebuild()
-AggregateTransform.model_rebuild()
-SpreadTransform.model_rebuild()
-NormalizationFormulaTransform.model_rebuild()
+BaseLookupTransform.model_rebuild()
+BaseAggregateTransform.model_rebuild()
+BaseSpreadTransform.model_rebuild()
+BaseNormalizationFormulaTransform.model_rebuild()
 BaseFormat.model_rebuild()
 SpatialDataFormat.model_rebuild()
 ElementFormat.model_rebuild()

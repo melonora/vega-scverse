@@ -2,5 +2,5 @@
   "type": "spread",
   "field": ["instance_id"],
   "px": 5,
-  "as_": ["instance_id"]
+  "as": ["instance_id"]
 }

@@ -1,4 +1,7 @@
-from .linkml_marks import BaseGroupMark, BaseRasterImageMark, BaseRasterLabelMark, BaseShapesMark, BasePointsMark, MarkDataSource
+from typing import Union
+
+from .linkml_marks import BaseGroupMark, BaseRasterImageMark, BaseRasterLabelMark, BaseShapesMark, BasePointsMark, \
+    MarkDataSource, TextMark
 from pydantic import Field
 
 from .scales import AxisScale, CategoricalColorScale
@@ -56,6 +59,29 @@ class GroupMark(BaseGroupMark):
                     {"range": "LinearColorScale"},
                 ],
                 "domain_of": ["BaseScales", "BaseGroupMark"],
+            }
+        },
+    )
+    marks: list[
+        Union[PointsMark, RasterImageMark, RasterLabelMark, ShapesMark, TextMark]
+    ] = Field(
+        default=...,
+        description="""Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting
+        symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose
+        properties can be set according to backing data. Mark property definitions may be simple constants or data
+        fields, or scales can be used to map data values to visual values.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "marks",
+                "any_of": [
+                    {"range": "BaseRasterImageMark"},
+                    {"range": "BaseRasterLabelMark"},
+                    {"range": "BasePointsMark"},
+                    {"range": "BaseShapesMark"},
+                    {"range": "TextMark"},
+                    {"range": "BaseGroupMark"},
+                ],
+                "domain_of": ["BaseGroupMark", "BaseViewConfiguration"],
             }
         },
     )

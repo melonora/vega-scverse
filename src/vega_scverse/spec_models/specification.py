@@ -1,11 +1,12 @@
 from typing import Optional, Union
 
-from .linkml_specification import BaseViewConfiguration, TextMark
+from .linkml_specification import BaseViewConfiguration, TextMark, SpatialDataObject
 from pydantic import Field
 
 from .scales import AxisScale, CategoricalColorScale
 from .linkml_scales import LinearColorScale
 from .marks import ShapesMark, RasterLabelMark, RasterImageMark, PointsMark, GroupMark
+from .data import SpatialDataElementObject, TableObject
 
 
 class ViewConfiguration(BaseViewConfiguration):
@@ -18,6 +19,21 @@ class ViewConfiguration(BaseViewConfiguration):
                 "alias": "$schema",
                 "domain_of": ["BaseViewConfiguration"],
                 "ifabsent": "string(https://github.com/melonora/vega-scverse/blob/main/src/vega_scverse/schema/linkml_specification.yaml)",
+            }
+        },
+    )
+    data: list[Union[SpatialDataElementObject, TableObject, SpatialDataObject]] = Field(
+        default=...,
+        description="""Scverse data set definitions and transforms define the data to load and how to process it.""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "data",
+                "any_of": [
+                    {"range": "SpatialDataObject"},
+                    {"range": "BaseTableObject"},
+                    {"range": "BaseSpatialDataElementObject"},
+                ],
+                "domain_of": ["ContinuousColorDomain", "MarkDataSource", "BaseViewConfiguration"],
             }
         },
     )

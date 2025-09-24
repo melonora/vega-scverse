@@ -55,7 +55,7 @@
         {
           "type": "formula",
           "expr": "(datum.value - 0.1) / (0.5 - 0.1)",
-          "as_": "8d7ccef3-8b28-4588-92bb-afdf8e57a5e9"
+          "as": "8d7ccef3-8b28-4588-92bb-afdf8e57a5e9"
         }
       ]
     }

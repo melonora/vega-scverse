@@ -20,7 +20,7 @@
       "key": "instance_id",
       "fields": ["instance_ids"],
       "values": ["extra_feature"],
-      "as_": ["extra_feature"],
+      "as": ["extra_feature"],
       "default": null
     }
   ]
