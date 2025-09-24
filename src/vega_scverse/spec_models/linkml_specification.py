@@ -728,7 +728,7 @@ class FilterTransform(Transform):
                     "'filter_scale'\n"
                     "will select the scale of a multiscale "
                     "raster data element.",
-                    "equals_string_in": ["filter_element", "filter_cs", "filter_scale"],
+                    "equals_string_in": ["filter_element", "filter_cs", "filter_scale", "filter_layer"],
                     "name": "type",
                 }
             },
@@ -745,7 +745,7 @@ class FilterTransform(Transform):
             }
         },
     )
-    type: Literal["filter_element", "filter_cs", "filter_scale"] = Field(
+    type: Literal["filter_element", "filter_cs", "filter_scale", "filter_layer"] = Field(
         default=...,
         description="""The type of filter transform. 'filter_element' will filter / select a particular element from a data source,
 'filter_cs' will select the coordinate system in which the element should be visualized and 'filter_scale'
@@ -754,7 +754,7 @@ will select the scale of a multiscale raster data element.""",
             "linkml_meta": {
                 "alias": "type",
                 "domain_of": ["Transform", "BaseFormat", "Scale", "Legend", "Mark", "TextMark", "BaseGroupMark"],
-                "equals_string_in": ["filter_element", "filter_cs", "filter_scale"],
+                "equals_string_in": ["filter_element", "filter_cs", "filter_scale", "filter_layer"],
             }
         },
     )

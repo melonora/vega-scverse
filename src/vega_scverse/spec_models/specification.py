@@ -37,8 +37,8 @@ class ViewConfiguration(BaseViewConfiguration):
             }
         },
     )
-    scales: list[AxisScale | CategoricalColorScale | LinearColorScale] = Field(
-        default=...,
+    scales: Optional[list[AxisScale | CategoricalColorScale | LinearColorScale]] = Field(
+        default=None,
         description="""Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes).
         Scales are a fundamental building block of data visualization, as they determine the nature of visual
         encodings.""",

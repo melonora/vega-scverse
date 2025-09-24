@@ -132,7 +132,7 @@ classes:
           The type of filter transform. 'filter_element' will filter / select a particular element from a data source,
           'filter_cs' will select the coordinate system in which the element should be visualized and 'filter_scale'
           will select the scale of a multiscale raster data element.
-        equals_string_in: [filter_element, filter_cs, filter_scale]
+        equals_string_in: [filter_element, filter_cs, filter_scale, filter_layer]
     attributes:
       expr:
         description: |-
