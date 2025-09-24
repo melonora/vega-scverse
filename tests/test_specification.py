@@ -25,3 +25,21 @@ def test_label_viewconfig(json_path):
     """Ensure complete sdata objects within data objects can be loaded."""
     obj = json_loader.load(json_path, target_class=ViewConfiguration)
     assert obj
+
+@pytest.mark.parametrize(
+    "json_path",
+    [p for p in DATA_DIR.glob("*.json") if p.stem.startswith("points")]
+)
+def test_points_viewconfig(json_path):
+    """Ensure complete sdata objects within data objects can be loaded."""
+    obj = json_loader.load(json_path, target_class=ViewConfiguration)
+    assert obj
+
+@pytest.mark.parametrize(
+    "json_path",
+    [p for p in DATA_DIR.glob("*.json") if p.stem.startswith("shapes")]
+)
+def test_shapes_viewconfig(json_path):
+    """Ensure complete sdata objects within data objects can be loaded."""
+    obj = json_loader.load(json_path, target_class=ViewConfiguration)
+    assert obj
