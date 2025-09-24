@@ -155,7 +155,7 @@ classes:
           LinearColorScale must be applied. In Vega this is only defined when the type of Scale is
           ordinal, but we deviate from that.
         required: true
-        pattern: "^.*_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        pattern: "^.*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
       field:
         description: |-
           If the data source is a table, then the field is the column within the table that is used as 

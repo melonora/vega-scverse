@@ -1,6 +1,6 @@
 {
   "type": "raster_label",
-  "from_": {
+  "from": {
     "data": "blobs_labels_e2efe281-9f48-4f2d-aa63-ae4f7b872b9c"
   },
   "zindex": 0,

@@ -1,6 +1,6 @@
 {
   "type": "raster_image",
-  "from_": {
+  "from": {
     "data": "blobs_giant_image_83d630c4-742c-4760-8689-cfc36982f767"
   },
   "zindex": 0,

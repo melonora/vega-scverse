@@ -16,7 +16,7 @@
     },
     {
       "type": "lookup",
-      "from_": "1ff46703-be53-4b80-95df-f6995a1e9ba5",
+      "from": "1ff46703-be53-4b80-95df-f6995a1e9ba5",
       "key": "instance_id",
       "fields": ["instance_ids"],
       "values": ["extra_feature"],

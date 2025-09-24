@@ -1581,7 +1581,7 @@ a source for the color mapping. In case of raster data with a single channel, th
 
     @field_validator("data")
     def pattern_data(cls, v):
-        pattern = re.compile(r"^.*_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+        pattern = re.compile(r"^.*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
         if isinstance(v, list):
             for element in v:
                 if isinstance(element, str) and not pattern.match(element):
@@ -3907,7 +3907,7 @@ class MarkDataSource(ConfiguredBaseModel):
         return v
 
 
-class RasterImageMark(Mark):
+class BaseRasterImageMark(Mark):
     """
     Graphical mark encoding an image.
     """
@@ -3964,7 +3964,7 @@ class RasterImageMark(Mark):
     )
 
 
-class RasterLabelMark(Mark):
+class BaseRasterLabelMark(Mark):
     """
     Graphical mark encoding a label image.
     """
@@ -4021,7 +4021,7 @@ class RasterLabelMark(Mark):
     )
 
 
-class PointsMark(Mark):
+class BasePointsMark(Mark):
     """
     Graphical mark for encoding points data, using a vega like symbol mark.
     """
@@ -4077,7 +4077,7 @@ class PointsMark(Mark):
     )
 
 
-class ShapesMark(Mark):
+class BaseShapesMark(Mark):
     """
     Graphical mark for encoding shapes data, using a vega like path mark.
     """
@@ -4219,11 +4219,11 @@ encodings.""",
             "linkml_meta": {
                 "alias": "legend",
                 "any_of": [{"range": "CategoricalLegend"}, {"range": "ColorBarLegend"}],
-                "domain_of": ["BaseGroupMark"],
+                "domain_of": ["BaseGroupMark", "BaseViewConfiguration"],
             }
         },
     )
-    marks: list[Union[PointsMark, RasterImageMark, RasterLabelMark, ShapesMark, TextMark]] = Field(
+    marks: list[Union[BasePointsMark, BaseRasterImageMark, BaseRasterLabelMark, BaseShapesMark, TextMark]] = Field(
         default=...,
         description="""Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting
 symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose
@@ -4233,10 +4233,10 @@ fields, or scales can be used to map data values to visual values.""",
             "linkml_meta": {
                 "alias": "marks",
                 "any_of": [
-                    {"range": "RasterImageMark"},
-                    {"range": "RasterLabelMark"},
-                    {"range": "PointsMark"},
-                    {"range": "ShapesMark"},
+                    {"range": "BaseRasterImageMark"},
+                    {"range": "BaseRasterLabelMark"},
+                    {"range": "BasePointsMark"},
+                    {"range": "BaseShapesMark"},
                     {"range": "TextMark"},
                 ],
                 "domain_of": ["BaseGroupMark", "BaseViewConfiguration"],
@@ -4341,12 +4341,20 @@ encodings.""",
         description="""Axes visualize spatial scale mappings using ticks, grid lines and labels.""",
         json_schema_extra={"linkml_meta": {"alias": "axes", "domain_of": ["BaseGroupMark", "BaseViewConfiguration"]}},
     )
-    legends: Optional[list[Legend]] = Field(
+    legend: Optional[list[Union[CategoricalLegend, ColorBarLegend]]] = Field(
         default=None,
         description="""Legends visualize scale mappings for visual values such as color, shape and size.""",
-        json_schema_extra={"linkml_meta": {"alias": "legends", "domain_of": ["BaseViewConfiguration"]}},
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "legend",
+                "any_of": [{"range": "CategoricalLegend"}, {"range": "ColorBarLegend"}],
+                "domain_of": ["BaseGroupMark", "BaseViewConfiguration"],
+            }
+        },
     )
-    marks: list[Union[BaseGroupMark, PointsMark, RasterImageMark, RasterLabelMark, ShapesMark, TextMark]] = Field(
+    marks: list[
+        Union[BaseGroupMark, BasePointsMark, BaseRasterImageMark, BaseRasterLabelMark, BaseShapesMark, TextMark]
+    ] = Field(
         default=...,
         description="""Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting
 symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose
@@ -4356,10 +4364,10 @@ fields, or scales can be used to map data values to visual values.""",
             "linkml_meta": {
                 "alias": "marks",
                 "any_of": [
-                    {"range": "RasterImageMark"},
-                    {"range": "RasterLabelMark"},
-                    {"range": "PointsMark"},
-                    {"range": "ShapesMark"},
+                    {"range": "BaseRasterImageMark"},
+                    {"range": "BaseRasterLabelMark"},
+                    {"range": "BasePointsMark"},
+                    {"range": "BaseShapesMark"},
                     {"range": "TextMark"},
                     {"range": "BaseGroupMark"},
                 ],
@@ -4433,10 +4441,10 @@ NAColorUpdate.model_rebuild()
 ConditionalColorUpdate.model_rebuild()
 Mark.model_rebuild()
 MarkDataSource.model_rebuild()
-RasterImageMark.model_rebuild()
-RasterLabelMark.model_rebuild()
-PointsMark.model_rebuild()
-ShapesMark.model_rebuild()
+BaseRasterImageMark.model_rebuild()
+BaseRasterLabelMark.model_rebuild()
+BasePointsMark.model_rebuild()
+BaseShapesMark.model_rebuild()
 TextMark.model_rebuild()
 BaseGroupMark.model_rebuild()
 BaseViewConfiguration.model_rebuild()

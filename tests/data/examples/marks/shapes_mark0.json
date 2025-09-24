@@ -1,6 +1,6 @@
 {
   "type": "path",
-  "from_": {
+  "from": {
     "data": "blobs_circles_3abbf654-22fc-4fc6-9ae7-cd3f4e4f5c37"
   },
   "zindex": 0,

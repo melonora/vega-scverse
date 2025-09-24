@@ -120,7 +120,7 @@
   "marks": [
     {
       "type": "path",
-      "from_": {
+      "from": {
           "data": "blobs_polygons_1bf3cf77-f166-4c49-86c4-ddd0a7293f84"
       },
       "zindex": 0,

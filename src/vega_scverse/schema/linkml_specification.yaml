@@ -92,10 +92,12 @@ classes:
           Axes visualize spatial scale mappings using ticks, grid lines and labels.
         range: Axis
         multivalued: true
-      legends:
+      legend:
         description: |-
           Legends visualize scale mappings for visual values such as color, shape and size.
-        range: Legend
+        any_of:
+          - range: CategoricalLegend
+          - range: ColorBarLegend
         multivalued: true
       marks:
         description: |-
@@ -104,10 +106,10 @@ classes:
           properties can be set according to backing data. Mark property definitions may be simple constants or data
           fields, or scales can be used to map data values to visual values.
         any_of:
-          - range: RasterImageMark
-          - range: RasterLabelMark
-          - range: PointsMark
-          - range: ShapesMark
+          - range: BaseRasterImageMark
+          - range: BaseRasterLabelMark
+          - range: BasePointsMark
+          - range: BaseShapesMark
           - range: TextMark
           - range: BaseGroupMark
         multivalued: true

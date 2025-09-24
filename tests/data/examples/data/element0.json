@@ -20,7 +20,7 @@
     },
     {
       "type": "lookup",
-      "from_": "b217e9fe-3ed9-43fa-b261-4ad1723dfcf8",
+      "from": "b217e9fe-3ed9-43fa-b261-4ad1723dfcf8",
       "key": "instance_id",
       "fields": ["instance_ids"],
       "values": ["channel_0_sum"],

@@ -72,7 +72,7 @@ classes:
         pattern: "^(.*_)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
         required: true
 
-  RasterImageMark:
+  BaseRasterImageMark:
     is_a: Mark
     description: |-
       Graphical mark encoding an image.
@@ -87,7 +87,7 @@ classes:
           A set of visual encoding properties that determine the position and appearance of the raster_image mark.
         range: ImageEncode
 
-  RasterLabelMark:
+  BaseRasterLabelMark:
     is_a: Mark
     description: |-
       Graphical mark encoding a label image.
@@ -102,7 +102,7 @@ classes:
           A set of visual encoding properties that determine the position and appearance of the raster_image mark.
         range: LabelEncode
 
-  PointsMark:
+  BasePointsMark:
     is_a: Mark
     description: |-
       Graphical mark for encoding points data, using a vega like symbol mark.
@@ -117,7 +117,7 @@ classes:
           A set of visual encoding properties that determine the position and appearance of the symbol mark.
         range: SymbolEncode
 
-  ShapesMark:
+  BaseShapesMark:
     is_a: Mark
     description: |-
       Graphical mark for encoding shapes data, using a vega like path mark.
@@ -198,10 +198,10 @@ classes:
           properties can be set according to backing data. Mark property definitions may be simple constants or data
           fields, or scales can be used to map data values to visual values.
         any_of:
-         - range: RasterImageMark
-         - range: RasterLabelMark
-         - range: PointsMark
-         - range: ShapesMark
+         - range: BaseRasterImageMark
+         - range: BaseRasterLabelMark
+         - range: BasePointsMark
+         - range: BaseShapesMark
          - range: TextMark
         multivalued: true
         required: true

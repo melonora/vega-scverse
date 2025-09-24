@@ -120,7 +120,7 @@
   "marks": [
     {
       "type": "symbol",
-      "from_": {
+      "from": {
           "data": "blobs_points_f3bf5183-daaf-445e-b965-28888359c8dd"
       },
       "zindex": 0,
