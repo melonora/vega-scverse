@@ -3,6 +3,7 @@ from .spec_models.linkml_specification import *
 from .spec_models.scales import *
 from .spec_models.data import *
 from .spec_models.marks import *
+from .spec_models.specification import *
 
 import inspect
 from . import spec_models

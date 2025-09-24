@@ -126,6 +126,11 @@ classes:
         range: string
         multivalued: true
         required: true
+      anchor:
+        description: |-
+          The anchor position for placing the title and subtitle. One of start, middle (the default), or end.
+        range: AnchorEnum
+        required: true
       orient:
         description: |-
           The orientation of the title relative to the chart.
@@ -365,3 +370,10 @@ enums:
       left: The anchor point of the text is left of the text.
       center: The anchor point of the text is at the center of the text.
       right: The anchor point of the text is right of the text.
+  AnchorEnum:
+    description: |-
+      The possible values for the anchor of a title or subtitle.
+    permissible_values:
+      start: The text is left aligned with the horizontal axis.
+      middle: The text is center aligned with the horizontal axis.
+      end: The text is right aligned with the horizontal axis.

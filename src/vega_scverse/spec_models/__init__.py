@@ -1,6 +1,6 @@
 from pathlib import Path
 import inspect
-from . import linkml_specification, scales, data, marks
+from . import linkml_specification, specification, scales, data, marks
 
 THIS_PATH = Path(__file__).parent
 
@@ -11,6 +11,7 @@ MAIN_SCHEMA_PATH = SCHEMA_DIRECTORY / "specification.yaml"
 __all__ = []
 
 modules = [
+    'vega_scverse.spec_models.linkml_specification',
     'vega_scverse.spec_models.specification',
     'vega_scverse.spec_models.scales',
     'vega_scverse.spec_models.data',
@@ -18,6 +19,7 @@ modules = [
 ]
 objects = [
     *inspect.getmembers(linkml_specification),
+    *inspect.getmembers(specification),
     *inspect.getmembers(scales),
     *inspect.getmembers(data),
     *inspect.getmembers(marks)

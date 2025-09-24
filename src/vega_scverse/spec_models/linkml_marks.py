@@ -239,6 +239,25 @@ class HorizontalAlignEnum(str, Enum):
     """
 
 
+class AnchorEnum(str, Enum):
+    """
+    The possible values for the anchor of a title or subtitle.
+    """
+
+    start = "start"
+    """
+    The text is left aligned with the horizontal axis.
+    """
+    middle = "middle"
+    """
+    The text is center aligned with the horizontal axis.
+    """
+    end = "end"
+    """
+    The text is right aligned with the horizontal axis.
+    """
+
+
 class ScaleEnum(str, Enum):
     """
     Possible values for the type of Scale
@@ -659,6 +678,11 @@ class Title(ConfiguredBaseModel):
         default=...,
         description="""The title text. Either a string or an array of strings. The latter specifies multiple lines of text.""",
         json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title", "TextEncodeEnter"]}},
+    )
+    anchor: AnchorEnum = Field(
+        default=...,
+        description="""The anchor position for placing the title and subtitle. One of start, middle (the default), or end.""",
+        json_schema_extra={"linkml_meta": {"alias": "anchor", "domain_of": ["Title"]}},
     )
     orient: OrientEnum = Field(
         default=...,

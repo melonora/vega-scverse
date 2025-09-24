@@ -29,10 +29,15 @@ created_on: "2025-06-01"
 created_by: orcid:0000-0003-1666-5421
 
 classes:
-  ViewConfiguration:
+  BaseViewConfiguration:
     description: |-
       Viewconfiguration based on vega for the scverse visualization ecosystem. Currently, only supports SpatialData.
     attributes:
+      schema:
+        description: |-
+          The schema version
+        range: string
+        ifabsent: string(https://github.com/melonora/vega-scverse/blob/main/src/vega_scverse/schema/linkml_specification.yaml)
       height:
         description: |-
           The height of the plotting area. The plotting area is defined as the rectangular region within a visualization 
@@ -66,15 +71,22 @@ classes:
       data:
         description: |-
           Scverse data set definitions and transforms define the data to load and how to process it.
-        range: DataObject
+        any_of:
+          - range: SpatialDataObject
+          - range: BaseTableObject
+          - range: SpatialDataElementObject
         required: true
         multivalued: true
       scales:
         description: |-
-          Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes). 
-          Scales are a fundamental building block of data visualization, as they determine the nature of visual 
+          Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes).
+          Scales are a fundamental building block of data visualization, as they determine the nature of visual
           encodings.
-        range: BaseScales
+        any_of:
+          - range: BaseAxisScale
+          - range: BaseCategoricalColorScale
+          - range: LinearColorScale
+        multivalued: true
       axes:
         description: |-
           Axes visualize spatial scale mappings using ticks, grid lines and labels.
@@ -87,12 +99,16 @@ classes:
         multivalued: true
       marks:
         description: |-
-          Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting 
-          symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose 
-          properties can be set according to backing data. Mark property definitions may be simple constants or data 
+          Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting
+          symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose
+          properties can be set according to backing data. Mark property definitions may be simple constants or data
           fields, or scales can be used to map data values to visual values.
         any_of:
-          - range: Mark
+          - range: RasterImageMark
+          - range: RasterLabelMark
+          - range: PointsMark
+          - range: ShapesMark
+          - range: TextMark
           - range: BaseGroupMark
         multivalued: true
         required: true

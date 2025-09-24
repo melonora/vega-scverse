@@ -406,6 +406,25 @@ class HorizontalAlignEnum(str, Enum):
     """
 
 
+class AnchorEnum(str, Enum):
+    """
+    The possible values for the anchor of a title or subtitle.
+    """
+
+    start = "start"
+    """
+    The text is left aligned with the horizontal axis.
+    """
+    middle = "middle"
+    """
+    The text is center aligned with the horizontal axis.
+    """
+    end = "end"
+    """
+    The text is right aligned with the horizontal axis.
+    """
+
+
 class MarkTypeEnum(str, Enum):
     """
     The valid mark types within the scverse plotting / visualization ecosystem.
@@ -1197,7 +1216,7 @@ class BaseScales(ConfiguredBaseModel):
                     {"range": "BaseCategoricalColorScale"},
                     {"range": "LinearColorScale"},
                 ],
-                "domain_of": ["BaseScales", "BaseGroupMark", "ViewConfiguration"],
+                "domain_of": ["BaseScales", "BaseGroupMark", "BaseViewConfiguration"],
             }
         },
     )
@@ -1536,7 +1555,7 @@ ordinal, but we deviate from that.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "data",
-                "domain_of": ["ContinuousColorDomain", "MarkDataSource", "ViewConfiguration"],
+                "domain_of": ["ContinuousColorDomain", "MarkDataSource", "BaseViewConfiguration"],
             }
         },
     )
@@ -1811,7 +1830,7 @@ pixel coordinates. If there is demand, this can be changed.""",
     padding: Optional[float] = Field(
         default=None,
         description="""The padding between the border and content of the legend group in pixels.""",
-        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend", "ViewConfiguration"]}},
+        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend", "BaseViewConfiguration"]}},
     )
     fill: str = Field(
         default=...,
@@ -1988,7 +2007,7 @@ pixel coordinates. If there is demand, this can be changed.""",
     padding: Optional[float] = Field(
         default=None,
         description="""The padding between the border and content of the legend group in pixels.""",
-        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend", "ViewConfiguration"]}},
+        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend", "BaseViewConfiguration"]}},
     )
     fill: str = Field(
         default=...,
@@ -2189,7 +2208,7 @@ pixel coordinates. If there is demand, this can be changed.""",
     padding: Optional[float] = Field(
         default=None,
         description="""The padding between the border and content of the legend group in pixels.""",
-        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend", "ViewConfiguration"]}},
+        json_schema_extra={"linkml_meta": {"alias": "padding", "domain_of": ["Legend", "BaseViewConfiguration"]}},
     )
     fill: str = Field(
         default=...,
@@ -2626,6 +2645,11 @@ class Title(ConfiguredBaseModel):
         default=...,
         description="""The title text. Either a string or an array of strings. The latter specifies multiple lines of text.""",
         json_schema_extra={"linkml_meta": {"alias": "text", "domain_of": ["Title", "TextEncodeEnter"]}},
+    )
+    anchor: AnchorEnum = Field(
+        default=...,
+        description="""The anchor position for placing the title and subtitle. One of start, middle (the default), or end.""",
+        json_schema_extra={"linkml_meta": {"alias": "anchor", "domain_of": ["Title"]}},
     )
     orient: OrientEnum = Field(
         default=...,
@@ -3558,12 +3582,16 @@ is on the top side.""",
     width: PositiveFloatObject = Field(
         default=...,
         description="""The width of the mark in pixels.""",
-        json_schema_extra={"linkml_meta": {"alias": "width", "domain_of": ["GroupEncodeEnter", "ViewConfiguration"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "width", "domain_of": ["GroupEncodeEnter", "BaseViewConfiguration"]}
+        },
     )
     height: PositiveFloatObject = Field(
         default=...,
         description="""The height of the mark in pixels.""",
-        json_schema_extra={"linkml_meta": {"alias": "height", "domain_of": ["GroupEncodeEnter", "ViewConfiguration"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "height", "domain_of": ["GroupEncodeEnter", "BaseViewConfiguration"]}
+        },
     )
 
 
@@ -3860,7 +3888,7 @@ class MarkDataSource(ConfiguredBaseModel):
         json_schema_extra={
             "linkml_meta": {
                 "alias": "data",
-                "domain_of": ["ContinuousColorDomain", "MarkDataSource", "ViewConfiguration"],
+                "domain_of": ["ContinuousColorDomain", "MarkDataSource", "BaseViewConfiguration"],
             }
         },
     )
@@ -4175,14 +4203,14 @@ encodings.""",
                     {"range": "BaseCategoricalColorScale"},
                     {"range": "LinearColorScale"},
                 ],
-                "domain_of": ["BaseScales", "BaseGroupMark", "ViewConfiguration"],
+                "domain_of": ["BaseScales", "BaseGroupMark", "BaseViewConfiguration"],
             }
         },
     )
     axes: list[Axis] = Field(
         default=...,
         description="""Axes visualize spatial scale mappings using ticks, grid lines and labels.""",
-        json_schema_extra={"linkml_meta": {"alias": "axes", "domain_of": ["BaseGroupMark", "ViewConfiguration"]}},
+        json_schema_extra={"linkml_meta": {"alias": "axes", "domain_of": ["BaseGroupMark", "BaseViewConfiguration"]}},
     )
     legend: Optional[list[Union[CategoricalLegend, ColorBarLegend]]] = Field(
         default=None,
@@ -4211,13 +4239,13 @@ fields, or scales can be used to map data values to visual values.""",
                     {"range": "ShapesMark"},
                     {"range": "TextMark"},
                 ],
-                "domain_of": ["BaseGroupMark", "ViewConfiguration"],
+                "domain_of": ["BaseGroupMark", "BaseViewConfiguration"],
             }
         },
     )
 
 
-class ViewConfiguration(ConfiguredBaseModel):
+class BaseViewConfiguration(ConfiguredBaseModel):
     """
     Viewconfiguration based on vega for the scverse visualization ecosystem. Currently, only supports SpatialData.
     """
@@ -4226,19 +4254,34 @@ class ViewConfiguration(ConfiguredBaseModel):
         {"from_schema": "https://w3id.org/scverse/vega-scverse/specification"}
     )
 
+    schema: Optional[str] = Field(
+        default="https://github.com/melonora/vega-scverse/blob/main/src/vega_scverse/schema/linkml_specification.yaml",
+        description="""The schema version""",
+        json_schema_extra={
+            "linkml_meta": {
+                "alias": "schema",
+                "domain_of": ["BaseViewConfiguration"],
+                "ifabsent": "string(https://github.com/melonora/vega-scverse/blob/main/src/vega_scverse/schema/linkml_specification.yaml)",
+            }
+        },
+    )
     height: int = Field(
         default=...,
         description="""The height of the plotting area. The plotting area is defined as the rectangular region within a visualization 
 where graphical marks (such as points, lines, or bars) are rendered, bounded by the axes and padding, 
 excluding titles, legends, and margins.""",
-        json_schema_extra={"linkml_meta": {"alias": "height", "domain_of": ["GroupEncodeEnter", "ViewConfiguration"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "height", "domain_of": ["GroupEncodeEnter", "BaseViewConfiguration"]}
+        },
     )
     width: int = Field(
         default=...,
         description="""The width of the plotting area. The plotting area is defined as the rectangular region within a visualization 
 where graphical marks (such as points, lines, or bars) are rendered, bounded by the axes and padding, 
 excluding titles, legends, and margins.""",
-        json_schema_extra={"linkml_meta": {"alias": "width", "domain_of": ["GroupEncodeEnter", "ViewConfiguration"]}},
+        json_schema_extra={
+            "linkml_meta": {"alias": "width", "domain_of": ["GroupEncodeEnter", "BaseViewConfiguration"]}
+        },
     )
     padding: Optional[Union[Padding, float]] = Field(
         default=None,
@@ -4252,55 +4295,75 @@ is defined with this class. This class should at least have one attribute define
             "linkml_meta": {
                 "alias": "padding",
                 "any_of": [{"range": "float"}, {"range": "Padding"}],
-                "domain_of": ["Legend", "ViewConfiguration"],
+                "domain_of": ["Legend", "BaseViewConfiguration"],
             }
         },
     )
     title: Optional[Title] = Field(
         default=None,
         description="""The title directive adds a descriptive title to a chart.""",
-        json_schema_extra={"linkml_meta": {"alias": "title", "domain_of": ["ViewConfiguration"]}},
+        json_schema_extra={"linkml_meta": {"alias": "title", "domain_of": ["BaseViewConfiguration"]}},
     )
-    data: list[DataObject] = Field(
+    data: list[Union[BaseTableObject, SpatialDataElementObject, SpatialDataObject]] = Field(
         default=...,
         description="""Scverse data set definitions and transforms define the data to load and how to process it.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "data",
-                "domain_of": ["ContinuousColorDomain", "MarkDataSource", "ViewConfiguration"],
+                "any_of": [
+                    {"range": "SpatialDataObject"},
+                    {"range": "BaseTableObject"},
+                    {"range": "SpatialDataElementObject"},
+                ],
+                "domain_of": ["ContinuousColorDomain", "MarkDataSource", "BaseViewConfiguration"],
             }
         },
     )
-    scales: Optional[BaseScales] = Field(
+    scales: Optional[list[str]] = Field(
         default=None,
-        description="""Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes). 
-Scales are a fundamental building block of data visualization, as they determine the nature of visual 
+        description="""Scales map data values (numbers, dates, categories, etc.) to visual values (pixels, colors, sizes).
+Scales are a fundamental building block of data visualization, as they determine the nature of visual
 encodings.""",
         json_schema_extra={
-            "linkml_meta": {"alias": "scales", "domain_of": ["BaseScales", "BaseGroupMark", "ViewConfiguration"]}
+            "linkml_meta": {
+                "alias": "scales",
+                "any_of": [
+                    {"range": "BaseAxisScale"},
+                    {"range": "BaseCategoricalColorScale"},
+                    {"range": "LinearColorScale"},
+                ],
+                "domain_of": ["BaseScales", "BaseGroupMark", "BaseViewConfiguration"],
+            }
         },
     )
     axes: Optional[list[Axis]] = Field(
         default=None,
         description="""Axes visualize spatial scale mappings using ticks, grid lines and labels.""",
-        json_schema_extra={"linkml_meta": {"alias": "axes", "domain_of": ["BaseGroupMark", "ViewConfiguration"]}},
+        json_schema_extra={"linkml_meta": {"alias": "axes", "domain_of": ["BaseGroupMark", "BaseViewConfiguration"]}},
     )
     legends: Optional[list[Legend]] = Field(
         default=None,
         description="""Legends visualize scale mappings for visual values such as color, shape and size.""",
-        json_schema_extra={"linkml_meta": {"alias": "legends", "domain_of": ["ViewConfiguration"]}},
+        json_schema_extra={"linkml_meta": {"alias": "legends", "domain_of": ["BaseViewConfiguration"]}},
     )
-    marks: list[Union[BaseGroupMark, Mark]] = Field(
+    marks: list[Union[BaseGroupMark, PointsMark, RasterImageMark, RasterLabelMark, ShapesMark, TextMark]] = Field(
         default=...,
-        description="""Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting 
-symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose 
-properties can be set according to backing data. Mark property definitions may be simple constants or data 
+        description="""Graphical marks visually encode data using geometric primitives such as rectangles, lines, and plotting
+symbols. Marks are the basic visual building block of a visualization, providing basic shapes whose
+properties can be set according to backing data. Mark property definitions may be simple constants or data
 fields, or scales can be used to map data values to visual values.""",
         json_schema_extra={
             "linkml_meta": {
                 "alias": "marks",
-                "any_of": [{"range": "Mark"}, {"range": "BaseGroupMark"}],
-                "domain_of": ["BaseGroupMark", "ViewConfiguration"],
+                "any_of": [
+                    {"range": "RasterImageMark"},
+                    {"range": "RasterLabelMark"},
+                    {"range": "PointsMark"},
+                    {"range": "ShapesMark"},
+                    {"range": "TextMark"},
+                    {"range": "BaseGroupMark"},
+                ],
+                "domain_of": ["BaseGroupMark", "BaseViewConfiguration"],
             }
         },
     )
@@ -4376,5 +4439,5 @@ PointsMark.model_rebuild()
 ShapesMark.model_rebuild()
 TextMark.model_rebuild()
 BaseGroupMark.model_rebuild()
-ViewConfiguration.model_rebuild()
+BaseViewConfiguration.model_rebuild()
 
